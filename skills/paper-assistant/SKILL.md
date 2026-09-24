@@ -9,7 +9,7 @@ description: Write or revise academic papers in Word, inspect formatting, format
 
 仅处理期刊/投稿问题时，先读取 `references/journal_recommendation_guide.md`，调用 `list_journal_sources` 检查实际数据版本；跳过论文写作三问和 Word 连接。未知或过期证据不得判为安全，用户导入信息不等于本次已在线核验。
 
-用户给研究想法、摘要或论文并要求选刊时，使用 `prepare_manuscript_for_journals` → **当前调用 Agent 自己的模型**提炼画像和评估候选 → `recommend_journals` 的两阶段流程。无需另一套模型 Key，不绑定 NarraFork。自动完成结构化参数，不要求用户手写 JSON。分开呈现稳妥／效率、均衡、冲刺档及可选极限冲刺；明确推荐分不是录用概率，“水刊”只能作为用户的投稿策略偏好，不能凭分区或发文量给刊物贴标签。
+用户给研究想法、摘要或论文并要求选刊时，使用 `prepare_manuscript_for_journals` → **当前调用 Agent 自己的模型**提炼画像和评估候选 → `recommend_journals` 的两阶段流程。无需另一套模型 Key，不绑定 NarraFork。自动完成结构化参数，不要求用户手写 JSON。分开呈现稳妥／效率、均衡、冲刺／领域顶刊档；明确推荐分不是录用概率，“水刊”只能作为用户的投稿策略偏好，不能凭分区或发文量给刊物贴标签。
 
 ## 🌟 核心交互哲学：多让用户做选择题，不做无提示填空
 

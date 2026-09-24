@@ -412,7 +412,7 @@ def recommend_records(prepared: Dict[str, Any], records: List[JournalRecord],
         fresh_profiles = [p for p in record.editorial_profiles if _dated(p.provenance, preferences.scope_max_age_days, now)]
         positions = {p.positioning for p in fresh_profiles if p.positioning != "unknown" and p.positioning_basis}
         position = next(iter(positions)) if len(positions) == 1 else "unknown"
-        group = {"application": "efficiency", "general": "balanced", "field_leading": "stretch", "elite": "elite"}.get(position)
+        group = {"application": "efficiency", "general": "balanced", "field_leading": "stretch"}.get(position)
         if not group:
             missing.append("期刊定位缺失或有冲突，不能可靠分档")
         assessment = judgments.get(record.journal_id)
@@ -438,13 +438,6 @@ def recommend_records(prepared: Dict[str, Any], records: List[JournalRecord],
             elif incompatible or article_type not in allowed:
                 missing.append("接收文章类型缺少证据或有冲突")
                 values["manuscript"] = None
-        if group == "elite":
-            if not preferences.include_elite:
-                rejected.append("未开启可选极限冲刺")
-            elif not (profile and profile.mode == "manuscript" and profile.readiness == "validated"
-                      and profile.significance == "cross_field" and profile.independent_validation_quotes
-                      and not prepared["truncated"] and (values["scope"] or 0) >= 80 and (values["manuscript"] or 0) >= 80):
-                rejected.append("现有材料不足以支持极限冲刺；需要完整稿件、验证与跨领域意义依据")
         if profile and not profile.article_type:
             missing.append("文章类型尚未明确，只能给初步参考")
             values["manuscript"] = None
@@ -490,8 +483,6 @@ def recommend_records(prepared: Dict[str, Any], records: List[JournalRecord],
         bucket["recommended"] = [c for c in all_cards if c["eligibility"] == "supported_by_supplied_evidence"]
         bucket["provisional"] = [c for c in all_cards if c["eligibility"] != "supported_by_supplied_evidence"]
     ordered_groups = ["stretch", "balanced", "efficiency"] if preferences.goal == "impact" else ["efficiency", "balanced", "stretch"]
-    if preferences.include_elite:
-        ordered_groups.insert(0, "elite")
     submission_order = [{"journal_id": c["journal_id"], "title": c["title"], "group": g,
                          "condition": "先补齐核验再考虑投稿" if c["missing"] else "仍需作者确认投稿要求"}
                         for g in ordered_groups for c in sorted(groups[g]["recommended"] + groups[g]["provisional"], key=order_key)

@@ -471,7 +471,6 @@ def _output_recommend_readable(payload: Dict[str, Any]) -> None:
         ("efficiency", "【稳妥／效率档】"),
         ("balanced", "【均衡档】"),
         ("stretch", "【冲刺／领域顶刊档】"),
-        ("elite", "【可选极限冲刺】"),
     ]
 
     for g_key, g_title in group_titles:
@@ -612,9 +611,6 @@ def cmd_recommend(finder: JournalFinder, args: argparse.Namespace) -> int:
                 if getattr(args, "preferences", None)
                 else None
             )
-            if getattr(args, "include_elite", False):
-                preferences = dict(preferences) if preferences is not None else {}
-                preferences["include_elite"] = True
 
             res = finder.recommend(
                 text=text,
@@ -761,7 +757,6 @@ def create_parser() -> argparse.ArgumentParser:
     p_recommend.add_argument("--assessments", default=None, help="期刊匹配度评估列表 JSON 文件路径")
     p_recommend.add_argument("--candidates", default=None, help="初筛候选期刊列表 JSON 文件路径")
     p_recommend.add_argument("--preferences", default=None, help="用户偏好设置 JSON 文件路径")
-    p_recommend.add_argument("--include-elite", dest="include_elite", action="store_true", help="允许包含顶尖期刊 (设置 preferences.include_elite=true)")
     p_recommend.add_argument("--prepare-only", dest="prepare_only", action="store_true", help="仅执行文本提取与分块解析，获取 input_id 与结构化文本")
     p_recommend.add_argument("--max-chars", type=int, default=60000, help="提取字符上限 (默认 60000)")
     _add_common(p_recommend)

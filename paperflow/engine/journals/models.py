@@ -117,7 +117,7 @@ class EditorialProfile(Model):
     topics: List[str] = Field(default_factory=list, max_length=30)
     article_types: List[str] = Field(default_factory=list, max_length=20)
     article_types_complete: bool = False
-    positioning: Literal["application", "general", "field_leading", "elite", "unknown"] = "unknown"
+    positioning: Literal["application", "general", "field_leading", "unknown"] = "unknown"
     positioning_basis: str = Field(default="", max_length=1200)
     recent_papers: List[str] = Field(default_factory=list, max_length=10)
     provenance: Provenance = Field(default_factory=Provenance)

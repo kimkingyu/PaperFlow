@@ -213,7 +213,6 @@ def test_cli_parser_recommend_options():
     assert "--assessments" in opts
     assert "--candidates" in opts
     assert "--preferences" in opts
-    assert "--include-elite" in opts
     assert "--prepare-only" in opts
 
 
@@ -349,10 +348,10 @@ def test_cli_recommend_json_bounded_reads_and_type_checks(temp_dir: Path, capsys
     assert "每个元素必须为 JSON 对象 (dict)" in out["message"]
 
 
-def test_cli_recommend_include_elite_flag(temp_dir: Path, capsys):
-    """--include-elite sets preferences.include_elite = True."""
+def test_cli_recommend_preferences_flag(temp_dir: Path, capsys):
+    """--preferences loads and forwards preferences JSON."""
     pref_file = temp_dir / "pref.json"
-    pref_file.write_text(json.dumps({"max_apc": 1500}), encoding="utf-8")
+    pref_file.write_text(json.dumps({"max_budget": 1500, "currency": "CNY"}), encoding="utf-8")
 
     with patch(
         "paperflow.cli.journal_cli.JournalFinder.recommend",
@@ -364,30 +363,16 @@ def test_cli_recommend_include_elite_flag(temp_dir: Path, capsys):
             "warnings": [],
         }
 
-        # Case 1: with existing preferences file
         code1 = run_journal_cli([
             "recommend",
             "--text", "Paper draft",
             "--preferences", str(pref_file),
-            "--include-elite",
             "--json",
         ])
         assert code1 == 0
         call_pref1 = mock_rec.call_args[1]["preferences"]
-        assert call_pref1["max_apc"] == 1500
-        assert call_pref1["include_elite"] is True
-
-        # Case 2: without preferences file
-        mock_rec.reset_mock()
-        code2 = run_journal_cli([
-            "recommend",
-            "--text", "Paper draft",
-            "--include-elite",
-            "--json",
-        ])
-        assert code2 == 0
-        call_pref2 = mock_rec.call_args[1]["preferences"]
-        assert call_pref2 == {"include_elite": True}
+        assert call_pref1["max_budget"] == 1500
+        assert call_pref1["currency"] == "CNY"
 
 
 def test_cli_recommend_full_arguments_forwarding(temp_dir: Path, capsys):
@@ -498,7 +483,7 @@ def test_cli_recommend_real_service_empty_store_needs_candidate_evidence(temp_di
     assert "efficiency" in data["groups"]
     assert "balanced" in data["groups"]
     assert "stretch" in data["groups"]
-    assert "elite" in data["groups"]
+    assert set(data["groups"].keys()) == {"efficiency", "balanced", "stretch"}
 
     # Verify no persistent DB table / records were written to disk
     store_file = empty_db / "journals.db"
@@ -617,7 +602,6 @@ def test_cli_recommend_human_readable_assessed_and_json_intact(temp_dir: Path, c
                 },
                 "balanced": {"label": "均衡稳妥", "recommended": [], "provisional": []},
                 "stretch": {"label": "冲刺突破", "recommended": [], "provisional": []},
-                "elite": {"label": "极限冲刺", "recommended": [], "provisional": []},
             },
             "excluded": [
                 {"title": "Unrelated Biology Journal", "reasons": ["研究主题与征稿范围适配不足"]}

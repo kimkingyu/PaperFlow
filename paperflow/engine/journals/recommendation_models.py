@@ -13,7 +13,6 @@ GROUP_LABELS = {
     "efficiency": "稳妥／效率档",
     "balanced": "均衡档",
     "stretch": "冲刺／领域顶刊档",
-    "elite": "可选极限冲刺",
 }
 
 
@@ -90,7 +89,6 @@ class RecommendationPreferences(Model):
     max_decision_days: Optional[float] = Field(default=None, gt=0)
     decision_stage: Literal["first_decision", "peer_review", "acceptance"] = "first_decision"
     estimated_pages: Optional[int] = Field(default=None, ge=1, le=1000)
-    include_elite: bool = False
     per_group: int = Field(default=3, ge=1, le=5)
     candidate_limit: int = Field(default=30, ge=1, le=50)
     min_scope_fit: float = Field(default=50, ge=0, le=100)

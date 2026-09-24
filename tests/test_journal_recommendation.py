@@ -103,7 +103,7 @@ def test_unknown_score_does_not_renormalize_into_a_higher_score():
 def test_positioning_is_independent_from_score_and_publisher_name(position, group):
     result = evaluate(journal(position, title="Fictional Nature-like title"))
     assert result["groups"][group]["recommended"]
-    assert not result["groups"]["elite"]["recommended"]
+    assert set(result["groups"]) == {"efficiency", "balanced", "stretch"}
 
 
 def test_no_profile_or_judgment_never_fakes_semantic_assessment():
@@ -169,12 +169,10 @@ def test_homonymous_journals_do_not_silently_merge():
     assert all(r.identity_warnings for r in combined)
 
 
-def test_elite_is_optional_and_cannot_be_recommended_for_an_idea():
-    assert not cards(evaluate(journal("elite")))
-    prefs = RecommendationPreferences(include_elite=True)
-    assert not cards(evaluate(journal("elite"), prefs, assessment_updates={"scope_fit": 95}))
-    eligible = evaluate(journal("elite"), prefs, paper=True, assessment_updates={"scope_fit": 95})
-    assert eligible["groups"]["elite"]["recommended"]
+def test_three_practical_tiers_only_without_elite_or_cns():
+    result = evaluate()
+    assert set(result["groups"].keys()) == {"efficiency", "balanced", "stretch"}
+    assert "elite" not in result["groups"]
 
 
 def test_old_scope_does_not_support_current_semantic_score():

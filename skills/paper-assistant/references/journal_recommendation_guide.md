@@ -31,14 +31,14 @@
 5. 调用 `recommend_journals`，传入原始 text/file_path、mode、profile、preferences 及可选 `candidate_records`。临时候选不会写入数据库。首次调用返回 context_id、assessment_targets 或 evidence_targets。缺征稿范围、仅有旧资料时先补证据，不能直接开始打分。
 6. 对 assessment_targets，按 `agent_contract.assessment_schema` 生成 assessments：journal_id、context_id、scope_fit、manuscript_fit、goal_fit、evidence、rationale、gaps。evidence 中 manuscript_quote、journal_quote 必须分别来自已读稿件和候选征稿资料。0 表示不适配，50 表示仅基本相关，80 以上须有具体的范围／方法／文章类型支撑；不能因为期刊有名而给高适配分。goal_fit 评估期刊定位与用户目标，不冒充录用概率。
 7. 保持同一输入、画像、偏好和原始候选对象，再次调用 `recommend_journals` 并传 assessments。不要把返回卡片直接当作 candidate_records 回传。材料、偏好或候选变化导致 STALE_ASSESSMENT 时重新评估，不能复用旧评分。后台本身没有模型，也不会自动向第三方发出请求。
-8. 按档输出最终卡片：`efficiency` 稳妥／效率、`balanced` 均衡、`stretch` 冲刺／领域顶刊、`elite` 可选极限冲刺。每档分别列 recommended 与 provisional，后者显著注明“待核验”。未分档和排除原因另列，不硬凑数量。补充资料最多先做一轮；仍缺的数据如实保留，不为了得到高分无限重试。
+8. 按档输出最终卡片：`efficiency` 稳妥／效率、`balanced` 均衡、`stretch` 冲刺／领域顶刊。每档分别列 recommended 与 provisional，后者显著注明“待核验”。未分档和排除原因另列，不硬凑数量。补充资料最多先做一轮；仍缺的数据如实保留，不为了得到高分无限重试。
 
 ### 结构化候选与偏好
 
 候选使用 JournalRecord 基本字段 title、issns、fields、oa_mode、rankings、risks 等，可增加：
 
 - `editorial_profiles`：scope_summary（概括征稿范围，不大量复制网页）、topics、article_types、article_types_complete、positioning、positioning_basis、recent_papers、provenance。
-- `positioning`：application/general/field_leading/elite/unknown；这是有依据的定位判断，不是官方质量认证。须写具体 positioning_basis，不能凭期刊名字带 Nature、出版社品牌、低分区或高发文量自动贴标签。没有足够依据填 unknown。
+- `positioning`：application/general/field_leading/unknown；这是有依据的定位判断，不是官方质量认证。须写具体 positioning_basis，不能凭期刊名字带 Nature、出版社品牌、低分区或高发文量自动贴标签。没有足够依据填 unknown。
 - `article_types` 使用可比较的出版类型，如 research/review/letter。只有完整核对了接收类型清单才设 article_types_complete=true；不把“页面只提到综述”误当成排除原创论文的完整规则。
 - `publication_fees`：每个出版路线、每种收费分别记录 route、kind、amount、currency、unit、optional、taxes_included、note、provenance。route 为 subscription/open_access/diamond/unknown；kind 为 apc/submission/page/colour/other；unit 为 per_article/per_page/unknown。未知金额为 null，不为 0；只有官网明确无 APC 才填 0。
 - `provenance`：source_id、source_url、observed_at、authority，必要时记录 data_year/source_version。日期应是实际观察时间，不伪造当天已联网核实。用户提供的官方信息仍是所给证据，不等于本次联网核验；不要回填 Key、投稿 UUID、带凭据链接。
@@ -49,7 +49,6 @@ preferences 常用参数：
 - max_budget + currency；publication_route；estimated_pages（确认页数后才能计算按页费用）。费用只覆盖所提供收费项目；未含税、附加费用或减免条件不明时不能称为已确认的总价。
 - max_decision_days + decision_stage(first_decision/peer_review/acceptance)。用户只说“快”而未给天数，不默认强加 45 天；初审不等于外审或录用时间。
 - filters：既有 SearchFilters 字段，明确体系／年度、必要的 category/category_type 和学校 profile_id。推荐的费用／周期用顶层参数，不与 filters 内旧 APC/周期参数混用。
-- include_elite 默认 false，用户需要时开启；想法、截断稿件或缺少已验证成果及跨领域意义依据时不会给极限冲刺推荐。子刊不自动等同于主刊或同等级。
 - fx_rates：只有实际取得带日期汇率才提供 source_currency、target_currency、rate、provenance；保留原币，不隐式换汇。汇率需在 7 天有效期内。
 
 ### 怎样解释结果
