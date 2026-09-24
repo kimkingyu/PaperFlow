@@ -1,12 +1,15 @@
 ---
 name: paper-assistant
-description: This skill should be used when the user wants to write or revise an academic paper or thesis (0 to 1) in Microsoft Word, set up or check paper formatting (fonts, headings, line spacing, figure/table captions, page layout), format references to GB/T 7714 or a journal style, insert live Zotero citations, review a draft with native Word comments, or remove AI-sounding phrasing from academic text.
-version: 1.3.0
+description: Write or revise academic papers in Word, inspect formatting, format references, insert Zotero citations, add review comments, and improve academic phrasing. Also use to match a research idea, abstract or manuscript to journals using the calling agent's own model, with tiered recommendations, fit scores, costs and risks; check CAS/JCR/XR/CCF rankings, compare OA/APC and review times, analyze related-paper venues, or parse offline Elsevier submission events.
 ---
 
 # PaperFlow 论文写作助手
 
-配合 PaperFlow MCP 服务使用：助手通过 MCP 工具直接读写用户桌面上**正在打开的 Word 文档**。
+配合 PaperFlow MCP 服务使用：写作和排版通过 MCP 工具操作 Word；期刊筛选、风险核查和离线投稿事件解析无需打开 Word。
+
+仅处理期刊/投稿问题时，先读取 `references/journal_recommendation_guide.md`，调用 `list_journal_sources` 检查实际数据版本；跳过论文写作三问和 Word 连接。未知或过期证据不得判为安全，用户导入信息不等于本次已在线核验。
+
+用户给研究想法、摘要或论文并要求选刊时，使用 `prepare_manuscript_for_journals` → **当前调用 Agent 自己的模型**提炼画像和评估候选 → `recommend_journals` 的两阶段流程。无需另一套模型 Key，不绑定 NarraFork。自动完成结构化参数，不要求用户手写 JSON。分开呈现稳妥／效率、均衡、冲刺档及可选极限冲刺；明确推荐分不是录用概率，“水刊”只能作为用户的投稿策略偏好，不能凭分区或发文量给刊物贴标签。
 
 ## 🌟 核心交互哲学：多让用户做选择题，不做无提示填空
 
@@ -47,19 +50,21 @@ version: 1.3.0
 
 | 需要处理 | 读取文件 |
 | :--- | :--- |
+| **大理工科科研讲故事、学术包装与四大黄金叙事母版（内部战法）** | `references/stem_narrative_playbook.md` |
 | **2021-2026 论文标准全集 (GB/T 2025/2022、IEEE、ACM、APA、Nature)** | `references/standards_2021_2026.md` |
 | 参考文献怎么写、类型标识、作者几人加"等"、2015 与 2025 版区别 | `references/format_references_gbt7714.md` |
 | 字体字号、标题层级、行距页边距、图表题注、交稿前格式自查 | `references/format_thesis_layout.md` |
 | 用户想找现成模板或 CSL 样式 | `references/template_sources.md` |
 | 去 AI 味改写 | `references/anti_ai_rules.md` |
-| 搭大纲 | `references/storm_outline_guide.md` |
+| 搭大纲（STORM三大专家碰撞与科学反派设计） | `references/storm_outline_guide.md` |
 | 文献证据与引用可信度 | `references/paper_qa_evidence.md` |
+| 选刊、分区/预警、学校要求、OA/周期、同行反查与投稿事件 | `references/journal_recommendation_guide.md` |
 
 ## 2. 常用 MCP 工具
 
 | 工具 | 什么时候用 |
 | :--- | :--- |
-| `get_active_word_doc` | 每次开工先调用，确认连上了哪篇文档、写到哪了 |
+| `get_active_word_doc` | 仅在编辑/检查 Word 论文前调用，确认目标；纯期刊查询不调用 |
 | `get_word_selection` | 用户说"这段""选中的这句"时读取选区，不要让用户复制粘贴 |
 | `write_to_active_word` | 写入正文或 1-3 级标题（用 Word 内置标题样式，目录能自动生成） |
 | `insert_academic_table` | 插入标准学术三线表（顶底粗、栏目细、无竖线，表题居中在上） |
@@ -68,12 +73,32 @@ version: 1.3.0
 | `add_word_comment` | 审稿意见写成 Word 批注，挂在选中文字上 |
 | `set_word_track_revisions` | 开关修订模式，让每处修改都能被用户接受或拒绝 |
 | `apply_academic_style_preset` | 仅在**用户没有官方模板**时，应用指定 2021-2026 标准样式预设 |
+| `audit_paper_format` | 全方位体检排版格式硬伤（字号倒挂、伪标题、缺少缩进、非三线表、标点混用、断号等），可自动打审阅批注 |
+| `normalize_paper_format` | 一键自动自愈与规范化排版（消除多余空行、规范缩进、重塑学术三线表、修正全角标点） |
 | `scan_anti_ai_flavor` | 检查一段文字里的 AI 套话 |
 | `generate_offline_paper_docx` | Word 没开时，离线生成一份新的 docx 初稿（支持三线表与 Zotero 引用） |
+| `prepare_manuscript_for_journals` | 只读提取想法／论文文本、input_id 及模型无关协议；不打开 Word、不额外调用模型 |
+| `recommend_journals` | 接收当前 Agent 的画像／有依据的判断，核验事实后分档计分并给出费用、风险与补强建议 |
+| `list_journal_sources` | 查明来源版本、缺口、许可模式和本地数据是否已初始化 |
+| `import_journal_data` | 预览/导入有权使用的期刊数据或学校政策，默认 dry_run |
+| `refresh_journal_sources` | 预览/刷新已授权来源；无权限或 Key 时明确降级 |
+| `search_academic_journals` | 按明确体系/年度、学科、OA/费用/周期与风险策略筛选 |
+| `get_journal_details` | 查看具体刊物的身份、来源指标与历史经验，歧义先消解 |
+| `check_journal_warning` | 分来源核查风险与覆盖；不作安全/毕业保证 |
+| `compare_academic_journals` | 最多 10 本候选按一致口径对比 |
+| `analyze_related_journals` | 从用户提供的文献元数据统计期刊分布并联查风险 |
+| `get_submission_tracker_info` | 离线解析用户自己的 Elsevier 事件或比较快照；无数据时只提供指南 |
 
 ## 3. 写作与修改全流程的选择题规范
 
 任何步骤发起前，主动向用户提供下一步行动的选择题：
+
+### 立意升维选择题：遭遇工程流水账时的叙事升格引导
+当用户给出“我搭了个设备/测了几组工艺参数/调通了算法流程”等工程流水账想法时，严禁直接顺从其流水账写大纲，必须先主动提供四大黄金叙事母版选项引导用户升维：
+- `[1] (推荐) 升维为“打破跷跷板效应”母版` —— 锁定本领域的固有矛盾（如强韧倒置、通量-选择性冲突、高速与超调抖振），以“右上角双高图”为终极视觉标杆。
+- `[2] 升维为“暗箱机理揭秘”母版` —— 拒绝工艺摸底报告，引入微观表征/数值仿真，从 Why 层面解释反常极值背后的“临界平衡阈值”。
+- `[3] 升维为“跨尺度关联 (Micro-to-Macro)”母版` —— 建立微观晶格/介观拓扑缺陷向宏观装备服役寿命与力学失效的跨尺度因果映射。
+- `[4] 升维为“跨学科工具降维”母版` —— 将计算机/先进信号/微流控前沿工具迁移至传统工业场景，通过时间差套利获取方法创新分。
 
 ### 流程选择题：确定下一步写什么
 - `[1] (推荐) 先写核心方法与实验部分` —— 学术写作确定性最高的部分，有具体步骤和数据，最不易产生空话。

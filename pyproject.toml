@@ -20,9 +20,16 @@ dependencies = [
     "pywin32>=305; platform_system=='Windows'",
 ]
 
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "build>=1,<2", "PyYAML>=6,<7"]
+pdf = ["pypdf>=6.19,<7"]
+
 [project.scripts]
 paperflow = "paperflow.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["paperflow*"]
+
+[tool.setuptools.package-data]
+paperflow = ["resources/journals/*.json"]

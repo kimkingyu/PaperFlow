@@ -8,6 +8,7 @@ for real-time document creation, editing, review comments, and academic anti-AI 
 from __future__ import annotations
 
 import json
+import os
 from typing import Any, Dict, List, Optional
 
 try:
@@ -19,9 +20,53 @@ except Exception:
 
 from paperflow.engine.anti_ai_cleaner import anti_ai_engine
 from paperflow.engine.docx_builder import AcademicDocxBuilder
+from paperflow.engine.formatter import PaperFormatAuditor, PaperFormatNormalizer
+from paperflow.engine.journal_finder import JournalFinder
+from paperflow.engine.journals.models import JournalError
 from paperflow.engine.standards_manager import get_standard_by_id, list_standards
 from paperflow.engine.zotero_field import parse_citations
 from paperflow.engine.word_live_bridge import live_bridge
+
+try:
+    from pydantic import ValidationError
+except ImportError:
+    ValidationError = None
+
+
+def _format_journal_error(err: Exception) -> str:
+    """Format exceptions into standardized response envelope without leaking secrets/tracebacks."""
+    error_code = "INTERNAL_ERROR"
+    message = "操作执行失败，请检查输入参数或本地数据文件状态"
+    if isinstance(err, JournalError):
+        error_code = getattr(err, "code", "JOURNAL_ERROR")
+        message = str(err)
+    elif ValidationError and isinstance(err, ValidationError):
+        error_code = "VALIDATION_ERROR"
+        safe_errors = []
+        for e in err.errors():
+            safe_errors.append({
+                "loc": list(e.get("loc", ())),
+                "type": e.get("type", "validation_error"),
+            })
+        message = "参数或数据字段校验未通过: " + json.dumps(safe_errors, ensure_ascii=False)
+
+    return json.dumps({
+        "status": "error",
+        "error_code": error_code,
+        "message": message,
+        "data": None,
+        "sources": [],
+        "coverage": {},
+        "warnings": [],
+        "suggested_options": [],
+    }, ensure_ascii=False, indent=2)
+
+
+def _get_journal_service() -> JournalFinder:
+    """Get JournalFinder reading PAPERFLOW_JOURNAL_HOME without creating DB or networking on init."""
+    data_dir = os.environ.get("PAPERFLOW_JOURNAL_HOME")
+    return JournalFinder(data_dir=data_dir if data_dir else None)
+
 
 
 @mcp_app.tool()
@@ -400,6 +445,436 @@ def generate_offline_paper_docx(
             "status": "error",
             "message": f"Failed to generate paper docx: {e}"
         }, ensure_ascii=False)
+
+
+@mcp_app.tool()
+def audit_paper_format(
+    file_path: str = "",
+    standard_id: str = "chinese_thesis_standard",
+    add_comments: bool = False,
+) -> str:
+    """Audit academic paper formatting and identify defects (live Word/WPS or offline docx).
+
+    Examines:
+    - Title outline isolation & heading hierarchy (inversion, level skip, unwanted indents)
+    - Pseudo-headings (bold text without real Heading style)
+    - First-line paragraph indentation (missing indent, manual space indent)
+    - Three-line table compliance (checks for unwanted vertical gridlines)
+    - Punctuation consistency (half-width marks inside Chinese text)
+    - Sequential citation continuity (checks for broken/missing citation indices)
+    - Redundant consecutive blank paragraphs
+
+    Args:
+        file_path: Optional path to an offline .docx file. If empty, audits the currently active Word/WPS window.
+        standard_id: Academic standard ID (default: 'chinese_thesis_standard').
+        add_comments: In live Word mode, attach native review comment bubbles at problem locations.
+    """
+    try:
+        if file_path:
+            report = PaperFormatAuditor.audit_docx(docx_path=file_path, standard_id=standard_id)
+        else:
+            report = live_bridge.audit_document(standard_id=standard_id, add_comments=add_comments)
+
+        score = report.get("format_score", 100)
+        report["suggested_options"] = [
+            f"1. (推荐) 一键自动规范化与修复排版缺陷 (normalize_paper_format)",
+            "2. 查看具体段落问题明细并人工核验",
+            "3. 切换审核规范（如改用 chinese_journal_standard）",
+        ] if score < 90 else [
+            "1. (推荐) 论文排版格式极佳，可直接推进答辩或投稿准备",
+            "2. 检查正文 AI 味与学术表达 (scan_anti_ai_flavor)",
+        ]
+
+        return json.dumps(report, ensure_ascii=False, indent=2)
+    except Exception as e:
+        return json.dumps({
+            "status": "error",
+            "message": f"Failed to audit paper format: {e}"
+        }, ensure_ascii=False, indent=2)
+
+
+@mcp_app.tool()
+def normalize_paper_format(
+    file_path: str = "",
+    output_path: str = "",
+    standard_id: str = "chinese_thesis_standard",
+) -> str:
+    """Auto-heal and normalize academic paper formatting to strictly adhere to standards.
+
+    Actions performed:
+    - Cleans redundant consecutive blank paragraphs
+    - Enforces standard margins (Top 3.0cm, Bottom 2.5cm, Left 3.0cm, Right 2.5cm)
+    - Formats Heading 1-3 hierarchy (H1 16pt center, H2 14pt left, H3 12pt left, pure black, no indent)
+    - Ensures body paragraph styling (12pt, 1.5 line spacing, 2-character first-line indent)
+    - Re-shapes all tables into standard academic three-line tables (no vertical lines, 1.5pt top/bottom)
+    - Replaces misplaced half-width punctuation in Chinese text with standard full-width punctuation
+    - Lowers paper title outline level to 10 to keep it out of navigation pane and auto TOC
+
+    Args:
+        file_path: Optional path to an offline .docx file. If empty, normalizes active Word/WPS document.
+        output_path: Optional destination path for offline docx. If empty, updates file in place.
+        standard_id: Academic standard ID (default: 'chinese_thesis_standard').
+    """
+    try:
+        if file_path:
+            res = PaperFormatNormalizer.normalize_docx(
+                input_path=file_path,
+                output_path=output_path if output_path else None,
+                standard_id=standard_id,
+            )
+        else:
+            res = live_bridge.normalize_document(standard_id=standard_id)
+
+        res["suggested_options"] = [
+            "1. (推荐) 再次运行格式体检验证合规状态 (audit_paper_format)",
+            "2. 在 Word 中查看排版效果并保存",
+            "3. 导出或提交审阅",
+        ]
+        return json.dumps(res, ensure_ascii=False, indent=2)
+    except Exception as e:
+        return json.dumps({
+            "status": "error",
+            "message": f"Failed to normalize paper format: {e}"
+        }, ensure_ascii=False, indent=2)
+
+
+# =====================================================================
+# Journal Tools (9 items)
+# Capability note: local snapshot + manual official evidence != real-time guarantee of safety.
+# Submission tracking is offline parse only.
+# =====================================================================
+
+
+@mcp_app.tool()
+def list_journal_sources(source_id: str = "") -> str:
+    """List supported academic journal sources, datasets, and local snapshot statuses.
+
+    Note: Local snapshot and manual official evidence != real-time guarantee of safety.
+
+    Args:
+        source_id: Optional specific source ID to inspect.
+    """
+    try:
+        service = _get_journal_service()
+        res = service.list_sources(source_id=source_id)
+        return json.dumps(res, ensure_ascii=False, indent=2)
+    except Exception as e:
+        return _format_journal_error(e)
+
+
+@mcp_app.tool()
+def import_journal_data(
+    source_id: str,
+    file_path: str,
+    kind: str = "auto",
+    data_year: Optional[int] = None,
+    encoding: str = "utf-8-sig",
+    dry_run: bool = True,
+    source_version: str = "",
+    dataset_id: str = "",
+    allow_shrink: bool = False,
+) -> str:
+    """Import journal rankings, risk lists, or school policies from local files.
+
+    Note: Local snapshot and manual official evidence != real-time guarantee of safety.
+    dry_run defaults to True: previews imported counts and rejections without altering DB.
+
+    Args:
+        source_id: ID of the source catalog.
+        file_path: Absolute or relative path to data file (CSV, JSON, SQLite).
+        kind: Data parser kind or 'auto'.
+        data_year: Explicit data year if applicable.
+        encoding: File encoding (default 'utf-8-sig').
+        dry_run: Whether to run in preview-only mode (default True).
+        source_version: Optional version tag.
+        dataset_id: Optional dataset identifier.
+        allow_shrink: Allow snapshot record count to shrink.
+    """
+    try:
+        service = _get_journal_service()
+        res = service.import_data(
+            source_id=source_id,
+            file_path=file_path,
+            kind=kind,
+            data_year=data_year,
+            encoding=encoding,
+            dry_run=dry_run,
+            source_version=source_version,
+            dataset_id=dataset_id,
+            allow_shrink=allow_shrink,
+        )
+        return json.dumps(res, ensure_ascii=False, indent=2)
+    except Exception as e:
+        return _format_journal_error(e)
+
+
+@mcp_app.tool()
+def refresh_journal_sources(
+    source_id: str,
+    dataset_id: str,
+    dry_run: bool = True,
+) -> str:
+    """Check or update open source datasets / APIs for journal index updates.
+
+    Note: Local snapshot and manual official evidence != real-time guarantee of safety.
+    dry_run defaults to True.
+
+    Args:
+        source_id: Source ID (e.g. GitHub mirrors or easyScholar API).
+        dataset_id: Specific dataset or journal query.
+        dry_run: Preview only if True (default True).
+    """
+    try:
+        service = _get_journal_service()
+        res = service.refresh(source_id=source_id, dataset_id=dataset_id, dry_run=dry_run)
+        return json.dumps(res, ensure_ascii=False, indent=2)
+    except Exception as e:
+        return _format_journal_error(e)
+
+
+@mcp_app.tool()
+def search_academic_journals(
+    query: str = "",
+    filters: Optional[Dict[str, Any]] = None,
+    sort_by: str = "relevance",
+    limit: int = 20,
+    offset: int = 0,
+) -> str:
+    """Search academic journals by title, alias, ISSN, or combined filters.
+
+    Note: Local snapshot and manual official evidence != real-time guarantee of safety.
+
+    Args:
+        query: Search keywords or journal title / ISSN.
+        filters: Filter dictionary mapping to SearchFilters.
+        sort_by: Sorting field ('relevance', 'impact', 'volume', etc.).
+        limit: Max records to return.
+        offset: Record offset for pagination.
+    """
+    try:
+        service = _get_journal_service()
+        res = service.search(
+            query=query,
+            filters=filters,
+            sort_by=sort_by,
+            limit=limit,
+            offset=offset,
+        )
+        return json.dumps(res, ensure_ascii=False, indent=2)
+    except Exception as e:
+        return _format_journal_error(e)
+
+
+@mcp_app.tool()
+def get_journal_details(query: str) -> str:
+    """Get detailed records and comprehensive risk evaluation for a specific journal.
+
+    Note: Local snapshot and manual official evidence != real-time guarantee of safety.
+
+    Args:
+        query: Journal ID, ISSN, or unambiguous title.
+    """
+    try:
+        service = _get_journal_service()
+        res = service.details(query=query)
+        return json.dumps(res, ensure_ascii=False, indent=2)
+    except Exception as e:
+        return _format_journal_error(e)
+
+
+@mcp_app.tool()
+def check_journal_warning(
+    query: str,
+    profile_id: Optional[str] = None,
+    warning_years: Optional[List[int]] = None,
+) -> str:
+    """Check warning, on-hold, delisted status and school policy compliance for a journal.
+
+    Note: Local snapshot and manual official evidence != real-time guarantee of safety.
+
+    Args:
+        query: Journal ID, ISSN, or title.
+        profile_id: Optional school policy profile ID.
+        warning_years: Optional list of years to inspect.
+    """
+    try:
+        service = _get_journal_service()
+        res = service.check_warning(
+            query=query,
+            profile_id=profile_id,
+            warning_years=warning_years,
+        )
+        return json.dumps(res, ensure_ascii=False, indent=2)
+    except Exception as e:
+        return _format_journal_error(e)
+
+
+@mcp_app.tool()
+def compare_academic_journals(
+    journal_ids: List[str],
+    rank_system: Optional[str] = None,
+    rank_year: Optional[int] = None,
+) -> str:
+    """Side-by-side comparison of multiple journals across tiers, metrics, and risks.
+
+    Note: Local snapshot and manual official evidence != real-time guarantee of safety.
+
+    Args:
+        journal_ids: List of canonical journal IDs to compare.
+        rank_system: Optional ranking system filter ('cas', 'jcr', 'xr', 'ccf', 'ccft').
+        rank_year: Optional ranking year.
+    """
+    try:
+        service = _get_journal_service()
+        res = service.compare(
+            journal_ids=journal_ids,
+            rank_system=rank_system,
+            rank_year=rank_year,
+        )
+        return json.dumps(res, ensure_ascii=False, indent=2)
+    except Exception as e:
+        return _format_journal_error(e)
+
+
+@mcp_app.tool()
+def analyze_related_journals(
+    references: Optional[List[Dict[str, Any]]] = None,
+    file_path: str = "",
+    filters: Optional[Dict[str, Any]] = None,
+) -> str:
+    """Analyze manuscript reference list to discover and rank potential peer target journals.
+
+    Note: Local snapshot and manual official evidence != real-time guarantee of safety.
+
+    Args:
+        references: List of reference dicts (up to 200 items).
+        file_path: Path to JSON file containing references list.
+        filters: SearchFilters dict for screening target journals.
+    """
+    try:
+        service = _get_journal_service()
+        res = service.peers(
+            references=references,
+            file_path=file_path,
+            filters=filters,
+        )
+        return json.dumps(res, ensure_ascii=False, indent=2)
+    except Exception as e:
+        return _format_journal_error(e)
+
+
+@mcp_app.tool()
+def get_submission_tracker_info(
+    provider: str = "elsevier",
+    data: Optional[Dict[str, Any]] = None,
+    file_path: str = "",
+    previous_file_path: str = "",
+    include_title: bool = False,
+) -> str:
+    """Offline submission event parser and timeline analyzer.
+
+    Note: Completely offline. Does not connect to live publisher APIs, public CORS proxies,
+    or third-party trackers. Does not ask for or store user passwords.
+
+    Args:
+        provider: Submission tracker provider (currently 'elsevier').
+        data: Optional raw ReviewEvents JSON data dict.
+        file_path: Path to JSON file exported from submission system.
+        previous_file_path: Path to prior snapshot JSON file for diff detection.
+        include_title: Whether to include manuscript title in output (default False).
+    """
+    try:
+        service = _get_journal_service()
+        res = service.tracker(
+            provider=provider,
+            data=data,
+            file_path=file_path,
+            previous_file_path=previous_file_path,
+            include_title=include_title,
+        )
+        return json.dumps(res, ensure_ascii=False, indent=2)
+    except Exception as e:
+        return _format_journal_error(e)
+
+
+@mcp_app.tool()
+def prepare_manuscript_for_journals(
+    text: str = "",
+    file_path: str = "",
+    mode: str = "auto",
+    max_chars: int = 60000,
+) -> str:
+    """Parse and normalize a manuscript or research idea locally for journal recommendation.
+
+    Note:
+    - 使用调用方当前Agent的模型；服务不自行调用LLM/不另需模型Key；
+    - 缺画像/适配判断返回needs_agent_assessment而非假智能评分；
+    - 不自动联网上传全文；
+    - 推荐分不是录用概率。
+    - Does not connect to Word/WPS live_bridge.
+
+    Args:
+        text: Direct manuscript or idea text (mutually exclusive with file_path).
+        file_path: Local path to manuscript file (.txt, .md, .docx, .pdf; mutually exclusive with text).
+        mode: Parsing mode ('auto', 'idea', or 'manuscript').
+        max_chars: Maximum character count to extract (default 60000).
+    """
+    try:
+        service = _get_journal_service()
+        res = service.prepare_manuscript(
+            text=text,
+            file_path=file_path,
+            mode=mode,
+            max_chars=max_chars,
+        )
+        return json.dumps(res, ensure_ascii=False, indent=2)
+    except Exception as e:
+        return _format_journal_error(e)
+
+
+@mcp_app.tool()
+def recommend_journals(
+    text: str = "",
+    file_path: str = "",
+    mode: str = "auto",
+    profile: Optional[Dict[str, Any]] = None,
+    assessments: Optional[List[Dict[str, Any]]] = None,
+    candidate_records: Optional[List[Dict[str, Any]]] = None,
+    preferences: Optional[Dict[str, Any]] = None,
+) -> str:
+    """Recommend academic journals by combining caller Agent semantic assessment with local database rules.
+
+    Note:
+    - 使用调用方当前Agent的模型；服务不自行调用LLM/不另需模型Key；
+    - 缺画像/适配判断返回needs_agent_assessment而非假智能评分；
+    - 不自动联网上传全文；
+    - 推荐分不是录用概率。
+    - Local snapshot and manual official evidence != real-time guarantee of safety.
+    - Does not connect to Word/WPS live_bridge.
+
+    Args:
+        text: Direct manuscript or idea text (mutually exclusive with file_path).
+        file_path: Local path to manuscript file (.txt, .md, .docx, .pdf; mutually exclusive with text).
+        mode: Recommendation mode ('auto', 'idea', or 'manuscript').
+        profile: Manuscript semantic profile dictionary generated by caller Agent.
+        assessments: List of candidate journal fit assessment dicts (up to 200 items) generated by caller Agent.
+        candidate_records: Optional list of candidate journal record dicts (up to 200 items).
+        preferences: Optional author preferences and hard filter constraints dictionary.
+    """
+    try:
+        service = _get_journal_service()
+        res = service.recommend(
+            text=text,
+            file_path=file_path,
+            mode=mode,
+            profile=profile,
+            assessments=assessments,
+            candidate_records=candidate_records,
+            preferences=preferences,
+        )
+        return json.dumps(res, ensure_ascii=False, indent=2)
+    except Exception as e:
+        return _format_journal_error(e)
 
 
 def run_server() -> None:

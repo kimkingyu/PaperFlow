@@ -25,6 +25,7 @@ import os
 import threading
 from typing import Any, Callable, Dict, Optional, Tuple, TypeVar
 
+from paperflow.engine.formatter import PaperFormatAuditor, PaperFormatNormalizer
 from paperflow.engine.validator import AcademicInvariantValidator
 
 _T = TypeVar("_T")
@@ -525,6 +526,48 @@ class WordLiveBridge:
                 "columns": num_cols,
                 "caption": caption,
             }
+
+        return self._call(work)
+
+    def audit_document(self, standard_id: str = "chinese_thesis_standard", add_comments: bool = False) -> Dict[str, Any]:
+        """Audit the active Word document against an academic standard, optionally injecting review comments."""
+        def work() -> Dict[str, Any]:
+            doc = self._active_doc()
+            report = PaperFormatAuditor.audit_live_doc(doc, standard_id=standard_id)
+
+            comments_added = 0
+            if add_comments and report.get("issues"):
+                for issue in report["issues"]:
+                    if issue["severity"] in ("error", "warning"):
+                        loc = issue.get("location", "")
+                        # Try to attach comment to the corresponding paragraph
+                        try:
+                            if "第" in loc and "段" in loc:
+                                p_num_str = "".join(filter(str.isdigit, loc))
+                                if p_num_str:
+                                    p_num = int(p_num_str)
+                                    if 1 <= p_num <= doc.Paragraphs.Count:
+                                        p_rng = doc.Paragraphs(p_num).Range
+                                        comment_body = f"【格式审查 - {issue['rule_id']}】{issue['message']}\n建议: {issue['suggestion']}"
+                                        c = doc.Comments.Add(p_rng, comment_body)
+                                        try:
+                                            c.Author = "PaperFlow 格式审查员"
+                                        except Exception:
+                                            pass
+                                        comments_added += 1
+                        except Exception:
+                            pass
+
+            report["comments_injected"] = comments_added
+            return report
+
+        return self._call(work)
+
+    def normalize_document(self, standard_id: str = "chinese_thesis_standard") -> Dict[str, Any]:
+        """Auto-heal and standardize the active Word document to strictly adhere to the given standard."""
+        def work() -> Dict[str, Any]:
+            doc = self._active_doc()
+            return PaperFormatNormalizer.normalize_live_doc(doc, standard_id=standard_id)
 
         return self._call(work)
 

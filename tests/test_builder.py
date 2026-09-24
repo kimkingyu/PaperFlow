@@ -21,6 +21,25 @@ class TestAntiAI(unittest.TestCase):
         result = anti_ai_engine.analyze(text)
         self.assertGreater(result["total_findings"], 0)
 
+    def test_detects_textbook_theory_padding(self) -> None:
+        zh_text = "如图所示，卷积神经网络通过多层堆叠提取特征，支持向量机通过超平面划分样本空间。"
+        zh_res = anti_ai_engine.analyze(zh_text)
+        self.assertTrue(any(f.get("rule_type") == "textbook_padding" for f in zh_res["findings"]))
+        self.assertTrue(any("删除脱离业务背景的教科书式纯理论介绍" in f["suggestion"] for f in zh_res["findings"]))
+
+        en_text = "As shown in Figure 2, the neural network consists of three dense layers. The basic principle of convolutional operators relies on sliding filters."
+        en_res = anti_ai_engine.analyze(en_text)
+        self.assertTrue(any(f.get("rule_type") == "textbook_padding" for f in en_res["findings"]))
+
+    def test_detects_hollow_conclusions(self) -> None:
+        zh_text = "由此可见，本文所提方法具有广阔的应用前景。在未来的工作中，我们将进一步研究更深的网络架构。"
+        zh_res = anti_ai_engine.analyze(zh_text)
+        self.assertTrue(any(f.get("rule_type") == "hollow_conclusion" for f in zh_res["findings"]))
+
+        en_text = "In summary, it is evident that the architecture performs well. Future work will focus on further optimizing latency."
+        en_res = anti_ai_engine.analyze(en_text)
+        self.assertTrue(any(f.get("rule_type") == "hollow_conclusion" for f in en_res["findings"]))
+
 
 class TestDocxBuilder(unittest.TestCase):
     def setUp(self) -> None:

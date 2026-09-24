@@ -15,6 +15,11 @@ import re
 from dataclasses import dataclass
 from typing import Any, Dict, List, Tuple
 
+# Constructive advice for textbook theory padding
+TEXTBOOK_PADDING_SUGGESTION = (
+    "删除脱离业务背景的教科书式纯理论介绍，将通用网络/算法公式符号直接替换为当前工程/实验对象的具体物理量，伪装成‘为该场景量身定制’。"
+)
+
 # High-frequency AI cliches in Chinese academic writing
 ZH_AI_PATTERNS = [
     (r"不可否认的是", "删除此过渡词，直接陈述事实或核心论据"),
@@ -26,6 +31,38 @@ ZH_AI_PATTERNS = [
     (r"在当今.*?的背景下|随着.*?的飞速发展", "开门见山陈述研究对象与痛点，不要以空泛时代背景开头"),
     (r"本研究旨在", "主动语态改写为：'本文提出...'、'本文设计并实现了...'"),
     (r"不仅.*?而且.*?更重要的是", "打破连续三重递进句式，拆分为因果逻辑句"),
+]
+
+# Textbook pure-theory padding patterns in Chinese
+ZH_TEXTBOOK_PATTERNS = [
+    (
+        r"如图所示，.*?神经网络通过|卷积神经网络包含.*?卷积层|支持向量机.*?超平面|长短期记忆网络.*?遗忘门",
+        TEXTBOOK_PADDING_SUGGESTION,
+    ),
+    (
+        r"(?:卷积神经网络|CNN)(?:主要由|由|通常包含).*?(?:卷积层|池化层|全连接层)|(?:长短期记忆网络|LSTM)(?:由|包含).*?(?:输入门|遗忘门|输出门)|(?:支持向量机|SVM)的基本(?:原理|思想)是.*?(?:超平面|间隔最大化)",
+        TEXTBOOK_PADDING_SUGGESTION,
+    ),
+    (
+        r"(?:反向传播|BP)神经网络.*?(?:前向传播|误差反向传播)|卡尔曼滤波.*?(?:状态预测|先验估计).*?更新方程|PID控制(?:器|算法)(?:由|包含)比例.*?积分.*?微分",
+        TEXTBOOK_PADDING_SUGGESTION,
+    ),
+]
+
+# Hollow concluding cliches in Chinese
+ZH_HOLLOW_CONCLUSION_PATTERNS = [
+    (
+        r"概括而言|归纳起来|总体而言，本文的研究表明|由此可见，本文所提方法",
+        "删除空洞总结陈词，直接用定量增益、误差收敛边界或机理解释收尾",
+    ),
+    (
+        r"在未来的工作中，?我们将进一步.*?(?:研究|探讨|完善|优化)|未来的研究(?:工作)?将(?:进一步)?(?:致力于|围绕|聚焦)|下一步工作将着重研究",
+        "杜绝空泛的未来展望陈词，应明确指出当前方法在特定极端工况/物理边界下的局限性及具体改进方案",
+    ),
+    (
+        r"具有广阔的应用前景|具有重要的理论意义和(?:实际|工程)应用价值|为.*?提供了新的思路和(?:方法|参考)",
+        "剔除自卖自夸式结语套话，代之以具体的工程落地指标、适用边界条件或产业验证成效",
+    ),
 ]
 
 # High-frequency AI cliches in English academic writing
@@ -41,6 +78,34 @@ EN_AI_PATTERNS = [
     (r"\bseamlessly integrate[sd]?\b", "replace with 'integrate with low overhead' or state exact protocol"),
 ]
 
+# Textbook pure-theory padding patterns in English
+EN_TEXTBOOK_PATTERNS = [
+    (
+        r"as shown in figure.*?(?:neural network|cnn|lstm|svm) consists of|the basic principle of (?:convolutional|recurrent|transformer)",
+        TEXTBOOK_PADDING_SUGGESTION,
+    ),
+    (
+        r"(?:a |the )?(?:convolutional neural network|cnn) (?:mainly )?(?:consists of|comprises|includes) .*?(?:convolutional layer|pooling layer)|(?:a |the )?(?:support vector machine|svm) aims to find (?:an |the )?optimal separating hyperplane|(?:long short-term memory|lstm) .*?consists of .*?(?:forget gate|input gate|output gate)",
+        TEXTBOOK_PADDING_SUGGESTION,
+    ),
+]
+
+# Hollow concluding cliches in English
+EN_HOLLOW_CONCLUSION_PATTERNS = [
+    (
+        r"\bIn summary,\s*(?:it is evident that|it can be observed that|this study has shown that)\b|\bTo sum up,\s*the proposed method\b",
+        "avoid hollow concluding filler; state quantitative gains, error bounds, or physical insights directly",
+    ),
+    (
+        r"\bIn (?:the )?future work,\s*we will (?:further )?(?:study|investigate|explore|improve)\b|\bFuture research will (?:focus on|be devoted to) further\b",
+        "avoid generic future-work clichés; specify concrete boundary limitations, unmodeled physical couplings, or scalability bottlenecks",
+    ),
+    (
+        r"\bhas broad application prospects\b|\bprovides a solid foundation and new insights for\b",
+        "remove promotional concluding clichés; conclude with verifiable engineering metrics and applicability boundaries",
+    ),
+]
+
 
 @dataclass
 class AIFinding:
@@ -54,8 +119,16 @@ class AntiAICleaner:
     """Academic anti-AI detector and text de-flavoring assistant."""
 
     def __init__(self) -> None:
-        self.zh_rules = [(re.compile(p, re.IGNORECASE), s) for p, s in ZH_AI_PATTERNS]
-        self.en_rules = [(re.compile(p, re.IGNORECASE), s) for p, s in EN_AI_PATTERNS]
+        self.zh_rules = (
+            [(re.compile(p, re.IGNORECASE), s, "ai_cliche") for p, s in ZH_AI_PATTERNS]
+            + [(re.compile(p, re.IGNORECASE), s, "textbook_padding") for p, s in ZH_TEXTBOOK_PATTERNS]
+            + [(re.compile(p, re.IGNORECASE), s, "hollow_conclusion") for p, s in ZH_HOLLOW_CONCLUSION_PATTERNS]
+        )
+        self.en_rules = (
+            [(re.compile(p, re.IGNORECASE), s, "ai_cliche") for p, s in EN_AI_PATTERNS]
+            + [(re.compile(p, re.IGNORECASE), s, "textbook_padding") for p, s in EN_TEXTBOOK_PATTERNS]
+            + [(re.compile(p, re.IGNORECASE), s, "hollow_conclusion") for p, s in EN_HOLLOW_CONCLUSION_PATTERNS]
+        )
 
     def analyze(self, text: str) -> Dict[str, Any]:
         """Scan text and identify AI-generated patterns and stylistic risks."""
@@ -64,11 +137,12 @@ class AntiAICleaner:
 
         rules = self.en_rules if is_english else self.zh_rules
 
-        for regex, suggestion in rules:
+        for regex, suggestion, rule_type in rules:
             for match in regex.finditer(text):
                 findings.append({
                     "matched": match.group(0),
                     "suggestion": suggestion,
+                    "rule_type": rule_type,
                     "position": f"char {match.start()}-{match.end()}",
                 })
 
@@ -78,6 +152,7 @@ class AntiAICleaner:
             findings.append({
                 "matched": f"{consecutive_moreover} consecutive transition markers",
                 "suggestion": "Excessive repetitive transition words detected. Diversify sentence flow or use causal clauses.",
+                "rule_type": "ai_cliche",
                 "position": "document-wide",
             })
 
@@ -96,6 +171,8 @@ class AntiAICleaner:
                 "2. 打破句式对称性：长短句交替，避免整齐划一的并列排比句",
                 "3. 剔除文学化抒情和空洞套话，代之以具体实验指标与归因分析",
                 "4. 保持学术断言的适度自信与严谨限定词 (e.g., 'under high-load scenarios')",
+                "5. 杜绝教科书纯理论注水：将通用算法符号直接替换为工程/实验对象的具体物理量",
+                "6. 消除空洞总结陈词：结语重在定量成果收敛、机理反思与极端工况边界分析",
             ],
         }
 
