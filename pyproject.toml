@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "paperflow-mcp"
+version = "0.1.0"
+description = "AI Client to Live Microsoft Word / WPS Office MCP Bridge & 0-to-1 Academic Paper Writing Suite"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [
+    { name = "PaperFlow Contributors" }
+]
+keywords = ["mcp", "word", "office", "academic", "paper-writing", "zotero", "workbuddy", "qwen", "claude"]
+dependencies = [
+    "mcp>=1.0.0",
+    "python-docx>=1.1.0",
+    "pydantic>=2.0.0",
+    "pywin32>=305; platform_system=='Windows'",
+]
+
+[project.scripts]
+paperflow = "paperflow.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["paperflow*"]
