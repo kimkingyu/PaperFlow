@@ -156,6 +156,8 @@ class JournalRecord(Model):
     title_zh: str = ""
     kind: Literal["journal", "conference"] = "journal"
     publisher: str = ""
+    # Official journal home page (publisher-hosted); empty when not verified.
+    homepage: str = Field(default="", max_length=500)
     identity_warnings: List[str] = Field(default_factory=list)
     metadata_observations: List[Dict[str, Any]] = Field(default_factory=list)
     issns: List[str] = Field(default_factory=list)
@@ -170,6 +172,16 @@ class JournalRecord(Model):
     experiences: List[Experience] = Field(default_factory=list)
     editorial_profiles: List[EditorialProfile] = Field(default_factory=list, max_length=20)
     publication_fees: List[PublicationFee] = Field(default_factory=list, max_length=40)
+
+    @field_validator("homepage")
+    @classmethod
+    def safe_homepage(cls, value):
+        value = (value or "").strip()
+        if value:
+            parsed = urlsplit(value)
+            if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+                raise ValueError("期刊官网必须是不带账号信息的 https 地址")
+        return value
 
 
 class ParsedBatch(Model):

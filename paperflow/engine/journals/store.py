@@ -322,3 +322,5 @@ class JournalStore:
             target.title_zh = incoming.title_zh
         if not target.publisher:
             target.publisher = incoming.publisher
+        if not target.homepage:
+            target.homepage = incoming.homepage

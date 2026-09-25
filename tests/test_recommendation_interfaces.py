@@ -472,6 +472,7 @@ def test_cli_recommend_real_service_empty_store_needs_candidate_evidence(temp_di
         "--json",
         "recommend",
         "--text", "This is a real study on distributed database query optimization and consistency protocols.",
+        "--no-builtin",
     ])
     assert code == 0
     payload = json.loads(capsys.readouterr().out)

@@ -1,4 +1,4 @@
-"""Packaged provenance only: journal databases are never bundled."""
+"""Source catalog, packaged factual snapshots and traceable upstream audit metadata."""
 from __future__ import annotations
 
 import json
@@ -12,8 +12,14 @@ def get_sources():
     path = resources.files("paperflow").joinpath("resources", "journals", "source_catalog.json")
     values = json.loads(path.read_text(encoding="utf-8"))["sources"]
     permitted = {x.strip() for x in os.environ.get("PAPERFLOW_JOURNAL_ALLOWED_SOURCES", "").split(",") if x.strip()}
+    audit_path = resources.files("paperflow").joinpath("resources", "journals", "source_audit.json")
+    audit = json.loads(audit_path.read_text(encoding="utf-8")) if audit_path.is_file() else {}
+    audited = {s.get("repo"): s for s in audit.get("seeds", [])}
     for source in values:
-        source["source_url"] = "https://github.com/" + source["repo"]
+        if source.get("repo"):
+            source["source_url"] = "https://github.com/" + source["repo"]
+            if source["repo"] in audited:
+                source["audit"] = audited[source["repo"]]
         source["download_permitted_by_user"] = source["id"] in permitted
         source["configured"] = bool(os.environ.get(source.get("key_env", ""))) if source.get("key_env") else False
         source["online_tracking_available"] = False

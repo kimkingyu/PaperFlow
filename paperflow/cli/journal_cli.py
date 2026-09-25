@@ -125,6 +125,19 @@ def cmd_sources(finder: JournalFinder, args: argparse.Namespace) -> int:
         return 3
 
 
+def cmd_build_db(finder: JournalFinder, args: argparse.Namespace) -> int:
+    try:
+        result = finder.build_database(force=args.force, dry_run=not args.apply,
+                                       input_paths=args.input_paths or None)
+        _output(result, args.json)
+        return 0
+    except JournalError as exc:
+        _output(_format_error_envelope(exc), args.json)
+        return 2 if exc.code == "INVALID_INPUT" else 3
+    except Exception as exc:
+        _output(_format_error_envelope(exc), args.json)
+        return 2 if (ValidationError and isinstance(exc, ValidationError)) else 3
+
 def cmd_import(finder: JournalFinder, args: argparse.Namespace) -> int:
     dry_run = not args.apply
     try:
@@ -454,6 +467,8 @@ def _output_recommend_readable(payload: Dict[str, Any]) -> None:
     input_id = data.get("input_id", "")
 
     print(f"=== 期刊推荐结果 (阶段: {stage}) ===")
+    if data.get("html_path"):
+        print(f"HTML 报告: {data['html_path']}")
     if context_id:
         print(f"context_id: {context_id}")
     if input_id:
@@ -587,6 +602,8 @@ def cmd_recommend(finder: JournalFinder, args: argparse.Namespace) -> int:
             raise JournalError("INVALID_INPUT", "--mode 必须为 auto、idea 或 manuscript")
 
         if getattr(args, "prepare_only", False):
+            if getattr(args, "html", ""):
+                raise JournalError("INVALID_INPUT", "--prepare-only 不生成推荐报告，不能同时使用 --html")
             max_chars = getattr(args, "max_chars", 60000)
             res = finder.prepare_manuscript(
                 text=text,
@@ -612,6 +629,13 @@ def cmd_recommend(finder: JournalFinder, args: argparse.Namespace) -> int:
                 else None
             )
 
+            export_options = {}
+            if getattr(args, "html", ""):
+                export_options.update(html_path=args.html, overwrite_html=args.overwrite_html)
+            elif getattr(args, "overwrite_html", False):
+                raise JournalError("INVALID_INPUT", "--overwrite-html 需要同时指定 --html")
+            if getattr(args, "no_builtin", False):
+                export_options["use_builtin"] = False
             res = finder.recommend(
                 text=text,
                 file_path=file_path,
@@ -620,6 +644,7 @@ def cmd_recommend(finder: JournalFinder, args: argparse.Namespace) -> int:
                 assessments=assessments,
                 candidate_records=candidate_records,
                 preferences=preferences,
+                **export_options,
             )
 
         if getattr(args, "prepare_only", False):
@@ -660,6 +685,15 @@ def create_parser() -> argparse.ArgumentParser:
     p_sources = subparsers.add_parser("sources", help="查看数据源目录和本地快照")
     p_sources.add_argument("source_id", nargs="?", default="", help="可选的数据源 ID")
     _add_common(p_sources)
+
+    # build-db is entirely local: packaged snapshots or explicitly supplied files.
+    p_build = subparsers.add_parser("build-db", help="编译内置精选与广谱库，或用户授权本地文件（默认预览）")
+    p_build.add_argument("--input", dest="input_paths", action="append", default=[], help="可重复指定标准记录 JSON 文件")
+    p_build_mode = p_build.add_mutually_exclusive_group()
+    p_build_mode.add_argument("--dry-run", action="store_true", help="仅预览，不写数据库（默认）")
+    p_build_mode.add_argument("--apply", action="store_true", help="写入本地数据库")
+    p_build.add_argument("--force", action="store_true", help="显式允许同一数据集记录数缩减，不清空其他来源")
+    _add_common(p_build)
 
     # import
     p_import = subparsers.add_parser("import", help="导入外部期刊数据集或学校规则")
@@ -757,6 +791,9 @@ def create_parser() -> argparse.ArgumentParser:
     p_recommend.add_argument("--assessments", default=None, help="期刊匹配度评估列表 JSON 文件路径")
     p_recommend.add_argument("--candidates", default=None, help="初筛候选期刊列表 JSON 文件路径")
     p_recommend.add_argument("--preferences", default=None, help="用户偏好设置 JSON 文件路径")
+    p_recommend.add_argument("--html", default="", help="导出单文件离线 HTML 推荐报告")
+    p_recommend.add_argument("--overwrite-html", action="store_true", help="允许覆盖指定 HTML，默认不覆盖")
+    p_recommend.add_argument("--no-builtin", action="store_true", help="无本地数据时不回退至内置精选候选")
     p_recommend.add_argument("--prepare-only", dest="prepare_only", action="store_true", help="仅执行文本提取与分块解析，获取 input_id 与结构化文本")
     p_recommend.add_argument("--max-chars", type=int, default=60000, help="提取字符上限 (默认 60000)")
     _add_common(p_recommend)
@@ -783,6 +820,7 @@ def run_journal_cli(args: Optional[List[str]] = None) -> int:
 
     dispatch = {
         "sources": cmd_sources,
+        "build-db": cmd_build_db,
         "import": cmd_import,
         "refresh": cmd_refresh,
         "search": cmd_search,

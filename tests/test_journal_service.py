@@ -28,7 +28,7 @@ class ServiceTests(unittest.TestCase):
         return self.service.import_data("local", str(self.input), kind="records", data_year=2025, dry_run=False)
 
     def test_no_implicit_database_and_no_fake_results(self):
-        self.assertEqual(len(self.service.list_sources()["data"]), 12)
+        self.assertEqual(len(self.service.list_sources()["data"]), 14)
         with self.assertRaises(JournalError) as ctx:
             self.service.search()
         self.assertEqual(ctx.exception.code, "DATA_NOT_INITIALIZED")

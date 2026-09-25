@@ -12,7 +12,9 @@
 
 ## 数据初始化和更新
 
-- `list_journal_sources` 展示 12 个上游参考项目的接入模式、缺口及已导入快照，不表示它们全部支持在线接口。
+- `list_journal_sources` 展示 12 个上游参考入口、内置精选及 DOAJ 开放元数据，共 14 个来源；附上游核查信息、许可边界与本地快照，不表示全部支持在线接口。
+- 使用 `build_journal_database(dry_run=true)` 或 `paperflow journal build-db` 预览内置精选与广谱库；确认后 `dry_run=false` / `--apply` 入库。`input_paths` / 可重复 `--input` 仅编译指定的授权本地记录。默认不联网，不把千本级 DOAJ 元数据误称为千本 SCI/EI。
+- `refresh_journal_sources(source_id="open_metadata", dataset_id="doaj", dry_run=false)` 才在线读取 DOAJ CC0 元数据；默认预览不请求网络。记录原更新日期与本次下载时间分开保存。其他 GitHub 来源仍须按各自授权与配置边界处理。
 - `import_journal_data(source_id, file_path, ..., dry_run=true)` 先预览；核对年度、拒收、同名歧义后，用户明确要求写入时设置 `dry_run=false`。
 - 默认只缓存用户有权使用的本地文件。来源为 import_only 时，不把公开可看误当成可随产品再分发。
 - `refresh_journal_sources(source_id, dataset_id, dry_run=true)` 查看计划。远端刷新需用户有相应使用权限，并在服务环境中显式配置 `PAPERFLOW_JOURNAL_ALLOWED_SOURCES`（逗号分隔 source_id）；不要代用户静默设置或绕过源站限制。
@@ -31,7 +33,10 @@
 5. 调用 `recommend_journals`，传入原始 text/file_path、mode、profile、preferences 及可选 `candidate_records`。临时候选不会写入数据库。首次调用返回 context_id、assessment_targets 或 evidence_targets。缺征稿范围、仅有旧资料时先补证据，不能直接开始打分。
 6. 对 assessment_targets，按 `agent_contract.assessment_schema` 生成 assessments：journal_id、context_id、scope_fit、manuscript_fit、goal_fit、evidence、rationale、gaps。evidence 中 manuscript_quote、journal_quote 必须分别来自已读稿件和候选征稿资料。0 表示不适配，50 表示仅基本相关，80 以上须有具体的范围／方法／文章类型支撑；不能因为期刊有名而给高适配分。goal_fit 评估期刊定位与用户目标，不冒充录用概率。
 7. 保持同一输入、画像、偏好和原始候选对象，再次调用 `recommend_journals` 并传 assessments。不要把返回卡片直接当作 candidate_records 回传。材料、偏好或候选变化导致 STALE_ASSESSMENT 时重新评估，不能复用旧评分。后台本身没有模型，也不会自动向第三方发出请求。
-8. 按档输出最终卡片：`efficiency` 稳妥／效率、`balanced` 均衡、`stretch` 冲刺／领域顶刊。每档分别列 recommended 与 provisional，后者显著注明“待核验”。未分档和排除原因另列，不硬凑数量。补充资料最多先做一轮；仍缺的数据如实保留，不为了得到高分无限重试。
+8. 按档输出最终卡片：`efficiency` 稳妥／效率、`balanced` 均衡、`stretch` 冲刺／领域顶刊。默认每档 6 本，支持 10+ 候选；每档分别列 recommended 与 provisional，后者显著注明“待核验”。未分档、排除原因和目标数量缺口另列，不硬凑数量。补充资料最多先做一轮；仍缺的数据如实保留，不为了得到高分无限重试。
+9. 用户要 HTML 时，传 `html_path` 给 `recommend_journals`（CLI：`--html report.html`），返回 `data.html_path`。单文件离线可筛 SCI/EI、三档、费用路线、投稿经验及风险状态，并对照卡片与表格。默认不覆盖已有文件，明确要求覆盖时用 `overwrite_html=true` / `--overwrite-html`。
+10. 空数据库且未提供 `candidate_records` 时，只读回退内置精选，不自动建库；`use_builtin=false` 或显式 `candidate_records=[]` 可禁用。没有 Agent 判断时仍须标注 `needs_agent_assessment`，HTML 不将未评分候选冒充已推荐。
+11. 投稿评价始终标明主观性、来源、原年份、样本量未知及过期提示；不能据出版社主页生成虚构用户经历。零 APC 路线不等于总费用免费，初审不等于总录用周期。
 
 ### 结构化候选与偏好
 

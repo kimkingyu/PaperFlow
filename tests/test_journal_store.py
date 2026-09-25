@@ -51,9 +51,10 @@ class StoreTests(unittest.TestCase):
         self.assertIsNone(policy)
         self.assertNotEqual(self.store.coverage()["snapshots"][0]["snapshot_id"], first["snapshot_id"])
 
-    def test_catalog_has_twelve_references_without_runtime_creation(self):
+    def test_catalog_has_upstream_and_packaged_sources_without_runtime_creation(self):
         sources = get_sources()
-        self.assertEqual(len(sources), 12)
+        self.assertEqual(len(sources), 14)
+        self.assertTrue({"curated", "open_metadata"}.issubset({s["id"] for s in sources}))
         self.assertEqual(get_source("showjcr")["mode"], "import_only")
         self.assertFalse(self.home.exists())
 

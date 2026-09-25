@@ -149,16 +149,9 @@ def _evaluate_filters(
 
     # 2. Indexing check (SCI / SCIE cannot be replaced by ESCI)
     if filters.indexing:
-        rec_idx = {i.strip().lower() for i in record.indexing if i}
-        missing_idx = []
-        for req in filters.indexing:
-            req_l = req.strip().lower()
-            if req_l in ("sci", "scie"):
-                if "sci" not in rec_idx and "scie" not in rec_idx:
-                    missing_idx.append(req)
-            else:
-                if req_l not in rec_idx:
-                    missing_idx.append(req)
+        from .identity import normalize_indexing
+        rec_idx = {normalize_indexing(i) for i in record.indexing if i}
+        missing_idx = [req for req in filters.indexing if normalize_indexing(req) not in rec_idx]
         if missing_idx:
             rejected["indexing"] = f"Missing indexing: {missing_idx}"
             passed = False

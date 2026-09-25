@@ -127,6 +127,25 @@ class JournalFinder:
 
     def refresh(self, source_id: str, dataset_id: str, dry_run: bool = True):
         source = get_source(source_id)
+        if source_id == "curated":
+            raise JournalError("INVALID_INPUT", "内置精选不在线刷新；请使用 build-db 或导入新的授权证据")
+        if source_id == "open_metadata":
+            if dataset_id not in ("doaj", "open_metadata.json"):
+                raise JournalError("INVALID_INPUT", "DOAJ 刷新 dataset_id 必须为 doaj")
+            if dry_run:
+                return response({"dry_run": True, "source_id": source_id, "dataset_id": "doaj",
+                                 "url": source["source_url"], "limit": 1500,
+                                 "license": source["data_license"]}, warnings=source["limitations"])
+            from .journals.open_metadata import fetch_doaj_csv, parse_doaj_csv
+            from .journals.models import utc_now
+            content = fetch_doaj_csv()
+            batch = parse_doaj_csv(content, retrieved_at=utc_now(), limit=1500)
+            if not batch.records:
+                raise JournalError("SOURCE_UNAVAILABLE", "DOAJ 未返回可导入记录，原数据库未修改")
+            checksum = hashlib.sha256(content.encode("utf-8")).hexdigest()
+            report = self.store.import_batch(batch, source_id, "open_metadata.json", checksum[:16],
+                                             checksum, "doaj.csv", dry_run=False, source_metadata=source)
+            return response(report, coverage=batch.coverage, warnings=batch.warnings + source["limitations"])
         if source_id == "easyscholar_api":
             if dry_run:
                 return response({"dry_run": True, "source_id": source_id, "configured": source["configured"],
@@ -174,7 +193,8 @@ class JournalFinder:
 
     def recommend(self, text: str = "", file_path: str = "", mode: str = "auto",
                   profile: Optional[Dict] = None, assessments: Optional[List[Dict]] = None,
-                  candidate_records: Optional[List[Dict]] = None, preferences: Optional[Dict] = None):
+                  candidate_records: Optional[List[Dict]] = None, preferences: Optional[Dict] = None,
+                  html_path: str = "", overwrite_html: bool = False, use_builtin: bool = True):
         from .journals.manuscript import prepare_manuscript
         from .journals.models import JournalRecord
         from .journals.recommendation_models import ResearchProfile, FitAssessment, RecommendationPreferences
@@ -201,8 +221,25 @@ class JournalFinder:
         supplied = [JournalRecord.model_validate(r) for r in candidate_records or []]
         prepared = prepare_manuscript(text=text, file_path=file_path, mode=mode)["data"]
         stored, coverage, policy = self.store.read_view(profile_id=prefs.filters.profile_id)
+        if not stored and candidate_records is None and use_builtin:
+            from .journals.builder import load_curated_candidates
+            supplied = load_curated_candidates()
+            coverage = {**coverage, "builtin_candidates": len(supplied), "builtin_read_only": True}
         records = combine_candidates(stored, supplied)
-        return recommend_records(prepared, records, portrait, judgments, prefs, coverage, policy)
+        result = recommend_records(prepared, records, portrait, judgments, prefs, coverage, policy)
+        if html_path:
+            from .journals.html_reporter import write_html_report
+            result["data"]["html_path"] = write_html_report(result, html_path, overwrite=overwrite_html)
+        return result
+
+    def build_database(self, force: bool = False, dry_run: bool = True,
+                       input_paths: Optional[List[str]] = None):
+        """Compile packaged or user-authorized records locally; preview by default."""
+        from .journals.builder import build_local_database
+        report = build_local_database(self.store, force=force, dry_run=dry_run, input_paths=input_paths)
+        return response(report, coverage=report.get("coverage", {}), warnings=[
+            "覆盖统计不代表当前收录或安全保证；未知费用与过期评价已分别保留",
+        ])
 
     def _view(self, include_history: bool = False, profile_id: Optional[str] = None):
         records, coverage, policy = self.store.read_view(include_history=include_history, profile_id=profile_id)

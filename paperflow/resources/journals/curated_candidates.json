@@ -1,0 +1,4409 @@
+{
+  "schema_version": 1,
+  "description": "Curated candidates for engineering, computer science, marine, and robotics journals verified against official 2026 publisher data.",
+  "records": [
+    {
+      "journal_id": "j_de3b28ab4f1d5a04afd430bd",
+      "title": "Sensors",
+      "title_zh": "传感器",
+      "kind": "journal",
+      "publisher": "MDPI",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "index": "SCIE",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.mdpi.com/journal/sensors/indexing",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        },
+        {
+          "type": "indexing_status",
+          "index": "EI Compendex",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.mdpi.com/journal/sensors/indexing",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        }
+      ],
+      "issns": [
+        "1424-8220"
+      ],
+      "aliases": [
+        "Sensors-MDPI"
+      ],
+      "fields": [
+        "sensors",
+        "robotics",
+        "iot",
+        "underwater_acoustics",
+        "signal_processing"
+      ],
+      "indexing": [
+        "SCIE",
+        "EI Compendex"
+      ],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.mdpi.com/journal/sensors/apc",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 17.8,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/sensors",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "涵盖传感器科学与技术的全链条研究，聚焦新型物理/化学/生物传感机制、水下声学传感、智能感知算法与多传感器融合系统在工业互联网、机器人及环境监测中的工程落地。",
+          "topics": [
+            "sensor_technology",
+            "underwater_sensors",
+            "signal_processing",
+            "sensor_networks",
+            "iot"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；该刊发文规模大、审稿节奏紧凑，侧重实验原型、传感器系统集成与工程应用验证，适合成果需要快速发表且具备扎实实验数据的工程类稿件。",
+          "recent_papers": [
+            "Fog-Deployable XGBoost Framework for DDoS Detection in IoT Networks",
+            "Near-Infrared Hyperspectral Classification of Waste Textiles Using Patch Transformer"
+          ],
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/sensors",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2600.0,
+          "currency": "CHF",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "MDPI官方APC页面原文：An article processing charge (APC) of CHF 2600 (Swiss francs) applies to papers accepted after peer review.",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/sensors/apc",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.mdpi.com/journal/sensors"
+    },
+    {
+      "journal_id": "j_1fa07b6b2c9c5f9cb8fae885",
+      "title": "Electronics",
+      "title_zh": "电子学",
+      "kind": "journal",
+      "publisher": "MDPI",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "index": "SCIE",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.mdpi.com/journal/electronics/indexing",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        },
+        {
+          "type": "indexing_status",
+          "index": "EI Compendex",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.mdpi.com/journal/electronics/indexing",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        }
+      ],
+      "issns": [
+        "2079-9292"
+      ],
+      "aliases": [
+        "Electronics-MDPI"
+      ],
+      "fields": [
+        "electronics",
+        "computer_science",
+        "embedded_systems",
+        "robotics",
+        "signal_processing"
+      ],
+      "indexing": [
+        "SCIE",
+        "EI Compendex"
+      ],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.mdpi.com/journal/electronics/apc",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 14.8,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/electronics",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "聚焦微电子电路、嵌入式计算系统、雷达与无线通信、电力电子以及智能控制硬件，关注软硬件协同优化与电子信息工程应用。",
+          "topics": [
+            "embedded_systems",
+            "microelectronics",
+            "circuit_design",
+            "power_electronics",
+            "robot_control"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；审稿周期短且涵盖广泛的电子电气与嵌入式应用，适合侧重硬件系统搭建、电路实现与中等理论深度的应用型成果。",
+          "recent_papers": [
+            "Impact of Wind-Induced Phase-Shift Errors on RIS-Assisted Cell-Free Massive MIMO Networks",
+            "Online Deinterleaving of Frequency-Agile Radar Emitters via Jump-Set Representation"
+          ],
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/electronics",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2400.0,
+          "currency": "CHF",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "MDPI官方APC页面原文：An article processing charge (APC) of CHF 2400 (Swiss francs) applies to papers accepted after peer review.",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/electronics/apc",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.mdpi.com/journal/electronics"
+    },
+    {
+      "journal_id": "j_fce7ca48cbad51a08e91c9ad",
+      "title": "Applied Sciences",
+      "title_zh": "应用科学",
+      "kind": "journal",
+      "publisher": "MDPI",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "index": "SCIE",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.mdpi.com/journal/applsci/indexing",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        },
+        {
+          "type": "indexing_status",
+          "index": "EI Compendex",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.mdpi.com/journal/applsci/indexing",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        }
+      ],
+      "issns": [
+        "2076-3417"
+      ],
+      "aliases": [
+        "ApplSci",
+        "Applied Sciences-Basel"
+      ],
+      "fields": [
+        "applied_physics",
+        "mechanical_engineering",
+        "computer_science",
+        "marine_engineering",
+        "robotics"
+      ],
+      "indexing": [
+        "SCIE",
+        "EI Compendex"
+      ],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.mdpi.com/journal/applsci/apc",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 15.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/applsci",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "面向广泛应用工程科学的多学科综合期刊，涵盖机械动力学、海洋结构计算、应用声学、智能计算与自动化应用等各工程交叉方向。",
+          "topics": [
+            "applied_engineering",
+            "mechanical_systems",
+            "computational_methods",
+            "robotics",
+            "marine_technology"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；跨学科收稿范围广，审稿时效高，适于包含工程试验、工业交叉或新算法实际验证的应用型稿件。",
+          "recent_papers": [
+            "Two-Stage Reactor Technology Integrating Biofilm Denitrification and Iron Electrocoagulation"
+          ],
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/applsci",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2400.0,
+          "currency": "CHF",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "MDPI官方APC页面原文：An article processing charge (APC) of CHF 2400 (Swiss francs) applies to papers accepted after peer review.",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/applsci/apc",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.mdpi.com/journal/applsci"
+    },
+    {
+      "journal_id": "j_e1ee01ac785357e3bb31a88c",
+      "title": "Journal of Marine Science and Engineering",
+      "title_zh": "海洋科学与工程学报",
+      "kind": "journal",
+      "publisher": "MDPI",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "index": "SCIE",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.mdpi.com/journal/jmse/indexing",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        },
+        {
+          "type": "indexing_status",
+          "index": "EI Compendex",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.mdpi.com/journal/jmse/indexing",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        }
+      ],
+      "issns": [
+        "2077-1312"
+      ],
+      "aliases": [
+        "JMSE"
+      ],
+      "fields": [
+        "marine_engineering",
+        "oceanography",
+        "underwater_robotics",
+        "offshore_engineering",
+        "naval_architecture"
+      ],
+      "indexing": [
+        "SCIE",
+        "EI Compendex"
+      ],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.mdpi.com/journal/jmse/apc",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 15.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/jmse",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "专注海洋工程、水下机器人与无人艇（AUV/USV）、船舶水动力学、深海探测装备及近海海洋环境监测，重视海上实测与仿真实验对比。",
+          "topics": [
+            "underwater_robotics",
+            "marine_structures",
+            "hydrodynamics",
+            "ocean_observation",
+            "autonomous_vessels"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；对海洋工程装备实测、水动力仿真和水下机器人控制应用吸纳能力强，具备高效审稿流程。",
+          "recent_papers": [
+            "A Decoupled Global-Local Planning Framework for COLREGs-Aware Maritime Autonomous Surface Ships"
+          ],
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/jmse",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2600.0,
+          "currency": "CHF",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "MDPI官方APC页面原文：An article processing charge (APC) of CHF 2600 (Swiss francs) applies to papers accepted after peer review.",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/jmse/apc",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.mdpi.com/journal/jmse"
+    },
+    {
+      "journal_id": "j_5251cf51abc75444b66291f0",
+      "title": "Machines",
+      "title_zh": "机械",
+      "kind": "journal",
+      "publisher": "MDPI",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "index": "SCIE",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.mdpi.com/journal/machines/indexing",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        }
+      ],
+      "issns": [
+        "2075-1702"
+      ],
+      "aliases": [
+        "Machines-MDPI"
+      ],
+      "fields": [
+        "mechanical_engineering",
+        "mechatronics",
+        "robotics",
+        "fault_diagnosis",
+        "control_systems"
+      ],
+      "indexing": [
+        "SCIE"
+      ],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.mdpi.com/journal/machines/apc",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 15.9,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/machines",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "关注机械制造、机构学、动力传动、机电一体化系统控制以及旋转机械故障诊断与预测性维护等工业应用研究。",
+          "topics": [
+            "mechatronics",
+            "mechanism_design",
+            "fault_diagnosis",
+            "bearing_diagnostics",
+            "industrial_robotics"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；偏向机械工程制造、旋转设备状态监测及动力学仿真分析等应用成果发表，处理速度较快。",
+          "recent_papers": [
+            "MSC-DeepLabv3+: A Multi-Scale Contextual Network for Tool Wear Semantic Segmentation"
+          ],
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/machines",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2400.0,
+          "currency": "CHF",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "MDPI官方APC页面原文：An article processing charge (APC) of CHF 2400 (Swiss francs) applies to papers accepted after peer review.",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/machines/apc",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.mdpi.com/journal/machines"
+    },
+    {
+      "journal_id": "j_894e96b496f35fe9ac258717",
+      "title": "Actuators",
+      "title_zh": "执行器",
+      "kind": "journal",
+      "publisher": "MDPI",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "index": "SCIE",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.mdpi.com/journal/actuators/indexing",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        }
+      ],
+      "issns": [
+        "2076-0825"
+      ],
+      "aliases": [
+        "Actuators-MDPI"
+      ],
+      "fields": [
+        "actuators",
+        "mechatronics",
+        "robotics",
+        "control_engineering",
+        "smart_materials"
+      ],
+      "indexing": [
+        "SCIE"
+      ],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.mdpi.com/journal/actuators/apc",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 16.6,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/actuators",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "报道执行器设计、智能驱动材料（压电/形状记忆合金/软体驱动）、微机电驱动系统及机器人动力关节伺服控制等前沿技术。",
+          "topics": [
+            "actuator_design",
+            "piezoelectric",
+            "soft_actuators",
+            "servo_control",
+            "robotic_joints"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；精准匹配机器人末端执行器、仿生驱动与特种电机控制实验研究，审稿决策迅速。",
+          "recent_papers": [
+            "Thermal Management of High-Speed Drive Motors for Fusion Engineering Cryogenic Systems"
+          ],
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/actuators",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2400.0,
+          "currency": "CHF",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "MDPI官方APC页面原文：An article processing charge (APC) of CHF 2400 (Swiss francs) applies to papers accepted after peer review.",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/actuators/apc",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.mdpi.com/journal/actuators"
+    },
+    {
+      "journal_id": "j_c08d6787e55858c78881be7d",
+      "title": "Processes",
+      "title_zh": "过程",
+      "kind": "journal",
+      "publisher": "MDPI",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "index": "SCIE",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.mdpi.com/journal/processes/indexing",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        },
+        {
+          "type": "indexing_status",
+          "index": "EI Compendex",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.mdpi.com/journal/processes/indexing",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        }
+      ],
+      "issns": [
+        "2227-9717"
+      ],
+      "aliases": [
+        "Processes-MDPI"
+      ],
+      "fields": [
+        "process_control",
+        "automation",
+        "chemical_engineering",
+        "optimization",
+        "system_modeling"
+      ],
+      "indexing": [
+        "SCIE",
+        "EI Compendex"
+      ],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.mdpi.com/journal/processes/apc",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 14.7,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/processes",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "聚焦工业系统与过程工程中的控制、建模、优化及自动化技术，涵盖流程工业智能监控、非线性过程辨识与先进控制算法应用。",
+          "topics": [
+            "process_control",
+            "industrial_automation",
+            "system_identification",
+            "process_optimization",
+            "predictive_control"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；适合工业流程仿真、状态估计与自动化工程算法验证类论文的高效发表。",
+          "recent_papers": [
+            "Comparative Analysis of Perennial and Annual Rice Biochemical Composition"
+          ],
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/processes",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2400.0,
+          "currency": "CHF",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "MDPI官方APC页面原文：An article processing charge (APC) of CHF 2400 (Swiss francs) applies to papers accepted after peer review.",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/processes/apc",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.mdpi.com/journal/processes"
+    },
+    {
+      "journal_id": "j_15b02c6d9b7c5cebb73d1810",
+      "title": "Robotics",
+      "title_zh": "机器人学",
+      "kind": "journal",
+      "publisher": "MDPI",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "index": "ESCI",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.mdpi.com/journal/robotics/indexing",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        }
+      ],
+      "issns": [
+        "2218-6581"
+      ],
+      "aliases": [
+        "Robotics-MDPI"
+      ],
+      "fields": [
+        "robotics",
+        "autonomous_systems",
+        "human_robot_interaction",
+        "field_robotics",
+        "control"
+      ],
+      "indexing": [
+        "ESCI"
+      ],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.mdpi.com/journal/robotics/apc",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 20.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/robotics",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "面向各类机器人理论、机构设计与实际系统应用，包括移动机器人定位导航、机械臂人机协作、特种巡检机器人及野外越野机器人。",
+          "topics": [
+            "robot_kinematics",
+            "autonomous_navigation",
+            "human_robot_interaction",
+            "aerial_robotics",
+            "mobile_robots"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；聚焦各类机器人实验整机与原型验证，录用门槛适中且审稿反馈较快，注意其当前属于 ESCI 索引而非 SCIE。",
+          "recent_papers": [
+            "Multi-Step Obstruction Reasoning for Target-Oriented Grasp Sequence Generation"
+          ],
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/robotics",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 1800.0,
+          "currency": "CHF",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "MDPI官方APC页面原文：An article processing charge (APC) of CHF 1800 (Swiss francs) applies to papers accepted after peer review.",
+          "provenance": {
+            "source_id": "mdpi_official",
+            "source_url": "https://www.mdpi.com/journal/robotics/apc",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.mdpi.com/journal/robotics"
+    },
+    {
+      "journal_id": "j_8fdbddaf0b2a5053961ee936",
+      "title": "IEEE Access",
+      "title_zh": "IEEE Access",
+      "kind": "journal",
+      "publisher": "IEEE",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "2169-3536"
+      ],
+      "aliases": [
+        "Access",
+        "IEEE Access"
+      ],
+      "fields": [
+        "computer_science",
+        "electrical_engineering",
+        "robotics",
+        "iot",
+        "underwater_communications"
+      ],
+      "indexing": [],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [
+        {
+          "field": "computer_science",
+          "topic": "submission_experience",
+          "summary": "2019年社区表曾列投稿周期约4周，但未说明周期阶段和样本量，不能视为当前时效承诺。",
+          "url": "https://github.com/DrJZhou/Journal-Information",
+          "subjective": true,
+          "sample_size": null,
+          "provenance": {
+            "source_id": "cs_experiences",
+            "source_url": "https://github.com/DrJZhou/Journal-Information",
+            "source_version": "4bed5e7",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T00:00:00Z",
+            "observed_at": null,
+            "data_year": 2019,
+            "authority": "community",
+            "freshness": "historical"
+          }
+        }
+      ],
+      "editorial_profiles": [
+        {
+          "scope_summary": "涵盖 IEEE 全技术领域的宽口径开放获取巨型期刊，发表电气工程、计算机软件体系、无线通信、海洋传感与机器人应用领域的同行评审论文。",
+          "topics": [
+            "electrical_engineering",
+            "deep_learning",
+            "wireless_networks",
+            "robot_navigation",
+            "embedded_hardware"
+          ],
+          "article_types": [
+            "research"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；主打 IEEE 权威平台与高发文量、标准化审稿流程，强调技术正确性与完整实现，适合追求快速见刊的工程应用研究。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://ieeeaccess.ieee.org/",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2160.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "IEEE官方2026年公布IEEE Access标准APC为2160美元（不含税，IEEE学会会员可享折扣）",
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://ieeeaccess.ieee.org/"
+    },
+    {
+      "journal_id": "j_263521e12f7254348074b1d0",
+      "title": "PLOS ONE",
+      "title_zh": "公共科学图书馆·综合",
+      "kind": "journal",
+      "publisher": "Public Library of Science",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "1932-6203"
+      ],
+      "aliases": [
+        "PLOS ONE",
+        "PLOS1"
+      ],
+      "fields": [
+        "computer_science",
+        "computational_engineering",
+        "data_science",
+        "robotics",
+        "multidisciplinary"
+      ],
+      "indexing": [],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://plos.org/publish/fees/",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "综合性开放获取期刊，接收工程科学、计算机视觉、生物机电与数据驱动建模等交叉领域论文，核心评审标准侧重方法科学严谨与数据透明，不主观预设学术重要性门槛。",
+          "topics": [
+            "computational_methods",
+            "image_processing",
+            "algorithm_validation",
+            "biomedical_engineering",
+            "machine_learning"
+          ],
+          "article_types": [
+            "research"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；评审注重实验方法与数据的可复现性与学术伦理，对交叉创新但难以归入狭窄垂直期刊的研究较为包容。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "plos_official",
+            "source_url": "https://plos.org/publish/fees/",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2477.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "PLOS官方费用表原文：All other articles $2,477（税费状态未在表格明示置null）",
+          "provenance": {
+            "source_id": "plos_official",
+            "source_url": "https://plos.org/publish/fees/",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://journals.plos.org/plosone/"
+    },
+    {
+      "journal_id": "j_b08840f15e2a525287e08f70",
+      "title": "PeerJ Computer Science",
+      "title_zh": "PeerJ计算机科学",
+      "kind": "journal",
+      "publisher": "PeerJ",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "2376-5992"
+      ],
+      "aliases": [
+        "PeerJ CS"
+      ],
+      "fields": [
+        "computer_science",
+        "artificial_intelligence",
+        "software_engineering",
+        "robotics",
+        "distributed_computing"
+      ],
+      "indexing": [],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://peerj.com/pricing/",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "涵盖计算机系统结构、软件算法、人工智能与网络安全，倡导开源代码与开放数据同行评审，注重计算机理论与工程实现的扎实度。",
+          "topics": [
+            "software_architecture",
+            "machine_learning",
+            "computer_vision",
+            "robot_operating_system",
+            "cloud_computing"
+          ],
+          "article_types": [
+            "research"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；出版资费相对亲民，审稿反馈透明客观，适合计算机软件与算法工程验证成果发表。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "peerj_official",
+            "source_url": "https://peerj.com/computer-science/",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": null,
+          "currency": "",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "PeerJ定价页面采用客户端动态渲染未提取到静态固定金额，金额置null待查",
+          "provenance": {
+            "source_id": "peerj_official",
+            "source_url": "https://peerj.com/pricing/",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:05:07.274524+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://peerj.com/journals/computer-science/"
+    },
+    {
+      "journal_id": "j_7a8d900c59e8574f9e45c3f7",
+      "title": "Microprocessors and Microsystems",
+      "title_zh": "微处理器与微系统",
+      "kind": "journal",
+      "publisher": "Elsevier",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "0141-9331",
+        "1872-9436"
+      ],
+      "aliases": [
+        "MICPRO"
+      ],
+      "fields": [
+        "embedded_systems",
+        "microprocessors",
+        "fpga",
+        "hardware_architecture",
+        "iot"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.sciencedirect.com/journal/microprocessors-and-microsystems",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 9.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/microprocessors-and-microsystems",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "由 Euromicro 合作主办，专门报道嵌入式微处理器、FPGA 可重构计算、片上网络（NoC）、低功耗系统与微体系架构工程设计。",
+          "topics": [
+            "embedded_hardware",
+            "fpga",
+            "microprocessor_design",
+            "system_on_chip",
+            "hardware_security"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；聚焦微系统硬件底层实现与嵌入式工程落地，编辑初审初筛快（9天），适合软硬件协同设计领域作者。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/microprocessors-and-microsystems",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "subscription",
+          "kind": "apc",
+          "amount": 0.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": true,
+          "note": "Elsevier官方订阅出版模式不向作者收取APC费用；传统订阅出版完全免费（除非选用额外彩图等特殊服务）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/microprocessors-and-microsystems",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        },
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2840.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "Elsevier 2026官方公布该刊Gold Open Access APC为2840美元（不含税）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://legacyfileshare.elsevier.com/els_com_pricing/article-publishing-charge.xlsx",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.sciencedirect.com/journal/microprocessors-and-microsystems"
+    },
+    {
+      "journal_id": "j_88477a7963c2567b8af302d5",
+      "title": "IEEE Embedded Systems Letters",
+      "title_zh": "IEEE嵌入式系统快报",
+      "kind": "journal",
+      "publisher": "IEEE",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "1943-0663"
+      ],
+      "aliases": [
+        "IEEE ESL",
+        "ESL"
+      ],
+      "fields": [
+        "embedded_systems",
+        "real_time_systems",
+        "hardware_software_codesign",
+        "microelectronics",
+        "iot"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "IEEE 嵌入式系统委员会旗下短篇快报期刊，快速报道嵌入式软硬件协同、实时多任务调度、边缘微架构等原创短文。",
+          "topics": [
+            "embedded_software",
+            "real_time_scheduling",
+            "low_power_design",
+            "hardware_accelerators",
+            "edge_ai"
+          ],
+          "article_types": [
+            "research",
+            "letter"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；作为短篇快报体裁期刊，极度适合创新点集中、验证充分的高时效性嵌入式研究成果快速卡位。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=4563995",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.631726+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2800.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "IEEE官方APC页原文：Hybrid journal OA APC is $2,800 USD — some journals charge additional fees; Local taxes will be added if applicable.",
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+            "authority": "official",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026
+          }
+        },
+        {
+          "route": "subscription",
+          "kind": "other",
+          "amount": null,
+          "currency": "",
+          "unit": "per_page",
+          "optional": false,
+          "taxes_included": null,
+          "note": "IEEE官方页声明混合刊可能收取超页与彩图附加费（some journals charge additional fees e.g. overlength and color page charges），单刊超页起征点未在该页明示，故订阅总费用置null",
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+            "authority": "official",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026
+          }
+        }
+      ],
+      "homepage": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=4563995"
+    },
+    {
+      "journal_id": "j_466f9cd5cad9537297ec10a0",
+      "title": "International Journal of Advanced Robotic Systems",
+      "title_zh": "国际先进机器人系统学报",
+      "kind": "journal",
+      "publisher": "SAGE Publications",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "1729-8814"
+      ],
+      "aliases": [
+        "IJARS"
+      ],
+      "fields": [
+        "robotics",
+        "autonomous_systems",
+        "human_robot_interaction",
+        "robot_control",
+        "biomimetic_robots"
+      ],
+      "indexing": [],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://journals.sagepub.com/home/arx",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "专注于先进机器人理论、关键零部件设计与各类机器人集成系统，包括工业机器人运动规划、医疗辅助机器人、仿生移动机器人及智能人机协作系统。",
+          "topics": [
+            "robotic_systems",
+            "motion_planning",
+            "biomimetic_robotics",
+            "medical_robotics",
+            "human_robot_interaction"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "application",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；收稿覆盖机器人各应用分支，对原型设计与初步实机测试较为友好，适合具有完整软硬件实验的综合成果。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "sage_official",
+            "source_url": "https://journals.sagepub.com/home/arx",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": null,
+          "currency": "",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "SAGE Open Access期刊统一执行分级APC政策，因官网接口网络拦截，具体金额依SAGE最新结算账单为准（无法查证置null）",
+          "provenance": {
+            "source_id": "sage_official",
+            "source_url": "https://journals.sagepub.com/home/arx",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://journals.sagepub.com/home/arx"
+    },
+    {
+      "journal_id": "j_72307a5e151d5ae79eac7266",
+      "title": "Journal of Systems Architecture",
+      "title_zh": "系统架构学报",
+      "kind": "journal",
+      "publisher": "Elsevier",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "1383-7621",
+        "1873-6165"
+      ],
+      "aliases": [
+        "JSA",
+        "J. Syst. Archit."
+      ],
+      "fields": [
+        "embedded_systems",
+        "software_architecture",
+        "real_time_systems",
+        "edge_computing",
+        "system_on_chip"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.sciencedirect.com/journal/journal-of-systems-architecture",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 1.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/journal-of-systems-architecture",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "嵌入式系统设计与系统架构权威主流刊物，涵盖从微架构设计、操作系统中间件到特定应用边缘计算架构的全栈软硬件体系。",
+          "topics": [
+            "embedded_software",
+            "real_time_systems",
+            "system_architecture",
+            "heterogeneous_computing",
+            "edge_ai"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "general",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；系统级结构与嵌入式软件领域的标杆刊物，编辑初审极快（官方中位数1天），对系统完整性与架构严谨性要求高。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/journal-of-systems-architecture",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "subscription",
+          "kind": "apc",
+          "amount": 0.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": true,
+          "note": "Elsevier官方明确订阅模式无作者出版费（No publication fee charged to authors）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/journal-of-systems-architecture",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        },
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2260.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "Elsevier 2026官方价目表显示该刊混合OA APC为2260美元（不含税）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://legacyfileshare.elsevier.com/els_com_pricing/article-publishing-charge.xlsx",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.sciencedirect.com/journal/journal-of-systems-architecture"
+    },
+    {
+      "journal_id": "j_e83d5f1c204953dd909e2a41",
+      "title": "Mechatronics",
+      "title_zh": "机电一体化学报",
+      "kind": "journal",
+      "publisher": "Elsevier",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "0957-4158",
+        "1873-4006"
+      ],
+      "aliases": [
+        "Mechatronics-Elsevier"
+      ],
+      "fields": [
+        "mechatronics",
+        "robotics",
+        "control_systems",
+        "smart_actuators",
+        "automation"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.sciencedirect.com/journal/mechatronics",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 5.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/mechatronics",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "国际自动控制联合会（IFAC）官方附属期刊，发表机电一体化、精密机器人、微型机械电子以及智能机械控制系统的前沿理论与工程实现。",
+          "topics": [
+            "mechatronics",
+            "robotic_manipulators",
+            "precision_motion",
+            "adaptive_control",
+            "sensor_actuator_integration"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "general",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；机电融合与机器人运动控制领域的经典IFAC权威会刊，强调机械结构动力学与控制理论的紧密结合。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/mechatronics",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "subscription",
+          "kind": "apc",
+          "amount": 0.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": true,
+          "note": "Elsevier官方订阅出版模式无作者费用（No publication fee charged to authors）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/mechatronics",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        },
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2880.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "Elsevier 2026官方价目表显示该刊混合OA APC为2880美元（不含税）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://legacyfileshare.elsevier.com/els_com_pricing/article-publishing-charge.xlsx",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.sciencedirect.com/journal/mechatronics"
+    },
+    {
+      "journal_id": "j_b444ee3e7d975499aba47dc3",
+      "title": "Measurement",
+      "title_zh": "测量",
+      "kind": "journal",
+      "publisher": "Elsevier",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "0263-2241",
+        "1873-412X"
+      ],
+      "aliases": [
+        "Measurement-Elsevier",
+        "IMEKO Journal"
+      ],
+      "fields": [
+        "measurement",
+        "instrumentation",
+        "signal_processing",
+        "fault_diagnosis",
+        "sensor_systems"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.sciencedirect.com/journal/measurement",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 7.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/measurement",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "国际测量联合会（IMEKO）官方会刊，报道现代测控科学、仪器技术、高精度传感信号提取、无损检测以及工程设备状态智能诊断成果。",
+          "topics": [
+            "measurement_science",
+            "instrumentation",
+            "condition_monitoring",
+            "vibration_analysis",
+            "precision_sensing"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "general",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；国际测控与仪器科学核心主流学术阵地，对测量不确定度评估、实验标定与传感器数据处理深度要求明确。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/measurement",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "subscription",
+          "kind": "apc",
+          "amount": 0.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": true,
+          "note": "Elsevier官方订阅出版模式作者无需支付费用（No publication fee charged to authors）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/measurement",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        },
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 3480.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "Elsevier 2026官方价目表显示该刊混合OA APC为3480美元（不含税）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://legacyfileshare.elsevier.com/els_com_pricing/article-publishing-charge.xlsx",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.sciencedirect.com/journal/measurement"
+    },
+    {
+      "journal_id": "j_d56855ddbc80585297d213fb",
+      "title": "Applied Ocean Research",
+      "title_zh": "应用海洋研究",
+      "kind": "journal",
+      "publisher": "Elsevier",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "0141-1187",
+        "1879-1549"
+      ],
+      "aliases": [
+        "Appl. Ocean Res.",
+        "AOR"
+      ],
+      "fields": [
+        "marine_engineering",
+        "oceanography",
+        "hydrodynamics",
+        "underwater_technology",
+        "naval_architecture"
+      ],
+      "indexing": [],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://legacyfileshare.elsevier.com/els_com_pricing/article-publishing-charge.xlsx",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 6.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/applied-ocean-research",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "发表海洋工程、海洋水动力学、水下装备波浪相互作用、海洋平台水弹性以及深远海工程技术前沿应用研究。",
+          "topics": [
+            "wave_mechanics",
+            "offshore_hydrodynamics",
+            "underwater_structures",
+            "mooring_systems",
+            "marine_robotics"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "general",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；海洋水动力学与近海工程的主流水准刊物，要求清晰的力学模型与流体仿真/水池水洞实验比对。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/applied-ocean-research",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 3380.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "Elsevier 2026官方价目表显示已转为Full OA，标准APC为3380美元（不含税）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://legacyfileshare.elsevier.com/els_com_pricing/article-publishing-charge.xlsx",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.sciencedirect.com/journal/applied-ocean-research"
+    },
+    {
+      "journal_id": "j_8571578981bc57e7b79473b9",
+      "title": "Computers & Electrical Engineering",
+      "title_zh": "计算机与电气工程",
+      "kind": "journal",
+      "publisher": "Elsevier",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "0045-7906",
+        "1879-0755"
+      ],
+      "aliases": [
+        "Comput. Electr. Eng.",
+        "CAEE"
+      ],
+      "fields": [
+        "computer_engineering",
+        "electrical_engineering",
+        "telecommunications",
+        "iot",
+        "signal_processing"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.sciencedirect.com/journal/computers-and-electrical-engineering",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 22.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/computers-and-electrical-engineering",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "致力于计算机技术与电气信息系统的融合研究，重点刊载通信系统软硬件实现、智能电网与工业物联网计算、雷达信号处理算法的工程应用。",
+          "topics": [
+            "computer_engineering",
+            "electrical_systems",
+            "internet_of_things",
+            "signal_algorithms",
+            "smart_grid"
+          ],
+          "article_types": [
+            "research"
+          ],
+          "article_types_complete": false,
+          "positioning": "general",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；中老牌传统电子计算机工程综合期刊，偏重算法与工程系统相结合的落地实现，审稿周期适中。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/computers-and-electrical-engineering",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "subscription",
+          "kind": "apc",
+          "amount": 0.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": true,
+          "note": "Elsevier官方订阅出版模式不收取作者出版费用（No publication fee charged to authors）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/computers-and-electrical-engineering",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        },
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 3270.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "Elsevier 2026官方公布OA路线APC为3270美元（不含税）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://legacyfileshare.elsevier.com/els_com_pricing/article-publishing-charge.xlsx",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.sciencedirect.com/journal/computers-and-electrical-engineering"
+    },
+    {
+      "journal_id": "j_91f53dbbc29750f1a624ebb2",
+      "title": "Journal of Real-Time Image Processing",
+      "title_zh": "实时图像处理学报",
+      "kind": "journal",
+      "publisher": "Springer",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "index": "SCIE",
+          "authority_type": "publisher-reported",
+          "source_url": "https://link.springer.com/journal/11554",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        },
+        {
+          "type": "indexing_status",
+          "index": "EI Compendex",
+          "authority_type": "publisher-reported",
+          "source_url": "https://link.springer.com/journal/11554",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        }
+      ],
+      "issns": [
+        "1861-8200",
+        "1861-8219"
+      ],
+      "aliases": [
+        "JRTIP"
+      ],
+      "fields": [
+        "image_processing",
+        "computer_vision",
+        "real_time_systems",
+        "embedded_vision",
+        "fpga"
+      ],
+      "indexing": [
+        "SCIE",
+        "EI Compendex"
+      ],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://link.springer.com/journal/11554/how-to-publish-with-us",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "专门针对实时图像处理的权威期刊，作者必须明确探讨并解决计算复杂度、实时延迟（帧率/吞吐率）与嵌入式硬件（GPU/FPGA/DSP）部署优化瓶颈。",
+          "topics": [
+            "real_time_vision",
+            "embedded_image_processing",
+            "fpga_acceleration",
+            "real_time_detection",
+            "video_streaming"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "general",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；对视觉算法的实时性约束有硬性评审指标，适合在边缘端、无人机或水下设备完成实时优化的图像处理论文。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "springer_official",
+            "source_url": "https://link.springer.com/journal/11554",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "subscription",
+          "kind": "apc",
+          "amount": 0.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": true,
+          "note": "Springer官方声明传统订阅出版模式免收APC（Subscription route: No APC applies）",
+          "provenance": {
+            "source_id": "springer_official",
+            "source_url": "https://link.springer.com/journal/11554/how-to-publish-with-us",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        },
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 3390.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "Springer 2026公布Open Choice混合OA费用为3390美元（或2790欧元/2490英镑，不含增值税）",
+          "provenance": {
+            "source_id": "springer_official",
+            "source_url": "https://link.springer.com/journal/11554/how-to-publish-with-us",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://link.springer.com/journal/11554"
+    },
+    {
+      "journal_id": "j_f345ef50caa35dd7a559e7f0",
+      "title": "ACM Transactions on Embedded Computing Systems",
+      "title_zh": "ACM嵌入式计算系统汇刊",
+      "kind": "journal",
+      "publisher": "Association for Computing Machinery",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "1539-9087",
+        "1558-3465"
+      ],
+      "aliases": [
+        "ACM TECS",
+        "TECS"
+      ],
+      "fields": [
+        "embedded_systems",
+        "real_time_systems",
+        "software_engineering",
+        "low_power_computing",
+        "system_level_design"
+      ],
+      "indexing": [],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.acm.org/publications/openaccess",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "计算机学会 ACM 在嵌入式计算系统领域的旗舰汇刊，涵盖实时操作系统调度、内存层次结构、低功耗系统级综合与物联网底层体系。",
+          "topics": [
+            "embedded_software",
+            "real_time_systems",
+            "low_power_architectures",
+            "system_synthesis",
+            "formal_verification"
+          ],
+          "article_types": [
+            "research"
+          ],
+          "article_types_complete": false,
+          "positioning": "general",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；ACM主流权威期刊，理论深度与系统原型要求均极为严格，同行评议严谨深入。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "acm_official",
+            "source_url": "https://dl.acm.org/journal/tecs",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": null,
+          "currency": "",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "ACM自2026年1月1日起全面转为Full Open Access；参与ACM Open协议机构通讯作者免APC，非协议作者费用需个案结算（未查得统一金额置null）",
+          "provenance": {
+            "source_id": "acm_official",
+            "source_url": "https://www.acm.org/publications/openaccess",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:05:07.275024+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://dl.acm.org/journal/tecs"
+    },
+    {
+      "journal_id": "j_986ba624f2a95d4abb6858f5",
+      "title": "Journal of Marine Science and Application",
+      "title_zh": "船舶与海洋工程学报（英文版）",
+      "kind": "journal",
+      "publisher": "Springer / Harbin Engineering University",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "index": "ESCI",
+          "authority_type": "publisher-reported",
+          "source_url": "https://link.springer.com/journal/11804",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        }
+      ],
+      "issns": [
+        "1671-9433",
+        "1993-5048"
+      ],
+      "aliases": [
+        "JMSA"
+      ],
+      "fields": [
+        "marine_engineering",
+        "naval_architecture",
+        "underwater_technology",
+        "underwater_acoustics",
+        "ocean_engineering"
+      ],
+      "indexing": [
+        "ESCI"
+      ],
+      "oa_mode": "diamond",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://link.springer.com/journal/11804",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "由哈尔滨工程大学与中国造船工程学会主办、Springer联合出版，聚焦船舶力学、水下声学、海洋无人航行器与深海探测核心技术。",
+          "topics": [
+            "naval_architecture",
+            "underwater_acoustics",
+            "marine_robotics",
+            "hydrodynamics",
+            "polar_engineering"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "general",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；深耕船舶与水下技术细分领域，且免收作者出版费，适合水下航行器与海洋声学前沿中坚成果。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "springer_official",
+            "source_url": "https://link.springer.com/journal/11804",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "diamond",
+          "kind": "apc",
+          "amount": 0.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": true,
+          "note": "哈尔滨工程大学与中船学会联合主办，官方明确声明免收作者版面费与出版费（Publishes high-level research without page limitations or publication fees）",
+          "provenance": {
+            "source_id": "springer_official",
+            "source_url": "https://link.springer.com/journal/11804",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://link.springer.com/journal/11804"
+    },
+    {
+      "journal_id": "j_53dd0db7f173560fb0c73b4e",
+      "title": "Chinese Journal of Mechanical Engineering",
+      "title_zh": "机械工程学报（英文版）",
+      "kind": "journal",
+      "publisher": "Chinese Mechanical Engineering Society / Springer",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "index": "SCIE",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.keaipublishing.com/en/journals/chinese-journal-of-mechanical-engineering/abstracting-and-indexing/",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        },
+        {
+          "type": "indexing_status",
+          "index": "EI Compendex",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.keaipublishing.com/en/journals/chinese-journal-of-mechanical-engineering/abstracting-and-indexing/",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        }
+      ],
+      "issns": [
+        "1000-9345",
+        "2192-8258"
+      ],
+      "aliases": [
+        "CJME",
+        "Chin. J. Mech. Eng."
+      ],
+      "fields": [
+        "mechanical_engineering",
+        "robotics",
+        "advanced_manufacturing",
+        "mechatronics",
+        "machine_design"
+      ],
+      "indexing": [
+        "SCIE",
+        "EI Compendex"
+      ],
+      "oa_mode": "full",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://cjme.springeropen.com/",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "中国机械工程学会会刊，报道现代机械动力学、精密制造装备、机器人机构与传动控制、重大工程装备结构优化的最新学术成果。",
+          "topics": [
+            "mechanical_design",
+            "robot_mechanisms",
+            "advanced_manufacturing",
+            "precision_engineering",
+            "vibration_dynamics"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "general",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；中国机械工程领域代表性SCIE刊物，强调理论建构与中国重大装备工程实践结合。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "cmes_official",
+            "source_url": "https://cjme.springeropen.com/",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": null,
+          "currency": "",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "当前出版平台已迁至 KeAi；未取得本次可核验的单篇费用金额，保持未知。",
+          "provenance": {
+            "source_id": "keai_cjme",
+            "source_url": "https://www.keaipublishing.com/en/journals/chinese-journal-of-mechanical-engineering/open-access/",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.keaipublishing.com/en/journals/chinese-journal-of-mechanical-engineering/"
+    },
+    {
+      "journal_id": "j_3b5f1b4ad51c59319a00fa2d",
+      "title": "Journal of Systems Engineering and Electronics",
+      "title_zh": "系统工程与电子技术（英文版）",
+      "kind": "journal",
+      "publisher": "Beijing Institute of Control Engineering / IEEE",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "index": "SCI",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.jseepub.com/EN/column/column25.shtml",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "出版方页面列出该收录项；不是 Clarivate/Engineering Village 独立核验，投稿前需查当前主列表。"
+        },
+        {
+          "type": "indexing_status",
+          "index": "EI",
+          "authority_type": "publisher-reported",
+          "source_url": "https://www.jseepub.com/EN/column/column25.shtml",
+          "observed_at": "2026-09-25T05:10:00+00:00",
+          "year": 2026,
+          "note": "官方收录图片显示 SCI 与 EI；未单独写 SCIE 或 Ei Compendex，请独立核验。"
+        }
+      ],
+      "issns": [
+        "1004-4132"
+      ],
+      "aliases": [
+        "JSEE"
+      ],
+      "fields": [
+        "systems_engineering",
+        "control_theory",
+        "radar_technology",
+        "robotics",
+        "aerospace_systems"
+      ],
+      "indexing": [
+        "SCI",
+        "EI"
+      ],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "http://www.jseepub.com/",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "入选中国科技期刊卓越行动计划梯队，专注于复杂大系统工程、制导导航与控制、雷达与电子信息对抗、无人系统分布式协同等领域理论与工程应用。",
+          "topics": [
+            "systems_engineering",
+            "guidance_navigation_control",
+            "radar_signal_processing",
+            "distributed_coordination",
+            "intelligent_decision"
+          ],
+          "article_types": [
+            "research"
+          ],
+          "article_types_complete": false,
+          "positioning": "general",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；国防工业与复杂控制系统领域的严谨学报，侧重数学推演严密性与工程系统仿真验证。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "jsee_official",
+            "source_url": "http://www.jseepub.com/",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "subscription",
+          "kind": "apc",
+          "amount": null,
+          "currency": "",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "学报由主办方提供基础出版通道，国内学报未公开固定单篇外币APC定价，金额置null",
+          "provenance": {
+            "source_id": "jsee_official",
+            "source_url": "http://www.jseepub.com/",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:05:07.275024+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.jseepub.com/EN/1004-4132/home.shtml"
+    },
+    {
+      "journal_id": "j_f3c8847825e257f5af4a2087",
+      "title": "Ocean Engineering",
+      "title_zh": "海洋工程",
+      "kind": "journal",
+      "publisher": "Elsevier",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "0029-8018",
+        "1873-5258"
+      ],
+      "aliases": [
+        "Ocean Eng.",
+        "OE"
+      ],
+      "fields": [
+        "marine_engineering",
+        "ocean_engineering",
+        "naval_architecture",
+        "underwater_robotics",
+        "offshore_structures"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.sciencedirect.com/journal/ocean-engineering",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 5.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/ocean-engineering",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "海洋工程与船舶力学领域的国际顶尖期刊之一，刊登深海浮式结构、水下机器人与作业母船系统协同、波浪载荷非线性水动力学等顶尖研究。",
+          "topics": [
+            "ocean_engineering",
+            "hydrodynamics",
+            "underwater_robotics",
+            "offshore_platforms",
+            "vessel_dynamics"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "field_leading",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；海洋工程领域公认顶级期刊，年发文量大但对水动力计算方法深度与海上实测或水池实验对比要求极高。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/ocean-engineering",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "subscription",
+          "kind": "apc",
+          "amount": 0.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": true,
+          "note": "Elsevier官方订阅出版模式不收作者出版费（No publication fee charged to authors）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/ocean-engineering",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        },
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 4720.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "Elsevier 2026官方价目表显示混合OA APC为4720美元（不含税）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://legacyfileshare.elsevier.com/els_com_pricing/article-publishing-charge.xlsx",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.sciencedirect.com/journal/ocean-engineering"
+    },
+    {
+      "journal_id": "j_8bee682826585113913f6ba3",
+      "title": "Robotics and Autonomous Systems",
+      "title_zh": "机器人与自主系统",
+      "kind": "journal",
+      "publisher": "Elsevier",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "0921-8890",
+        "1872-793X"
+      ],
+      "aliases": [
+        "RAS",
+        "Robot. Auton. Syst."
+      ],
+      "fields": [
+        "robotics",
+        "autonomous_systems",
+        "field_robotics",
+        "artificial_intelligence",
+        "human_robot_interaction"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.sciencedirect.com/journal/robotics-and-autonomous-systems",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 32.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/robotics-and-autonomous-systems",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "智能自主系统与机器人学领军老牌期刊（IAS学会合作），专注复杂未知动态环境下的机器人自主感知、决策规划、具身智能与多智能体协同。",
+          "topics": [
+            "autonomous_robotics",
+            "embodied_ai",
+            "slam",
+            "motion_planning",
+            "multi_robot_systems"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "field_leading",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；机器人学界深具声望的理论与实机结合顶级阵地，审稿对外审专家把关极严，要求完整理论证明与真实机器人场景验证。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/robotics-and-autonomous-systems",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "subscription",
+          "kind": "apc",
+          "amount": 0.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": true,
+          "note": "Elsevier官方明确订阅模式无作者出版费（No publication fee charged to authors）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/robotics-and-autonomous-systems",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        },
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2940.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "Elsevier 2026官方公布混合OA APC为2940美元（不含税）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://legacyfileshare.elsevier.com/els_com_pricing/article-publishing-charge.xlsx",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.sciencedirect.com/journal/robotics-and-autonomous-systems"
+    },
+    {
+      "journal_id": "j_79510367dda65037b3c0d884",
+      "title": "Engineering Applications of Artificial Intelligence",
+      "title_zh": "人工智能工程应用",
+      "kind": "journal",
+      "publisher": "Elsevier",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "0952-1976",
+        "1873-6769"
+      ],
+      "aliases": [
+        "EAAI",
+        "Eng. Appl. Artif. Intell."
+      ],
+      "fields": [
+        "artificial_intelligence",
+        "machine_learning",
+        "fault_diagnosis",
+        "robotics",
+        "industrial_automation"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.sciencedirect.com/journal/engineering-applications-of-artificial-intelligence",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 27.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/engineering-applications-of-artificial-intelligence",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "IFAC 旗下人工智能与工程应用交叉领军期刊，报道深度学习在复杂工业工程、机器人智能控制、高可靠性故障智能诊断中的创新突破。",
+          "topics": [
+            "ai_in_engineering",
+            "deep_learning",
+            "fault_diagnosis",
+            "industrial_control",
+            "autonomous_decision"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "field_leading",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；工程AI交叉学科的标杆期刊，对模型创新度与实际工业数据集的严苛评测基准要求高，拒稿率高。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/engineering-applications-of-artificial-intelligence",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "subscription",
+          "kind": "apc",
+          "amount": 0.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": true,
+          "note": "Elsevier官方订阅出版模式作者无需支付费用（No publication fee charged to authors）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/engineering-applications-of-artificial-intelligence",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        },
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 3040.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "Elsevier 2026官方价目表显示混合OA APC为3040美元（不含税）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://legacyfileshare.elsevier.com/els_com_pricing/article-publishing-charge.xlsx",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.sciencedirect.com/journal/engineering-applications-of-artificial-intelligence"
+    },
+    {
+      "journal_id": "j_07e76b0ecb525d02af7ab649",
+      "title": "Advanced Engineering Informatics",
+      "title_zh": "先进工程信息学",
+      "kind": "journal",
+      "publisher": "Elsevier",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "1474-0346",
+        "1873-5320"
+      ],
+      "aliases": [
+        "ADVEI",
+        "Adv. Eng. Inform."
+      ],
+      "fields": [
+        "engineering_informatics",
+        "knowledge_engineering",
+        "digital_twins",
+        "robotics",
+        "cyber_physical_systems"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://www.sciencedirect.com/journal/advanced-engineering-informatics",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 4.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/advanced-engineering-informatics",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "工程信息学顶级期刊，专注于知识密集型工程活动，涵盖知识图谱与工程本体、具身智能实体协同、数字孪生与复杂工程智能决策推理。",
+          "topics": [
+            "knowledge_representation",
+            "digital_twin",
+            "embodied_ai",
+            "smart_construction",
+            "decision_support_systems"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "field_leading",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；工程计算方法与知识工程顶级学报，要求深厚的形式化知识表示理论或完整的复杂工程数字孪生验证体系。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/advanced-engineering-informatics",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "subscription",
+          "kind": "apc",
+          "amount": 0.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": true,
+          "note": "Elsevier官方订阅出版模式无作者费用（No publication fee charged to authors）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://www.sciencedirect.com/journal/advanced-engineering-informatics",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        },
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 3920.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "Elsevier 2026官方价目表显示混合OA APC为3920美元（不含税）",
+          "provenance": {
+            "source_id": "elsevier_official",
+            "source_url": "https://legacyfileshare.elsevier.com/els_com_pricing/article-publishing-charge.xlsx",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "homepage": "https://www.sciencedirect.com/journal/advanced-engineering-informatics"
+    },
+    {
+      "journal_id": "j_7da98852c7a95ac2aa72c5ac",
+      "title": "Journal of Field Robotics",
+      "title_zh": "野外机器人学报",
+      "kind": "journal",
+      "publisher": "Wiley",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "1556-4959",
+        "1556-4967"
+      ],
+      "aliases": [
+        "JFR",
+        "J. Field Robot."
+      ],
+      "fields": [
+        "field_robotics",
+        "robotics",
+        "underwater_robotics",
+        "autonomous_vehicles",
+        "control"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://onlinelibrary.wiley.com/journal/15564967",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.633229+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [
+        {
+          "name": "first_decision_days",
+          "raw": "",
+          "value": 16.0,
+          "lower": null,
+          "upper": null,
+          "comparator": "eq",
+          "unit": "days",
+          "year": 2026,
+          "stage": "first_decision",
+          "currency": "",
+          "provenance": {
+            "source_id": "wiley_official",
+            "source_url": "https://onlinelibrary.wiley.com/journal/15564967",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "非结构化动态极端环境（水下深海、农林采矿、太空行星、灾难救援）野外作业机器人的国际顶尖标杆学术刊物。",
+          "topics": [
+            "field_robotics",
+            "underwater_vehicles",
+            "unstructured_environments",
+            "long_term_autonomy",
+            "field_experiments"
+          ],
+          "article_types": [
+            "research"
+          ],
+          "article_types_complete": false,
+          "positioning": "field_leading",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；野外与极限工况机器人领域的国际旗舰刊物，录取率约16%，极度看重长时间、真实野外/深海实验的鲁棒性验证数据。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "wiley_official",
+            "source_url": "https://onlinelibrary.wiley.com/journal/15564967",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "unknown",
+          "kind": "apc",
+          "amount": null,
+          "currency": "",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": null,
+          "note": "Wiley OnlineOpen价格页面由客户端JavaScript动态加载，未从静态HTML提取到具体APC金额与订阅附加费条款，金额置null",
+          "provenance": {
+            "source_id": "wiley_official",
+            "source_url": "https://authorservices.wiley.com/author-resources/Journal-Authors/open-access/article-preparation-payment-options/onlineopen-prices.html",
+            "authority": "official",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026
+          }
+        }
+      ],
+      "homepage": "https://onlinelibrary.wiley.com/journal/15564967"
+    },
+    {
+      "journal_id": "j_afdf9c25238853ef97fe0d7b",
+      "title": "IEEE Transactions on Industrial Electronics",
+      "title_zh": "IEEE工业电子学汇刊",
+      "kind": "journal",
+      "publisher": "IEEE",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "0278-0046",
+        "1557-9948"
+      ],
+      "aliases": [
+        "IEEE TIE",
+        "TIE"
+      ],
+      "fields": [
+        "industrial_electronics",
+        "motor_drives",
+        "power_electronics",
+        "robotics",
+        "control_systems"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.633229+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "工业电子与智能电气驱动领域的全球顶级期刊，报道先进电机驱动与伺服控制、电力电子功率变换、机器人执行关节控制以及工业自动化精密系统的理论与实验突破。",
+          "topics": [
+            "power_electronics",
+            "motor_control",
+            "industrial_automation",
+            "motion_control",
+            "actuator_systems"
+          ],
+          "article_types": [
+            "research"
+          ],
+          "article_types_complete": false,
+          "positioning": "field_leading",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；电气与工业自动化控制全球顶级学术旗舰，评审严苛，要求深厚理论推导与完整的台架实验台对比数据。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=41",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2800.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "IEEE官方APC页原文：Hybrid journal OA APC is $2,800 USD — some journals charge additional fees; Local taxes will be added if applicable.",
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+            "authority": "official",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026
+          }
+        },
+        {
+          "route": "subscription",
+          "kind": "other",
+          "amount": null,
+          "currency": "",
+          "unit": "per_page",
+          "optional": false,
+          "taxes_included": null,
+          "note": "IEEE官方页声明混合刊可能收取超页与彩图附加费（some journals charge additional fees e.g. overlength and color page charges），单刊超页起征点未在该页明示，故订阅总费用置null",
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+            "authority": "official",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026
+          }
+        }
+      ],
+      "homepage": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=41"
+    },
+    {
+      "journal_id": "j_6e8a9270bd8b58e9b692ef73",
+      "title": "IEEE Transactions on Industrial Informatics",
+      "title_zh": "IEEE工业信息学汇刊",
+      "kind": "journal",
+      "publisher": "IEEE",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "1551-3203",
+        "1941-0050"
+      ],
+      "aliases": [
+        "IEEE TII",
+        "TII"
+      ],
+      "fields": [
+        "industrial_informatics",
+        "cyber_physical_systems",
+        "industrial_iot",
+        "robotics",
+        "fault_diagnosis"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.633229+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "工业信息学与工业4.0领军旗舰刊物，涵盖工业物联网、工业信息物理系统（CPS）、工业边缘智能分析、工业机器人云协同及高端装备智能健康监测。",
+          "topics": [
+            "industrial_iot",
+            "cyber_physical_systems",
+            "edge_computing",
+            "industrial_ai",
+            "fault_diagnosis"
+          ],
+          "article_types": [
+            "research"
+          ],
+          "article_types_complete": false,
+          "positioning": "field_leading",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；工业互联网与智能信息系统的顶级权威汇刊，要求兼具扎实的信息通信/算法架构与真实的工业制造试验验证场景。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=9424",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2800.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "IEEE官方APC页原文：Hybrid journal OA APC is $2,800 USD — some journals charge additional fees; Local taxes will be added if applicable.",
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+            "authority": "official",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026
+          }
+        },
+        {
+          "route": "subscription",
+          "kind": "other",
+          "amount": null,
+          "currency": "",
+          "unit": "per_page",
+          "optional": false,
+          "taxes_included": null,
+          "note": "IEEE官方页声明混合刊可能收取超页与彩图附加费（some journals charge additional fees e.g. overlength and color page charges），单刊超页起征点未在该页明示，故订阅总费用置null",
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+            "authority": "official",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026
+          }
+        }
+      ],
+      "homepage": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=9424"
+    },
+    {
+      "journal_id": "j_a98b299ed5ab5c7db5e71c53",
+      "title": "IEEE Internet of Things Journal",
+      "title_zh": "IEEE物联网期刊",
+      "kind": "journal",
+      "publisher": "IEEE",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "2327-4662"
+      ],
+      "aliases": [
+        "IEEE IoT-J",
+        "IoT-J"
+      ],
+      "fields": [
+        "iot",
+        "wireless_sensor_networks",
+        "edge_computing",
+        "underwater_iot",
+        "cyber_physical_systems"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.633229+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "物联网技术领域全球最高影响力学术期刊之一，报道涵盖水下物联网（IoUT）、无线传感器网络、边缘算力卸载、物联网安全及跨模态智能感知系统。",
+          "topics": [
+            "internet_of_things",
+            "underwater_iot",
+            "sensor_networks",
+            "edge_intelligence",
+            "wireless_communications"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "field_leading",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；物联网大领域的国际顶级汇刊，关注网络架构创新、协议优化与大规模边缘感知节点部署的综合性能验证。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=6488907",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2800.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "IEEE官方APC页原文：Hybrid journal OA APC is $2,800 USD — some journals charge additional fees; Local taxes will be added if applicable.",
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+            "authority": "official",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026
+          }
+        },
+        {
+          "route": "subscription",
+          "kind": "other",
+          "amount": null,
+          "currency": "",
+          "unit": "per_page",
+          "optional": false,
+          "taxes_included": null,
+          "note": "IEEE官方页声明混合刊可能收取超页与彩图附加费（some journals charge additional fees e.g. overlength and color page charges），单刊超页起征点未在该页明示，故订阅总费用置null",
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+            "authority": "official",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026
+          }
+        }
+      ],
+      "homepage": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=6488907"
+    },
+    {
+      "journal_id": "j_bf0075f2250e5bd5958964f5",
+      "title": "IEEE Journal of Oceanic Engineering",
+      "title_zh": "IEEE海洋工程学报",
+      "kind": "journal",
+      "publisher": "IEEE",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "0364-9059",
+        "1558-1691"
+      ],
+      "aliases": [
+        "IEEE JOE",
+        "JOE"
+      ],
+      "fields": [
+        "oceanic_engineering",
+        "underwater_acoustics",
+        "marine_robotics",
+        "sonar_systems",
+        "underwater_communications"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.633229+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "IEEE 海洋工程学会（OES）旗舰学报，专注于水下声学通信与层析成像、声呐信号处理、无人潜水器（UUV/AUV）深远海自主控制以及水下目标声学探测。",
+          "topics": [
+            "underwater_acoustics",
+            "sonar_processing",
+            "oceanic_robotics",
+            "marine_telemetry",
+            "auv_control"
+          ],
+          "article_types": [
+            "research",
+            "review"
+          ],
+          "article_types_complete": false,
+          "positioning": "field_leading",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；水声工程与海洋电子领域的国际最高权威刊物，对水声物理机理推导、声学信号处理算法与海试数据分析要求极深。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=48",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2800.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "IEEE官方APC页原文：Hybrid journal OA APC is $2,800 USD — some journals charge additional fees; Local taxes will be added if applicable.",
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+            "authority": "official",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026
+          }
+        },
+        {
+          "route": "subscription",
+          "kind": "other",
+          "amount": null,
+          "currency": "",
+          "unit": "per_page",
+          "optional": false,
+          "taxes_included": null,
+          "note": "IEEE官方页声明混合刊可能收取超页与彩图附加费（some journals charge additional fees e.g. overlength and color page charges），单刊超页起征点未在该页明示，故订阅总费用置null",
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+            "authority": "official",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026
+          }
+        }
+      ],
+      "homepage": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=48"
+    },
+    {
+      "journal_id": "j_2377e585d3f65acaabe2bc95",
+      "title": "IEEE/ASME Transactions on Mechatronics",
+      "title_zh": "IEEE/ASME机电一体化汇刊",
+      "kind": "journal",
+      "publisher": "IEEE / ASME",
+      "identity_warnings": [],
+      "metadata_observations": [
+        {
+          "type": "indexing_status",
+          "authority_type": "publisher-reported",
+          "index": "unverified_on_fetched_page",
+          "year": 2026,
+          "note": "当前抓取的官方静态页面未直接展开索引列表，保持空置不作推测"
+        }
+      ],
+      "issns": [
+        "1083-4435",
+        "1941-014X"
+      ],
+      "aliases": [
+        "T-Mech",
+        "TMECH"
+      ],
+      "fields": [
+        "mechatronics",
+        "robotics",
+        "precision_motion",
+        "actuators",
+        "control_systems"
+      ],
+      "indexing": [],
+      "oa_mode": "hybrid",
+      "provenance": {
+        "source_id": "curated_editorial",
+        "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+        "source_version": "",
+        "source_record": "",
+        "retrieved_at": "2026-09-25T04:02:17.633229+00:00",
+        "observed_at": "2026-09-25T00:00:00Z",
+        "data_year": 2026,
+        "authority": "official",
+        "freshness": "fresh"
+      },
+      "rankings": [],
+      "metrics": [],
+      "risks": [],
+      "experiences": [],
+      "editorial_profiles": [
+        {
+          "scope_summary": "IEEE与美国机械工程师学会（ASME）联合出版的机电一体化与机器人顶级旗舰，涵盖高精运动控制、柔性灵巧手、触觉力控感知以及微纳米机电驱动系统。",
+          "topics": [
+            "mechatronics",
+            "precision_control",
+            "robotic_manipulation",
+            "force_feedback",
+            "actuation_mechanisms"
+          ],
+          "article_types": [
+            "research"
+          ],
+          "article_types_complete": false,
+          "positioning": "field_leading",
+          "positioning_basis": "基于范围的投稿策略判断，不是官方评级或录用保证；机电一体化机电融合领域的全球最高标杆之一，审稿标准苛刻，要求机械硬件创新与高阶先进控制策略深度交织。",
+          "recent_papers": [],
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=3516",
+            "source_version": "",
+            "source_record": "",
+            "retrieved_at": "2026-09-25T04:02:17.632218+00:00",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026,
+            "authority": "official",
+            "freshness": "unknown"
+          }
+        }
+      ],
+      "publication_fees": [
+        {
+          "route": "open_access",
+          "kind": "apc",
+          "amount": 2800.0,
+          "currency": "USD",
+          "unit": "per_article",
+          "optional": false,
+          "taxes_included": false,
+          "note": "IEEE官方APC页原文：Hybrid journal OA APC is $2,800 USD — some journals charge additional fees; Local taxes will be added if applicable.",
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+            "authority": "official",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026
+          }
+        },
+        {
+          "route": "subscription",
+          "kind": "other",
+          "amount": null,
+          "currency": "",
+          "unit": "per_page",
+          "optional": false,
+          "taxes_included": null,
+          "note": "IEEE官方页声明混合刊可能收取超页与彩图附加费（some journals charge additional fees e.g. overlength and color page charges），单刊超页起征点未在该页明示，故订阅总费用置null",
+          "provenance": {
+            "source_id": "ieee_official",
+            "source_url": "https://open.ieee.org/for-authors/article-processing-charges/",
+            "authority": "official",
+            "observed_at": "2026-09-25T00:00:00Z",
+            "data_year": 2026
+          }
+        }
+      ],
+      "homepage": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=3516"
+    }
+  ]
+}

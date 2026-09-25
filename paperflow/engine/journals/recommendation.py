@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlsplit
 
-from .identity import identity_id, normalize_issn, normalize_name
+from .identity import identity_id, normalize_issn, normalize_name, normalize_indexing
 from .models import JournalError, JournalRecord, SchoolPolicy, response
 from .recommendation_models import (
     BASE_WEIGHTS, GROUP_LABELS, RUBRIC_VERSION, FitAssessment,
@@ -282,8 +282,8 @@ def _constraints(record, filters):
     if filters.field and _plain(filters.field).replace("_", " ") not in {_plain(f).replace("_", " ") for f in record.fields}:
         missing.append("所要求学科标签尚未核实")
     if filters.indexing:
-        known = {v.casefold().replace("sci", "scie") if v.casefold() == "sci" else v.casefold() for v in record.indexing}
-        requested = {v.casefold().replace("sci", "scie") if v.casefold() == "sci" else v.casefold() for v in filters.indexing}
+        known = {normalize_indexing(v) for v in record.indexing}
+        requested = {normalize_indexing(v) for v in filters.indexing}
         if not requested.issubset(known):
             missing.append("缺少所要求收录的有效证据")
     if filters.oa_mode != "any" and record.oa_mode != filters.oa_mode:
@@ -448,6 +448,7 @@ def recommend_records(prepared: Dict[str, Any], records: List[JournalRecord],
         if score["evidence_completeness"] < 100:
             missing.append("评分存在缺失维度，区间上界不是已取得的分数")
         card = {"journal_id": record.journal_id, "title": record.title, "issns": record.issns,
+                "homepage": record.homepage, "publisher": record.publisher,
                 "group": group, "positioning": position, "positioning_is_assessment": True,
                 "score": score if effective_assessment else None,
                 "eligibility": "needs_verification" if missing else "supported_by_supplied_evidence",
@@ -458,10 +459,16 @@ def recommend_records(prepared: Dict[str, Any], records: List[JournalRecord],
                 "cost": cost, "timing": timing, "publication_conditions": route_conditions,
                 "editorial_evidence": _profile_views(record.editorial_profiles, preferences, now),
                 "editorial_profile_count": len(record.editorial_profiles),
-                "experiences": [e.model_dump(mode="json") for e in record.experiences[:5]],
+                "experiences": [{**e.model_dump(mode="json"),
+                                 "needs_verification": not _dated(e.provenance, preferences.evidence_max_age_days, now)}
+                                for e in record.experiences[:10]],
+                "experience_count": len(record.experiences),
+                "metrics": [m.model_dump(mode="json") for m in record.metrics],
+                "provenance": record.provenance.model_dump(mode="json"),
+                "metadata_observations": record.metadata_observations,
                 "assessment_origin": "calling_agent" if assessment else "not_assessed"}
         if group in ("efficiency", "balanced"):
-            card["special_issue_tip"] = "可关注该刊近期开放的 Special Issue（专刊）命题作文，契合客座编辑征稿主题以提高送审与录用效率"
+            card["special_issue_tip"] = "可核对官方 Special Issue 征稿范围与截止日期；专刊不代表更容易录用，也不能绕过风险核查"
         if rejected:
             excluded.append({"journal_id": record.journal_id, "title": record.title, "reasons": list(dict.fromkeys(rejected))})
             continue
@@ -488,6 +495,19 @@ def recommend_records(prepared: Dict[str, Any], records: List[JournalRecord],
                         for g in ordered_groups for c in sorted(groups[g]["recommended"] + groups[g]["provisional"], key=order_key)
                         if c["score"] is not None]
     extra_warnings, narrative_guidance = _narrative_and_sanity_guidance(profile, prepared)
+    displayed = [card for bucket in groups.values() for key in ("recommended", "provisional")
+                 for card in bucket[key]]
+    display_summary = {
+        "target_minimum": min(10, preferences.per_group * len(groups)),
+        "group_capacity": preferences.per_group,
+        "displayed_candidates": len(displayed),
+        "supported_recommendations": sum(len(b["recommended"]) for b in groups.values()),
+        "provisional_candidates": sum(len(b["provisional"]) for b in groups.values()),
+        "assessed_candidates": sum(c["score"] is not None for c in displayed),
+    }
+    display_summary["shortfall"] = max(0, display_summary["target_minimum"] - len(displayed))
+    if display_summary["shortfall"]:
+        extra_warnings.append("分档候选不足目标数量：保留真实缺口，不放宽硬条件、不重复刊物或编造证据凑数")
     stage = "needs_agent_assessment" if not profile or targets else "scored"
     if not records or (profile and evidence_targets and not targets):
         stage = "needs_candidate_evidence"
@@ -497,6 +517,7 @@ def recommend_records(prepared: Dict[str, Any], records: List[JournalRecord],
                      "groups": groups, "unclassified": sorted(unclassified, key=order_key)[:preferences.per_group],
                      "assessment_targets": targets, "evidence_targets": evidence_targets, "excluded": excluded,
                      "submission_order": submission_order, "candidate_count": len(records),
+                     "display_summary": display_summary, "evaluated_at": now.isoformat(),
                      "evaluated_candidate_count": len(candidates), "candidate_pool_truncated": len(records) > len(candidates),
                      "agent_model_required": True, "backend_calls_llm": False,
                      "analysis_limits": prepared["analysis_limits"], "live_verified": False,

@@ -13,6 +13,17 @@ def normalize_name(value: str) -> str:
     return " ".join(value.replace("\u2013", "-").replace("\u2014", "-").split())
 
 
+def normalize_indexing(value: str) -> str:
+    """Canonical index aliases; ESCI/SSCI are never matched as SCI substrings."""
+    key = " ".join(str(value or "").upper().replace("-", " ").split())
+    aliases = {
+        "SCI": "SCIE", "SCIE": "SCIE", "SCI EXPANDED": "SCIE",
+        "SCIENCE CITATION INDEX": "SCIE", "SCIENCE CITATION INDEX EXPANDED": "SCIE",
+        "EI": "EI", "EI COMPENDEX": "EI", "COMPENDEX": "EI", "ENGINEERING INDEX": "EI",
+    }
+    return aliases.get(key, key)
+
+
 def normalize_issn(value: str) -> str:
     compact = re.sub(r"[\s-]", "", value or "").upper()
     if not re.fullmatch(r"\d{7}[\dX]", compact):

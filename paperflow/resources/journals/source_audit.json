@@ -1,0 +1,628 @@
+{
+  "schema_version": 1,
+  "audited_at": "2026-09-25T03:43:57Z",
+  "seeds": [
+    {
+      "repo": "jiafeng5513/SciPythonSpider",
+      "canonical_repo": "jiafeng5513/SciPythonSpider",
+      "commit": "e40f28bc484785ad946393e8be44b37cfff9d58f",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2019-01-06T02:49:09Z",
+      "code_license": "unlicensed",
+      "data_license": "third_party_review_required",
+      "data_years": [
+        "2017"
+      ],
+      "extractable_fields": [
+        "issn",
+        "category",
+        "total_cites",
+        "impact_factor",
+        "cas_tier",
+        "journal_full_name",
+        "journal_chinese_name",
+        "annual_articles",
+        "submission_difficulty",
+        "first_review_duration",
+        "homepage_url"
+      ],
+      "api_availability": "无公开 API。mySpider.py 直接针对 MedSci 网页端接口抓取，未见开放 API 声明，本次未验证可用性；不执行上游旧爬虫。",
+      "integration_status": "import_only",
+      "rationale": "仅可作为 2017 年历史中科院分区与 MedSci 历史抓取数据的离线受限导入；初审周期与录用难度为主观填报且已陈旧，不可作为当前评估指标。",
+      "evidence_urls": [
+        "https://github.com/jiafeng5513/SciPythonSpider",
+        "https://raw.githubusercontent.com/jiafeng5513/SciPythonSpider/master/README.md",
+        "https://raw.githubusercontent.com/jiafeng5513/SciPythonSpider/master/mySpider.py"
+      ]
+    },
+    {
+      "repo": "hitfyd/ShowJCR",
+      "canonical_repo": "hitfyd/ShowJCR",
+      "commit": "4687a8f608f20aaf004299992f5d347dba009361",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2026-09-24T01:43:04Z",
+      "code_license": "GPL-3.0",
+      "data_license": "third_party_review_required",
+      "data_years": [
+        "2020",
+        "2021",
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "extractable_fields": [
+        "journal_title",
+        "issn",
+        "eissn",
+        "cas_major_category",
+        "cas_major_tier",
+        "cas_minor_category",
+        "cas_minor_tier",
+        "is_top",
+        "is_review",
+        "is_open_access",
+        "wos_collection",
+        "jcr_impact_factor",
+        "jcr_quartile",
+        "ccf_category",
+        "ccf_rank",
+        "ccft_tier",
+        "warning_level",
+        "warning_reason"
+      ],
+      "api_availability": "无网络 API。为桌面端应用程序，附带离线 CSV 原始数据表及预构建 SQLite 数据库 jcr.db。",
+      "integration_status": "import_only",
+      "rationale": "保留独立离线导入器支持、不直接在本项目合入 GPL-3.0 代码；内置数据再分发许可待核，由用户自行提供或核验数据文件，仅作为本地数据文件导入支持。",
+      "evidence_urls": [
+        "https://github.com/hitfyd/ShowJCR",
+        "https://raw.githubusercontent.com/hitfyd/ShowJCR/master/LICENSE",
+        "https://raw.githubusercontent.com/hitfyd/ShowJCR/master/README.md"
+      ]
+    },
+    {
+      "repo": "AaronGIG/xr-journal-query",
+      "canonical_repo": "AaronGIG/xr-journal-query",
+      "commit": "838eeb9d5216c547c1b4cb22a27d4a345e1e3188",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2026-03-26T18:39:30Z",
+      "code_license": "MIT",
+      "data_license": "third_party_review_required",
+      "data_years": [
+        "2026"
+      ],
+      "extractable_fields": [
+        "journal_title",
+        "discipline_category",
+        "tier",
+        "is_top"
+      ],
+      "api_availability": "无后端网络 API。数据（22,301条）硬编码内嵌于单文件 index.html 的静态 JavaScript 数组中，支持浏览器纯离线过滤。",
+      "integration_status": "import_only",
+      "rationale": "代码为宽松 MIT 许可；数据源自 XR-Scholar 2026 年新锐分区表，免责声明指出版权归平台所有且不保证时效准确性；无 ISSN/EISSN（仅有刊名），无小类分区和影响因子；导入时需注意刊名重名消歧，且不可将新锐分区等同于中科院或 JCR 官方分区。",
+      "evidence_urls": [
+        "https://github.com/AaronGIG/xr-journal-query",
+        "https://raw.githubusercontent.com/AaronGIG/xr-journal-query/master/LICENSE",
+        "https://raw.githubusercontent.com/AaronGIG/xr-journal-query/master/README.md"
+      ]
+    },
+    {
+      "repo": "yiyinyiyang/easyScholar",
+      "canonical_repo": "yiyinyiyang/easyScholar",
+      "commit": "f473f058974ef70164466a58493467419e6b3cc6",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2021-12-16T10:55:08Z",
+      "code_license": "unlicensed",
+      "data_license": "not_confirmed",
+      "data_years": [
+        "2019",
+        "2020",
+        "2021"
+      ],
+      "extractable_fields": [
+        "journal_abbr",
+        "journal_full_name",
+        "ccf_rank",
+        "sci_impact_factor",
+        "cas_base_tier",
+        "cas_up_tier",
+        "cscd_status",
+        "cssci_status",
+        "university_custom_ranks"
+      ],
+      "api_availability": "无公开动态 API 服务。本仓库为旧版浏览器扩展，数据硬编码保存在 show_ranking/data/ 目录下静态 JS 字典中；README 指向的源码仓 Nixiak-nan/easyScholar 经查已 404。",
+      "integration_status": "design_reference",
+      "rationale": "无明确代码许可证，且作为 museremarkable/swufe_ccf_show_ranking (AGPL-3.0) 的 fork 存在潜在开源传染风险；不可作为动态数据源接入，仅可参考其高校本地期刊目录与期刊全称缩写字典结构。",
+      "evidence_urls": [
+        "https://github.com/yiyinyiyang/easyScholar",
+        "https://raw.githubusercontent.com/yiyinyiyang/easyScholar/master/readme.md"
+      ]
+    },
+    {
+      "repo": "redleafnew/zotero-updateifs",
+      "canonical_repo": "redleafnew/zotero-updateifs",
+      "commit": "cc2dd0c3d5be47cbbffd6bb318be51b1a99c8aeb",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2022-12-10T09:00:40Z",
+      "code_license": "MPL-declared_unconfirmed",
+      "data_license": "third_party_review_required",
+      "data_years": [
+        "unknown"
+      ],
+      "extractable_fields": [
+        "jcr_quartile",
+        "cas_quartile",
+        "impact_factor",
+        "five_year_if",
+        "cscd",
+        "pku_core",
+        "tech_core",
+        "composite_if",
+        "comprehensive_if",
+        "journal_abbr"
+      ],
+      "api_availability": "依赖抓取唯问网（sci.justscience.cn）网页端，未见正式公开 API 声明，本次未验证可用性；作者已在 README 中推荐迁移至使用 easyScholar 官方接口的 zotero-updateifsE。",
+      "integration_status": "design_reference",
+      "rationale": "旧架构 XUL 插件，数据许可待核；仅作为 Zotero 字段元数据映射（写入 Archive/Rights 等字段）的设计参考，不直接对接其接口。",
+      "evidence_urls": [
+        "https://github.com/redleafnew/zotero-updateifs",
+        "https://raw.githubusercontent.com/redleafnew/zotero-updateifs/main/README.md"
+      ]
+    },
+    {
+      "repo": "DrJZhou/Journal-Information",
+      "canonical_repo": "DrJZhou/Journal-Information",
+      "commit": "4bed5e7087281ca0917f4568484cc5fc6216b6a7",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2022-10-09T03:59:19Z",
+      "code_license": "unlicensed",
+      "data_license": "not_confirmed",
+      "data_years": [
+        "2019"
+      ],
+      "extractable_fields": [
+        "journal_abbr",
+        "journal_full_name",
+        "ccf_rank",
+        "sci_category_rank",
+        "homepage_url",
+        "review_period",
+        "impact_factor_2019",
+        "letpub_link",
+        "page_limits"
+      ],
+      "api_availability": "无 API。纯静态 Markdown 表格与 PDF 文件，无交互端点。",
+      "integration_status": "import_only",
+      "rationale": "仅收录约 22 本计算机中等水平期刊信息，README 明确声明所有信息以 2019 年为准且审稿周期不一定可信；仅可作为个人历史投稿周期与页数限制的离线小样本经验参考，不可推算当前指标。",
+      "evidence_urls": [
+        "https://github.com/DrJZhou/Journal-Information",
+        "https://raw.githubusercontent.com/DrJZhou/Journal-Information/master/README.md"
+      ]
+    },
+    {
+      "repo": "secdr/sec-journal",
+      "canonical_repo": "secdr/sec-journal",
+      "commit": "568d9f7669176e8570617685103833da989278f4",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2017-05-13T13:36:58Z",
+      "code_license": "unlicensed",
+      "data_license": "not_confirmed",
+      "data_years": [
+        "2017"
+      ],
+      "extractable_fields": [
+        "journal_title",
+        "homepage_url",
+        "historical_if",
+        "review_duration_estimate",
+        "difficulty_comment"
+      ],
+      "api_availability": "无 API。纯静态 Markdown 文本列表。",
+      "integration_status": "import_only",
+      "rationale": "2017 年历史记录，仅包含 17 本安全类期刊；审稿周期数字未注明单位，难易度评语（如“难+正规”）为主观经验，仅能作为历史特定领域的静态经验对照，不能代表当前官方录用标准。",
+      "evidence_urls": [
+        "https://github.com/secdr/sec-journal",
+        "https://raw.githubusercontent.com/secdr/sec-journal/master/README.md"
+      ]
+    },
+    {
+      "repo": "CoolCodeLvs/Recommended-Journals-for-intelligent-fault-diagnosis",
+      "canonical_repo": "CoolCodeLvs/Recommended-Journals-for-intelligent-fault-diagnosis",
+      "commit": "2b2d1f13c8bef8d4ec3499309403b9c32f9d786e",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2022-07-06T13:23:59Z",
+      "code_license": "unlicensed",
+      "data_license": "not_confirmed",
+      "data_years": [
+        "2022"
+      ],
+      "extractable_fields": [
+        "journal_title",
+        "impact_factor_2022",
+        "cas_tier",
+        "ccf_rank",
+        "learned_society_t_tier",
+        "is_mandatory_oa",
+        "ablesci_link"
+      ],
+      "api_availability": "无 API。纯静态 Markdown 表格，通过 GitHub Pages 展示。",
+      "integration_status": "import_only",
+      "rationale": "聚焦智能故障诊断特定领域，提供兵工/自动化学会等 T 分级及 ablesci 链接；但停更于 2022 年，其父仓库 liguge 保持持续更新并包含 2025/2026 年最新分级与小类分区。",
+      "evidence_urls": [
+        "https://github.com/CoolCodeLvs/Recommended-Journals-for-intelligent-fault-diagnosis",
+        "https://raw.githubusercontent.com/CoolCodeLvs/Recommended-Journals-for-intelligent-fault-diagnosis/gh-pages/README.md"
+      ]
+    },
+    {
+      "repo": "weiaicunzai/awesome-medical-image-analysis-journals-and-conferences",
+      "canonical_repo": "weiaicunzai/awesome-medical-image-analysis-journals-and-conferences",
+      "commit": "4b58622d671474c77eb7f18d49b0693cdded2573",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2021-01-01T08:37:06Z",
+      "code_license": "unlicensed",
+      "data_license": "not_confirmed",
+      "data_years": [
+        "2019",
+        "2020"
+      ],
+      "extractable_fields": [
+        "venue_name",
+        "impact_factor_2019_2020",
+        "cas_tier",
+        "h5_index",
+        "ccf_rank",
+        "venue_type"
+      ],
+      "api_availability": "无 API。纯静态 Markdown 表格，无交互端点。",
+      "integration_status": "import_only",
+      "rationale": "整理了医学图像分析领域的高影响期刊与学术会议；数据明确为 2019-2020 年历史数据；包含期刊与会议混合条目，提取时需进行 venue_type 过滤，不可视为当前最新评价。",
+      "evidence_urls": [
+        "https://github.com/weiaicunzai/awesome-medical-image-analysis-journals-and-conferences",
+        "https://raw.githubusercontent.com/weiaicunzai/awesome-medical-image-analysis-journals-and-conferences/master/README.md"
+      ]
+    },
+    {
+      "repo": "Erwinoner/elsevier-tracker",
+      "canonical_repo": "Erwinoner/elsevier-tracker",
+      "commit": "de671f770f038ccb2c36e19a62a4356a03355730",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2025-04-14T09:25:39Z",
+      "code_license": "MIT",
+      "data_license": "user_private",
+      "data_years": [
+        "unknown"
+      ],
+      "extractable_fields": [
+        "manuscript_uuid",
+        "paper_title",
+        "journal_title",
+        "current_status",
+        "submitted_date",
+        "review_events",
+        "reviewer_invited_date",
+        "reviewer_accepted_date",
+        "reviewer_completed_date",
+        "response_time",
+        "review_time"
+      ],
+      "api_availability": "前端通过公共 CORS 代理请求 AWS API Gateway (tnlkuelk67.execute-api.us-east-1.amazonaws.com/tracker/{uuid})。因第三方代理存在明文截获稿件 UUID 与审稿事件的高隐私风险，严禁接入在线公共代理。",
+      "integration_status": "design_reference",
+      "rationale": "代码具备合法 MIT 许可；核心价值在于确立了 Elsevier 审稿事件数据模型（ReviewEvents 数组与 LatestRevisionNumber 过滤逻辑），仅支持离线解析用户主动导出的 JSON 轨迹，绝不发起在线轮询。",
+      "evidence_urls": [
+        "https://github.com/Erwinoner/elsevier-tracker",
+        "https://raw.githubusercontent.com/Erwinoner/elsevier-tracker/main/LICENSE",
+        "https://raw.githubusercontent.com/Erwinoner/elsevier-tracker/main/README.md",
+        "https://raw.githubusercontent.com/Erwinoner/elsevier-tracker/main/index.html"
+      ]
+    },
+    {
+      "repo": "zm1060/BetterElsevierTrack",
+      "canonical_repo": "zm1060/BetterElsevierTrack",
+      "commit": "0b6b14884604fe5abc69dcf8493374b52df63a49",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2025-07-24T06:24:19Z",
+      "code_license": "MIT_statement_not_confirmed",
+      "data_license": "user_private",
+      "data_years": [
+        "unknown"
+      ],
+      "extractable_fields": [
+        "manuscript_url",
+        "review_events",
+        "status_change_diff",
+        "reviewer_count"
+      ],
+      "api_availability": "接口已失效（archived: true）。README 明确标注因 Elsevier 更新接口，该插件已无法使用；且其后台监控向未加密 HTTP 服务器 (http://39.108.213.152:5000/start_monitor) 上报明文数据，存在严重信息安全泄露隐患。",
+      "integration_status": "unavailable",
+      "rationale": "上游接口已失效且仓库已归档；后台服务存在安全风险；仅作为状态变更快照 diff 机制的算法设计概念参考，绝不复用其代码或网络链路。",
+      "evidence_urls": [
+        "https://github.com/zm1060/BetterElsevierTrack",
+        "https://raw.githubusercontent.com/zm1060/BetterElsevierTrack/main/README.md"
+      ]
+    }
+  ],
+  "related": [
+    {
+      "repo": "redleafnew/zotero-updateifsE",
+      "relation": "redleafnew/zotero-updateifs 官方继任重构版本（Green Frog）",
+      "canonical_repo": "redleafnew/zotero-updateifsE",
+      "commit": "19c451c913c22c7ae697287b6727de5a51cf409e",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2026-08-20T02:14:16Z",
+      "code_license": "AGPL-3.0",
+      "data_license": "service_terms_apply",
+      "data_years": [
+        "unknown"
+      ],
+      "extractable_fields": [
+        "sci",
+        "sciUp",
+        "sciBase",
+        "sciif",
+        "sciif5",
+        "cscd",
+        "pku",
+        "cssci",
+        "ccf",
+        "ajg",
+        "ft50",
+        "university_categories"
+      ],
+      "api_availability": "通过用户自备 secretKey 请求 https://easyscholar.cc/open/getPublicationRank 开放接口。代码中另含私有服务器 IP (121.196.229.180:8080)，不应调用私有端点。",
+      "integration_status": "requires_key",
+      "rationale": "代码受 AGPL-3.0 强传染约束，不可直接引入其源码；本系统在隔离提供器中独立实现对 easyScholar OpenAPI 的标准请求，由用户配置环境变量提供自有 Key，无 Key 时优雅降级。",
+      "evidence_urls": [
+        "https://github.com/redleafnew/zotero-updateifsE",
+        "https://raw.githubusercontent.com/redleafnew/zotero-updateifsE/bootstrap/README.md"
+      ]
+    },
+    {
+      "repo": "WenyanLiu/CCFrank4dblp",
+      "relation": "yiyinyiyang/easyScholar 基础原型源头",
+      "canonical_repo": "WenyanLiu/CCFrank4dblp",
+      "commit": "540396b36bfb46b18cfed22bf5c578d73257c4b9",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2026-05-26T15:18:55Z",
+      "code_license": "MIT",
+      "data_license": "third_party_review_required",
+      "data_years": [
+        "2022",
+        "2026"
+      ],
+      "extractable_fields": [
+        "ccf_rank",
+        "ccf_category",
+        "venue_full_name",
+        "venue_abbr",
+        "dblp_id"
+      ],
+      "api_availability": "纯前端浏览器插件，无后端 API；内置清洗完备的 CCF 会议与期刊全称/简称/DBLP key 静态映射表。",
+      "integration_status": "design_reference",
+      "rationale": "采用宽松 MIT 许可并持续维护；其关于计算机领域期刊会议全称与简称缩写的双向消歧映射表具有很高的参考价值。",
+      "evidence_urls": [
+        "https://github.com/WenyanLiu/CCFrank4dblp",
+        "https://raw.githubusercontent.com/WenyanLiu/CCFrank4dblp/master/README.md"
+      ]
+    },
+    {
+      "repo": "liguge/Journals-of-Prognostics-and-Health-Management",
+      "relation": "CoolCodeLvs/Recommended-Journals-for-intelligent-fault-diagnosis 的直接父仓库",
+      "canonical_repo": "liguge/Journals-of-Prognostics-and-Health-Management",
+      "commit": "9403c046426ea79df0798d5deffb2a79c44a9e85",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2026-09-17T11:39:59Z",
+      "code_license": "unlicensed",
+      "data_license": "not_confirmed",
+      "data_years": [
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "extractable_fields": [
+        "journal_title",
+        "impact_factor_2025",
+        "cas_major_tier_2025",
+        "cas_minor_tier",
+        "xr_tier_2026",
+        "is_top",
+        "ccf_rank",
+        "learned_society_t_tier",
+        "is_mandatory_oa"
+      ],
+      "api_availability": "无 API。静态 Markdown 表格与 GitHub Pages 展示。",
+      "integration_status": "import_only",
+      "rationale": "相比停更的种子仓，上游父仓库持续维护至 2026 年（记录 2025 SCI IF、2026 新锐分区及小类分区详细变动），是工科智能故障诊断领域极高价值的离线对照表。",
+      "evidence_urls": [
+        "https://github.com/liguge/Journals-of-Prognostics-and-Health-Management",
+        "https://raw.githubusercontent.com/liguge/Journals-of-Prognostics-and-Health-Management/gh-pages/README.md"
+      ]
+    },
+    {
+      "repo": "Hylouis233/xr-journal-query",
+      "relation": "AaronGIG/xr-journal-query 的功能增强 fork",
+      "canonical_repo": "Hylouis233/xr-journal-query",
+      "commit": "10ef514aa3666f413ca0e36fea9a2babfdbf8961",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2026-08-23T01:39:41Z",
+      "code_license": "MIT",
+      "data_license": "third_party_review_required",
+      "data_years": [
+        "2026"
+      ],
+      "extractable_fields": [
+        "journal_title",
+        "discipline_category",
+        "sub_category",
+        "tier",
+        "is_top",
+        "wos_collection"
+      ],
+      "api_availability": "无 API。单 HTML 静态页面，离线可用。",
+      "integration_status": "import_only",
+      "rationale": "较上游版本领先 8 个提交，补充了小类学科分区筛选与 Web of Science 收录状态筛选，共收录 22,257 种期刊；数据颗粒度明显高于上游，但同样缺少 ISSN 与影响因子。",
+      "evidence_urls": [
+        "https://github.com/Hylouis233/xr-journal-query",
+        "https://raw.githubusercontent.com/Hylouis233/xr-journal-query/master/README.md"
+      ]
+    },
+    {
+      "repo": "museremarkable/swufe_ccf_show_ranking",
+      "relation": "yiyinyiyang/easyScholar 的直接父仓库",
+      "canonical_repo": "museremarkable/swufe_ccf_show_ranking",
+      "commit": "e9161b278206662f6ca6f98ad1932c022133d3d1",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2021-12-14T03:38:13Z",
+      "code_license": "AGPL-3.0",
+      "data_license": "not_confirmed",
+      "data_years": [
+        "2019",
+        "2021"
+      ],
+      "extractable_fields": [
+        "university_custom_ranks",
+        "swufe_rank",
+        "fdu_rank",
+        "sjtu_rank",
+        "pku_rank"
+      ],
+      "api_availability": "无 API。保存在扩展源码的内部静态 js 字典中。",
+      "integration_status": "design_reference",
+      "rationale": "采用 AGPL-3.0 许可证，存在许可证传染风险；仅可作为各高校特色期刊分级数据结构的离线模型参考，不进行代码并入。",
+      "evidence_urls": [
+        "https://github.com/museremarkable/swufe_ccf_show_ranking"
+      ]
+    },
+    {
+      "repo": "l0o0/jasminum",
+      "relation": "redleafnew/zotero-updateifs 提及的中文核心期刊代码参考（茉莉花）",
+      "canonical_repo": "l0o0/jasminum",
+      "commit": "b63a6a1e0ac4ce25fcd0c9200ec647b063ce02c0",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2026-09-02T08:20:04Z",
+      "code_license": "AGPL-3.0",
+      "data_license": "not_confirmed",
+      "data_years": [
+        "unknown"
+      ],
+      "extractable_fields": [
+        "cnki_metadata",
+        "cscd_flag",
+        "pku_core_flag",
+        "chinese_compound_if",
+        "chinese_comprehensive_if"
+      ],
+      "api_availability": "基于抓取知网网页端，未见对外开放 API 声明，本次未验证可用性。",
+      "integration_status": "design_reference",
+      "rationale": "AGPL-3.0 许可，专注 Zotero 中文文献元数据抓取；仅作为中文核心期刊匹配和复合影响因子解析算法的设计参考。",
+      "evidence_urls": [
+        "https://github.com/l0o0/jasminum"
+      ]
+    },
+    {
+      "repo": "Nixiak-nan/easyScholar",
+      "relation": "yiyinyiyang/easyScholar README 标明的原项目源码与数据地址",
+      "canonical_repo": "Nixiak-nan/easyScholar",
+      "commit": "unknown",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "unknown",
+      "code_license": "unknown",
+      "data_license": "unknown",
+      "data_years": [
+        "unknown"
+      ],
+      "extractable_fields": [],
+      "api_availability": "不可访问（HTTP 404 Not Found）。",
+      "integration_status": "unavailable",
+      "rationale": "查证确认该仓库链接已失效（已被删除、改名或设为私有）；证实静态 README 中声明的第三方外部源存在高失效风险，系统不可强依赖此类外链。",
+      "evidence_urls": [
+        "https://github.com/Nixiak-nan/easyScholar"
+      ]
+    },
+    {
+      "repo": "beloglazov/zotero-scholar-citations",
+      "relation": "redleafnew/zotero-updateifs 的扩展框架源头",
+      "canonical_repo": "beloglazov/zotero-scholar-citations",
+      "commit": "82fd0aa5ac31a5727d2d16b18030b23fb48713b1",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2021-02-21T15:45:04Z",
+      "code_license": "unlicensed",
+      "data_license": "user_private",
+      "data_years": [
+        "unknown"
+      ],
+      "extractable_fields": [
+        "google_scholar_citation_count"
+      ],
+      "api_availability": "抓取 Google Scholar 网页，未见开放 API 声明，本次未验证可用性。",
+      "integration_status": "design_reference",
+      "rationale": "仅为历史插件框架原型，不包含期刊等级与评价数据，仅作为历史架构参考。",
+      "evidence_urls": [
+        "https://github.com/beloglazov/zotero-scholar-citations"
+      ]
+    },
+    {
+      "repo": "webbrain-one/BetterElsevierTrack",
+      "relation": "zm1060/BetterElsevierTrack 的 fork 分支",
+      "canonical_repo": "webbrain-one/BetterElsevierTrack",
+      "commit": "0b6b14884604fe5abc69dcf8493374b52df63a49",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2026-08-05T19:30:07Z",
+      "code_license": "unlicensed",
+      "data_license": "user_private",
+      "data_years": [
+        "unknown"
+      ],
+      "extractable_fields": [
+        "review_events",
+        "manuscript_url"
+      ],
+      "api_availability": "接口已不可用。",
+      "integration_status": "unavailable",
+      "rationale": "经 Git 差异比对，该分支与上游失效版本 commit 完全一致，无代码更新或接口修复。",
+      "evidence_urls": [
+        "https://github.com/webbrain-one/BetterElsevierTrack"
+      ]
+    },
+    {
+      "repo": "zmoit99-eng/ShowJCR",
+      "relation": "hitfyd/ShowJCR 的 fork 副本",
+      "canonical_repo": "zmoit99-eng/ShowJCR",
+      "commit": "4687a8f608f20aaf004299992f5d347dba009361",
+      "checked_at": "2026-09-25T03:43:57Z",
+      "pushed_at": "2026-08-20T08:47:24Z",
+      "code_license": "GPL-3.0",
+      "data_license": "third_party_review_required",
+      "data_years": [
+        "2020",
+        "2021",
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "extractable_fields": [
+        "cas_data",
+        "jcr_data",
+        "xr_data",
+        "ccf_data"
+      ],
+      "api_availability": "本地离线 CSV/SQLite。",
+      "integration_status": "import_only",
+      "rationale": "作为上游 ShowJCR 的镜像 fork，内容与主仓库保持同步，未引入新格式。",
+      "evidence_urls": [
+        "https://github.com/zmoit99-eng/ShowJCR"
+      ]
+    }
+  ],
+  "limitations": [
+    "代码许可与数据许可严格分离核验：开源许可证（如 GPL-3.0、MIT、AGPL-3.0）仅约束软件代码本身，仓库随附或抓取的第三方期刊分级数据（中科院分区升级版、Clarivate JCR、CCF 目录等）数据再分发许可待核，本项目采用独立离线导入机制，不预置未确认许可的第三方数据。",
+    "任何仓库的 pushed_at 或最近 commit 时间均不能等同于数据年份，必须以数据文件表头、文件命名或官方发版声明为准。",
+    "严禁在生产或集成过程中运行旧爬虫脚本（如 SciPythonSpider、zotero-updateifs），目标站点结构更迭与反爬机制极易导致封禁或脏数据污染。",
+    "严禁使用公共 CORS 代理或明文第三方云监控（如 Erwinoner/elsevier-tracker、zm1060/BetterElsevierTrack），稿件 UUID 与审稿事件属于学术隐私，只允许在纯离线环境下解析用户主动导出的 JSON 轨迹。",
+    "第三方商业/准商业 API（如 easyScholar OpenAPI）必须依赖用户自备合法凭据（API Key），系统不内置共享密钥；请求失败或未配置时必须安全降级，且返回数据中未明示年份的指标必须标注为 unknown。",
+    "新锐期刊分区（XR-Scholar）属于第三方机构自研评价体系，非中科院官方升级版分区或 Clarivate JCR 分区，不可直接混淆口径；单 HTML 提取的期刊缺少 ISSN，必须依赖严格的刊名消歧匹配。",
+    "历史经验类数据（如 DrJZhou、secdr、weiaicunzai）仅为小样本静态历史参考，不可作为当前期刊影响因子、初审周期或录用率计算依据。"
+  ]
+}

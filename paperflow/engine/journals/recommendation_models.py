@@ -89,8 +89,8 @@ class RecommendationPreferences(Model):
     max_decision_days: Optional[float] = Field(default=None, gt=0)
     decision_stage: Literal["first_decision", "peer_review", "acceptance"] = "first_decision"
     estimated_pages: Optional[int] = Field(default=None, ge=1, le=1000)
-    per_group: int = Field(default=3, ge=1, le=5)
-    candidate_limit: int = Field(default=30, ge=1, le=50)
+    per_group: int = Field(default=6, ge=1, le=20)
+    candidate_limit: int = Field(default=50, ge=1, le=200)
     min_scope_fit: float = Field(default=50, ge=0, le=100)
     evidence_max_age_days: int = Field(default=90, ge=1, le=365)
     scope_max_age_days: int = Field(default=730, ge=1, le=3650)
