@@ -1,4 +1,45 @@
-# PaperFlow · AI 客户端与 Office/Word 实时连接桥梁 & 论文从0到1写作套件
+# PaperFlow · 独立科研 Agent 工作台与 MCP 写作工具服务
+
+## 两种使用模式
+
+| 模式 | 谁执行 Agent 任务 | 如何启动 | 模型配置 |
+| --- | --- | --- | --- |
+| 独立网页工作台 | PaperFlow 内置 Agent；也可手动操作各业务页面 | `python -m paperflow web`（`gui` / `studio` 为别名） | 网页设置中配置 Responses、Chat Completions 兼容或 Anthropic 协议；发送材料前明确授权 |
+| 外部 harness / MCP | 你所使用的 AI 客户端 | `python -m paperflow run` 或无参数启动 | 使用宿主模型，不要求 PaperFlow 额外配置模型 Key |
+
+### 独立工作台快速开始
+
+要求 Python 3.10+。安装已构建的 wheel（下面以 0.1.0 文件名为例）；包内包含网页静态资源，最终用户不需要 Node。本地构建不代表已发布至 PyPI。
+
+```bash
+python -m pip install "./dist/paperflow_mcp-0.1.0-py3-none-any.whl[gui,pdf]"
+python -m paperflow web
+```
+
+从当前源码开发运行：
+
+```bash
+python -m pip install -e ".[dev,gui,pdf]"
+npm --prefix frontend ci
+npm --prefix frontend run build
+python -m paperflow web
+```
+
+完成前端构建后，运行 `python -m build` 可在 `dist/` 生成包含网页资源的 wheel 和源码包。
+
+- 启动时打印仅本次有效的本机访问链接；只监听 `127.0.0.1`，不是公网多租户服务。
+- 先创建/选择工作区，再使用科研规划、文献、写作、选刊、投稿、文档格式、任务成果和 Agent 页面；无需把日常操作写成 JSON。
+- 没有模型 Key 时仍可使用手动和离线功能。模型连接测试只发送简短测试消息，不上传项目材料。
+- Agent 显示实际工具调用、审批、预算、停止状态与产物；默认最多 40 次模型调用、80 次工具执行、30 分钟。已发出的请求仍需结算，停止不会回滚既有结果。
+- 模型 Key 默认只在服务进程内存中；勾选记住时使用系统 keyring，并按端点隔离。网页访问令牌不是模型 Key。
+- 上传材料和下载产物使用受管文件 ID；不会允许网页或模型直接读写任意系统路径。文档规范化默认下载新副本。
+- Word/WPS 实时操作需要 Windows 与可用的桌面程序；先锁定具体文档，修改需要确认。其他平台仍可处理离线 DOCX。
+- MCP Apps 原有单文件界面继续兼容；`python -m paperflow gui --legacy` 可打开旧工作台。
+- 原文提取不等于完整理解，引用定位校验不认证论述真伪；没有自有实验材料时保留占位，不将他人结果写成本人实验。
+
+运行中的任务和会话保存在本地；重启不自动恢复模型调用或文档修改。事件流重连只恢复显示，不重复执行副作用。未知完成状态的中断动作需要核对，不能直接假定成功。
+
+---
 
 <p align="center">
   <b>让 Tencent WorkBuddy、通义千问 Qwen、Cursor、Claude 直接“挂载连接”桌面上运行的 Microsoft Word 与 WPS！</b><br>

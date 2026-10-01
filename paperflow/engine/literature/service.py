@@ -183,7 +183,7 @@ class LiteratureService:
         return response(data, status="partial" if warnings else "success", coverage=coverage, sources=paper["sources"], warnings=warnings)
 
     def save_reading(self, paper_id: str, reading: Dict[str, Any], origin: str = "calling_agent", strict: bool = True) -> Dict[str, Any]:
-        if origin not in ("calling_agent", "gui_model") or not isinstance(strict, bool):
+        if origin not in ("calling_agent", "gui_model", "nativeAgent") or not isinstance(strict, bool):
             raise JournalError("INVALID_INPUT", "解读来源或校验模式无效")
         paper = self.store.get(paper_id)
         self._bytes(paper)

@@ -23,7 +23,7 @@ from paperflow.engine.journals.recommendation_models import FitAssessment, Resea
 
 from .secrets import ModelConfig, redact
 
-PROVIDERS = ("openai_compatible", "anthropic")
+PROVIDERS = ("openai_compatible", "openai_responses", "anthropic")
 MAX_TARGETS = 24
 TIMEOUT_SECONDS = 120
 LOCAL_HOSTS = {"127.0.0.1", "localhost", "::1"}
@@ -33,12 +33,16 @@ Transport = Callable[[str, Dict[str, str], Dict[str, Any]], Dict[str, Any]]
 
 def validate_endpoint(provider: str, base_url: str, model: str) -> None:
     if provider not in PROVIDERS:
-        raise JournalError("INVALID_INPUT", "provider 只能是 openai_compatible 或 anthropic")
+        raise JournalError("INVALID_INPUT", "provider 只能是 openai_compatible、openai_responses 或 anthropic")
     if not model or len(model) > 200:
         raise JournalError("INVALID_INPUT", "请填写模型名称")
     parts = urlsplit(base_url or "")
-    if not parts.hostname or parts.username or parts.password:
-        raise JournalError("INVALID_INPUT", "接口地址无效或包含账号信息")
+    if not parts.hostname or parts.username or parts.password or parts.query or parts.fragment:
+        raise JournalError("INVALID_INPUT", "接口地址无效，不得包含账号、查询参数或片段")
+    try:
+        parts.port
+    except ValueError:
+        raise JournalError("INVALID_INPUT", "接口端口无效") from None
     if parts.scheme == "https":
         return
     if parts.scheme == "http" and parts.hostname in LOCAL_HOSTS:
@@ -47,10 +51,20 @@ def validate_endpoint(provider: str, base_url: str, model: str) -> None:
 
 
 def _http_transport(url: str, headers: Dict[str, str], body: Dict[str, Any]) -> Dict[str, Any]:
-    request = urllib.request.Request(url, data=json.dumps(body).encode("utf-8"),
+    class NoRedirect(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg, response_headers, newurl):
+            raise JournalError("MODEL_REDIRECT", "模型接口重定向已阻止，请填写最终可信端点")
+
+    request = urllib.request.Request(url, data=json.dumps(body, allow_nan=False).encode("utf-8"),
                                      headers={"Content-Type": "application/json", **headers}, method="POST")
-    with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as reply:
-        return json.loads(reply.read(8 * 1024 * 1024).decode("utf-8"))
+    with urllib.request.build_opener(NoRedirect()).open(request, timeout=TIMEOUT_SECONDS) as reply:
+        raw = reply.read(8 * 1024 * 1024 + 1)
+        if len(raw) > 8 * 1024 * 1024:
+            raise JournalError("MODEL_RESPONSE_TOO_LARGE", "模型响应超过大小限制")
+        result = json.loads(raw.decode("utf-8"))
+        if not isinstance(result, dict):
+            raise JournalError("MODEL_ERROR", "模型响应必须是 JSON 对象")
+        return result
 
 
 def _chat(config: ModelConfig, system: str, user: str, transport: Transport) -> str:
@@ -64,6 +78,13 @@ def _chat(config: ModelConfig, system: str, user: str, transport: Transport) -> 
                                "messages": [{"role": "user", "content": user}]})
             return "".join(b.get("text", "") for b in reply.get("content", []) if b.get("type") == "text")
         headers = {"Authorization": f"Bearer {key}"} if key else {}
+        if config.provider == "openai_responses":
+            endpoint = base if base.endswith("/responses") else base + "/responses"
+            reply = transport(endpoint, headers, {"model": config.model, "instructions": system,
+                                                  "input": [{"role": "user", "content": user}], "store": False})
+            return "".join(block.get("text", "") for item in reply.get("output", [])
+                           if item.get("type") == "message" for block in item.get("content", [])
+                           if block.get("type") == "output_text")
         reply = transport(base + "/chat/completions", headers,
                           {"model": config.model, "temperature": 0,
                            "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}]})

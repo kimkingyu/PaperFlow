@@ -429,8 +429,8 @@ def loop_params(action: str, params: Dict[str, Any]) -> Dict[str, Any]:
             raise JournalError("INVALID_INPUT", "expected_project_revision 必须是整数")
         if "expected_loop_revision" not in params or type(params["expected_loop_revision"]) is not int:
             raise JournalError("INVALID_INPUT", "expected_loop_revision 必须是整数")
-        if params.get("origin") not in ("calling_agent", "gui_model", None):
-            raise JournalError("INVALID_INPUT", "origin 必须是 calling_agent 或 gui_model")
+        if params.get("origin") not in ("calling_agent", "gui_model", "nativeAgent", None):
+            raise JournalError("INVALID_INPUT", "origin 必须是 calling_agent、gui_model 或 nativeAgent")
 
     if action == "loop_step":
         act_id = params.get("action_id")
@@ -451,8 +451,8 @@ def loop_params(action: str, params: Dict[str, Any]) -> Dict[str, Any]:
             raise JournalError("INVALID_INPUT", "expected_project_revision 必须是整数")
         if "expected_loop_revision" not in params or type(params["expected_loop_revision"]) is not int:
             raise JournalError("INVALID_INPUT", "expected_loop_revision 必须是整数")
-        if params.get("origin") not in ("calling_agent", "gui_model", None):
-            raise JournalError("INVALID_INPUT", "origin 必须是 calling_agent 或 gui_model")
+        if params.get("origin") not in ("calling_agent", "gui_model", "nativeAgent", None):
+            raise JournalError("INVALID_INPUT", "origin 必须是 calling_agent、gui_model 或 nativeAgent")
 
     return result
 

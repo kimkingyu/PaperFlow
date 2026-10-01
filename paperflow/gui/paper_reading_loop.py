@@ -14,6 +14,7 @@ import re
 import threading
 import time
 import unicodedata
+import uuid
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from paperflow.engine.journals.models import JournalError, response
@@ -86,13 +87,33 @@ def _check_no_paths(val: Any) -> None:
             _check_no_paths(item)
 
 
+def _execution_call(services: Any, method: str, project_id: str, owner: str) -> None:
+    result = getattr(services, method)(project_id, owner)
+    if isinstance(result, dict) and result.get("status") == "error":
+        raise JournalError(result.get("error_code") or "EXECUTION_BUSY",
+                           result.get("message") or "项目执行权不可用")
+
+
+def _verified_execution_project(data: dict) -> str:
+    project_id = (data.get("project") or {}).get("project_id") or data.get("project_id")
+    if not isinstance(project_id, str) or not project_id.strip():
+        raise JournalError("INVALID_INPUT", "服务未返回已验证的项目 ID；未执行循环动作")
+    return project_id
+
+
 class LoopWorker:
     def __init__(self, service: Any, store: SecretStore, project_id: str,
-                 transport: Optional[model_scoring.Transport] = None):
+                 transport: Optional[model_scoring.Transport] = None, *,
+                 execution_services: Any = None, owner: Optional[str] = None):
         self.service = service
         self.store = store
         self.project_id = project_id
         self.transport = transport
+        self.execution_services = execution_services
+        self.owner = owner
+        self._execution_released = False
+        if execution_services is not None and not owner:
+            raise JournalError("INVALID_INPUT", "租约执行器必须具有后端生成的 owner")
         self.config_fingerprint = _config_hash(store.config)
         self.pause_event = threading.Event()
         self.stop_event = threading.Event()
@@ -101,12 +122,33 @@ class LoopWorker:
         self.last_error: Optional[str] = None
         self.started_at = 0.0
 
+    def _ensure_execution(self) -> None:
+        # Never enter SQLite while holding the process-local worker registry lock.
+        if self.execution_services is not None:
+            _execution_call(self.execution_services, "ensure_execution", self.project_id, self.owner)
+
+    def _release_execution(self) -> None:
+        if self.execution_services is not None and not self._execution_released:
+            _execution_call(self.execution_services, "release_execution", self.project_id, self.owner)
+            self._execution_released = True
+
     def start(self) -> None:
         with _WORKER_LOCK:
             self.is_running = True
             self.started_at = time.time()
+        try:
+            self._ensure_execution()
             self.thread = threading.Thread(target=self._run, name=f"loop-worker-{self.project_id}", daemon=True)
             self.thread.start()
+        except BaseException:
+            try:
+                self._release_execution()
+            finally:
+                with _WORKER_LOCK:
+                    self.is_running = False
+                    if _WORKERS.get(self.project_id) is self:
+                        _WORKERS.pop(self.project_id, None)
+            raise
 
     def request_pause(self) -> None:
         self.pause_event.set()
@@ -133,7 +175,8 @@ class LoopWorker:
         if len(user_text) > MAX_MODEL_CHARS:
             raise JournalError("MODEL_BUDGET_EXCEEDED", f"本阶段模型材料超过 {MAX_MODEL_CHARS} 字符限制")
 
-        # 1. Reserve attempt
+        # 1. Reserve attempt (the existing budget protocol remains authoritative).
+        self._ensure_execution()
         reserved = self.service.reserve_model_call(
             self.project_id, action_id, expected_proj_rev, expected_loop_rev
         )
@@ -156,6 +199,8 @@ class LoopWorker:
         chat_success = False
         raw_result = None
         try:
+            self._ensure_execution()
+            config = self._verify_config_and_consent()
             tp = self.transport or model_scoring._http_transport
             raw_text = model_scoring._chat(config, system, user_text, tp)
             raw_result = model_scoring._json_block(raw_text)
@@ -185,6 +230,10 @@ class LoopWorker:
             raise JournalError("PAUSED_BY_USER" if c_status == "paused" else "STOPPED_BY_USER",
                                "后端循环已处于暂停或停止状态，已结算调用但不应用晚到的结果")
 
+        # Late results still count, but cannot be applied after consent/config/lease changes.
+        self._verify_config_and_consent()
+        self._ensure_execution()
+
         # 5. Sanitize and validate no secrets/paths leaked
         serialized = json.dumps(raw_result, ensure_ascii=False, allow_nan=False)
         key = config.api_key()
@@ -195,6 +244,7 @@ class LoopWorker:
         return raw_result, updated_loop_rev
 
     def _execute_review_phase(self, env_data: dict) -> None:
+        self._ensure_execution()
         loop_rev = env_data["loop_revision"]
         proj_rev = env_data["project_revision"]
         prep = self.service.prepare_review(self.project_id)
@@ -245,6 +295,8 @@ class LoopWorker:
         latest_proj_rev = fdata.get("project_revision", proj_rev)
         latest_loop_rev = fdata.get("loop_revision", loop_rev)
 
+        self._ensure_execution()
+        self._verify_config_and_consent()
         sub_res = self.service.submit_review(
             self.project_id, review_obj, context_fingerprint, latest_proj_rev, latest_loop_rev, origin="gui_model"
         )
@@ -253,6 +305,7 @@ class LoopWorker:
                                sub_res.get("message") or "评审结果提交失败")
 
     def _execute_assessment_phase(self, env_data: dict) -> None:
+        self._ensure_execution()
         loop_rev = env_data["loop_revision"]
         proj_rev = env_data["project_revision"]
         loop_obj = env_data.get("loop") or {}
@@ -265,6 +318,7 @@ class LoopWorker:
 
         if not candidates:
             # 没有可评估候选，尝试单步推进
+            self._ensure_execution()
             self.service.step(self.project_id, action_id, proj_rev, loop_rev)
             return
 
@@ -322,6 +376,8 @@ class LoopWorker:
                     })
 
         feedback = {"kind": "assessment", "assessments": sanitized_assessments}
+        self._ensure_execution()
+        self._verify_config_and_consent()
         app_res = self.service.apply_feedback(
             self.project_id, action_id, feedback, latest_proj_rev, latest_loop_rev, origin="gui_model"
         )
@@ -330,6 +386,7 @@ class LoopWorker:
                                app_res.get("message") or "候选初筛应用失败")
 
     def _execute_interpretation_phase(self, env_data: dict) -> None:
+        self._ensure_execution()
         loop_rev = env_data["loop_revision"]
         proj_rev = env_data["project_revision"]
         loop_obj = env_data.get("loop") or {}
@@ -368,6 +425,8 @@ class LoopWorker:
         feedback = {"kind": "interpretation", "reading": card_data}
         if isinstance(res_obj, dict) and "read_more" in res_obj and isinstance(res_obj["read_more"], bool):
             feedback["read_more"] = res_obj["read_more"]
+        self._ensure_execution()
+        self._verify_config_and_consent()
         app_res = self.service.apply_feedback(
             self.project_id, action_id, feedback, latest_proj_rev, latest_loop_rev, origin="gui_model"
         )
@@ -376,6 +435,7 @@ class LoopWorker:
                                app_res.get("message") or "文献解读应用失败")
 
     def _execute_revision_phase(self, env_data: dict) -> None:
+        self._ensure_execution()
         loop_rev = env_data["loop_revision"]
         proj_rev = env_data["project_revision"]
         loop_obj = env_data.get("loop") or {}
@@ -422,6 +482,8 @@ class LoopWorker:
         new_draft = res_obj.get("draft") if (isinstance(res_obj, dict) and "draft" in res_obj) else res_obj
         note = res_obj.get("change_note") if isinstance(res_obj, dict) else "基于新证据自动修订"
         feedback = {"kind": "revision", "draft": new_draft, "change_note": str(note)[:1000]}
+        self._ensure_execution()
+        self._verify_config_and_consent()
         app_res = self.service.apply_feedback(
             self.project_id, action_id, feedback, latest_proj_rev, latest_loop_rev, origin="gui_model"
         )
@@ -430,6 +492,7 @@ class LoopWorker:
                                app_res.get("message") or "草稿修订应用失败")
 
     def _execute_step(self, env_data: dict) -> None:
+        self._ensure_execution()
         loop_obj = env_data.get("loop") or {}
         next_act = loop_obj.get("next_action") or {}
         action_id = next_act.get("action_id")
@@ -447,6 +510,7 @@ class LoopWorker:
         proj_rev = fdata.get("project_revision", env_data["project_revision"])
         loop_rev = fdata.get("loop_revision", env_data["loop_revision"])
 
+        self._ensure_execution()
         step_res = self.service.step(self.project_id, action_id, proj_rev, loop_rev)
         if step_res.get("status") == "error":
             raise JournalError(step_res.get("error_code") or "STEP_FAILED", step_res.get("message") or "执行单步失败")
@@ -454,6 +518,7 @@ class LoopWorker:
     def _run(self) -> None:
         try:
             while not (self.stop_event.is_set() or self.pause_event.is_set()):
+                self._ensure_execution()
                 state_env = self.service.get(self.project_id)
                 if state_env.get("status") == "error":
                     raise JournalError(state_env.get("error_code") or "GET_FAILED",
@@ -498,6 +563,7 @@ class LoopWorker:
             try:
                 curr = self.service.get(self.project_id)
                 cdata = curr.get("data") or {}
+                self._ensure_execution()
                 self.service.control(
                     self.project_id, "pause",
                     cdata.get("loop_revision", 0),
@@ -507,9 +573,13 @@ class LoopWorker:
             except Exception:
                 pass
         finally:
-            with _WORKER_LOCK:
-                self.is_running = False
-                _WORKERS.pop(self.project_id, None)
+            try:
+                self._release_execution()
+            finally:
+                with _WORKER_LOCK:
+                    self.is_running = False
+                    if _WORKERS.get(self.project_id) is self:
+                        _WORKERS.pop(self.project_id, None)
 
 
 # ---------------------------------------------------------------------------
@@ -537,7 +607,8 @@ def shutdown_all() -> None:
 def start_auto_loop(service: Any, store: SecretStore, project_id: str,
                     expected_loop_revision: int, expected_project_revision: int,
                     budget: Optional[dict] = None, request: str = "",
-                    consent: bool = False, transport: Optional[model_scoring.Transport] = None) -> dict:
+                    consent: bool = False, transport: Optional[model_scoring.Transport] = None, *,
+                    execution_services: Any = None) -> dict:
     if consent is not True:
         raise JournalError("CONSENT_REQUIRED", "启动自适应补读自动循环必须明确授权预算与材料发送")
     config = store.config
@@ -559,19 +630,49 @@ def start_auto_loop(service: Any, store: SecretStore, project_id: str,
         raise JournalError(current.get("error_code") or "PROJECT_NOT_FOUND", current.get("message") or "项目不存在")
     cdata = current.get("data") or {}
     loop_stat = (cdata.get("loop") or {}).get("status", "idle")
-
-    action = "start" if loop_stat in ("idle", None) else "resume"
-    ctl_res = service.control(
-        project_id, action, expected_loop_revision, expected_project_revision,
-        budget=budget, request=request
-    )
-    if ctl_res.get("status") == "error":
-        raise JournalError(ctl_res.get("error_code") or "CONTROL_FAILED", ctl_res.get("message") or "控制操作失败")
-
-    worker = LoopWorker(service, store, project_id, transport=transport)
-    with _WORKER_LOCK:
-        _WORKERS[project_id] = worker
-    worker.start()
+    if execution_services is not None:
+        project_id = _verified_execution_project(cdata)
+    owner = f"gui:{uuid.uuid4().hex}"
+    acquired = False
+    worker = None
+    try:
+        if execution_services is not None:
+            _execution_call(execution_services, "acquire_execution", project_id, owner)
+            acquired = True
+        worker = LoopWorker(service, store, project_id, transport=transport,
+                            execution_services=execution_services, owner=owner)
+        # Reserve the local slot before control, without nesting SQLite and registry locks.
+        with _WORKER_LOCK:
+            active = [pid for pid, w in _WORKERS.items() if w.is_running]
+            if project_id in active:
+                raise JournalError("LOOP_ALREADY_RUNNING", "该项目的自适应补读已在后台运行中")
+            if len(active) >= MAX_GLOBAL_WORKERS:
+                raise JournalError("MAX_WORKERS_EXCEEDED", f"全局后台循环已达上限（最多 {MAX_GLOBAL_WORKERS} 个并发）")
+            worker.is_running = True
+            _WORKERS[project_id] = worker
+        action = "start" if loop_stat in ("idle", None) else "resume"
+        worker._ensure_execution()
+        worker._verify_config_and_consent()
+        ctl_res = service.control(
+            project_id, action, expected_loop_revision, expected_project_revision,
+            budget=budget, request=request
+        )
+        if ctl_res.get("status") == "error":
+            raise JournalError(ctl_res.get("error_code") or "CONTROL_FAILED", ctl_res.get("message") or "控制操作失败")
+        worker.start()
+    except BaseException:
+        try:
+            if worker is not None:
+                worker._release_execution()
+            elif acquired:
+                _execution_call(execution_services, "release_execution", project_id, owner)
+        finally:
+            if worker is not None:
+                with _WORKER_LOCK:
+                    worker.is_running = False
+                    if _WORKERS.get(project_id) is worker:
+                        _WORKERS.pop(project_id, None)
+        raise
 
     res_data = ctl_res.get("data") or {}
     return response({
@@ -625,10 +726,12 @@ def stop_loop(service: Any, project_id: str,
 def resume_loop(service: Any, store: SecretStore, project_id: str,
                 expected_loop_revision: int, expected_project_revision: int,
                 budget: Optional[dict] = None, request: str = "",
-                consent: bool = False, transport: Optional[model_scoring.Transport] = None) -> dict:
+                consent: bool = False, transport: Optional[model_scoring.Transport] = None, *,
+                execution_services: Any = None) -> dict:
     return start_auto_loop(
         service, store, project_id, expected_loop_revision, expected_project_revision,
-        budget=budget, request=request, consent=consent, transport=transport
+        budget=budget, request=request, consent=consent, transport=transport,
+        execution_services=execution_services
     )
 
 
@@ -646,7 +749,8 @@ def update_budget(service: Any, project_id: str,
 
 def single_step(service: Any, store: SecretStore, project_id: str,
                 expected_loop_revision: int, expected_project_revision: int,
-                consent: bool = False, transport: Optional[model_scoring.Transport] = None) -> dict:
+                consent: bool = False, transport: Optional[model_scoring.Transport] = None, *,
+                execution_services: Any = None) -> dict:
     """Execute a single phase/action step in the reading loop."""
     if (type(expected_loop_revision) is not int or expected_loop_revision < 0
             or type(expected_project_revision) is not int or expected_project_revision < 1):
@@ -662,34 +766,66 @@ def single_step(service: Any, store: SecretStore, project_id: str,
             or current_project_revision != expected_project_revision):
         raise JournalError("REVISION_CONFLICT", "项目或补读循环版本已变化，请刷新后重试；未执行单步动作")
     status = loop_obj.get("status")
+    # Consent rejection must precede lease acquisition and any execution side effects.
+    initial_kind = (loop_obj.get("next_action") or {}).get("kind")
+    model_kinds = {"review", "assessment", "interpretation", "revision"}
+    if consent is not True and (initial_kind in model_kinds or status in {
+            "awaiting_review", "awaiting_assessment", "awaiting_interpretation", "awaiting_revision"}):
+        raise JournalError("CONSENT_REQUIRED", "执行模型阶段前需明确同意发送本阶段材料")
 
-    worker = LoopWorker(service, store, project_id, transport=transport)
-    next_act = loop_obj.get("next_action") or {}
-    act_kind = next_act.get("kind")
+    if execution_services is not None:
+        project_id = _verified_execution_project(cdata)
+    owner = f"gui:{uuid.uuid4().hex}"
+    acquired = False
+    worker = None
+    try:
+        if execution_services is not None:
+            _execution_call(execution_services, "acquire_execution", project_id, owner)
+            acquired = True
+            # The native executor may have committed between the first read and acquisition.
+            locked = service.get(project_id)
+            if locked.get("status") == "error":
+                raise JournalError(locked.get("error_code") or "GET_FAILED",
+                                   locked.get("message") or "获取循环状态失败")
+            cdata = locked.get("data") or {}
+            loop_obj = cdata.get("loop") or {}
+            if (cdata.get("loop_revision", loop_obj.get("loop_revision")) != expected_loop_revision
+                    or cdata.get("project_revision", (cdata.get("project") or {}).get("revision")) != expected_project_revision):
+                raise JournalError("REVISION_CONFLICT", "项目或补读循环版本已变化，请刷新后重试；未执行单步动作")
+            status = loop_obj.get("status")
+        worker = LoopWorker(service, store, project_id, transport=transport,
+                            execution_services=execution_services, owner=owner)
+        worker._ensure_execution()
+        next_act = loop_obj.get("next_action") or {}
+        act_kind = next_act.get("kind")
 
-    if status == "awaiting_review" or act_kind == "review":
-        if consent is not True:
-            raise JournalError("CONSENT_REQUIRED", "执行模型评审前需明确同意发送本阶段材料")
-        worker._execute_review_phase(cdata)
-    elif status == "awaiting_assessment" or act_kind == "assessment":
-        if consent is not True:
-            raise JournalError("CONSENT_REQUIRED", "执行候选初筛前需明确同意发送本阶段材料")
-        worker._execute_assessment_phase(cdata)
-    elif status == "awaiting_interpretation" or act_kind == "interpretation":
-        if consent is not True:
-            raise JournalError("CONSENT_REQUIRED", "执行文献解读前需明确同意发送本阶段材料")
-        worker._execute_interpretation_phase(cdata)
-    elif status == "awaiting_revision" or act_kind == "revision":
-        if consent is not True:
-            raise JournalError("CONSENT_REQUIRED", "执行草稿修订前需明确同意发送本阶段材料")
-        worker._execute_revision_phase(cdata)
-    elif status in ("ready", "executing") or act_kind in ("search", "download", "read"):
-        worker._execute_step(cdata)
-    else:
-        raise JournalError("NO_ACTION_AVAILABLE", f"当前状态 {status} 没有可单步推进的动作")
+        if status == "awaiting_review" or act_kind == "review":
+            if consent is not True:
+                raise JournalError("CONSENT_REQUIRED", "执行模型评审前需明确同意发送本阶段材料")
+            worker._execute_review_phase(cdata)
+        elif status == "awaiting_assessment" or act_kind == "assessment":
+            if consent is not True:
+                raise JournalError("CONSENT_REQUIRED", "执行候选初筛前需明确同意发送本阶段材料")
+            worker._execute_assessment_phase(cdata)
+        elif status == "awaiting_interpretation" or act_kind == "interpretation":
+            if consent is not True:
+                raise JournalError("CONSENT_REQUIRED", "执行文献解读前需明确同意发送本阶段材料")
+            worker._execute_interpretation_phase(cdata)
+        elif status == "awaiting_revision" or act_kind == "revision":
+            if consent is not True:
+                raise JournalError("CONSENT_REQUIRED", "执行草稿修订前需明确同意发送本阶段材料")
+            worker._execute_revision_phase(cdata)
+        elif status in ("ready", "executing") or act_kind in ("search", "download", "read"):
+            worker._execute_step(cdata)
+        else:
+            raise JournalError("NO_ACTION_AVAILABLE", f"当前状态 {status} 没有可单步推进的动作")
 
-    latest = service.get(project_id)
-    return latest
+        return service.get(project_id)
+    finally:
+        if worker is not None:
+            worker._release_execution()
+        elif acquired:
+            _execution_call(execution_services, "release_execution", project_id, owner)
 
 
 def get_loop_status(service: Any, project_id: str, store: Optional[SecretStore] = None) -> dict:

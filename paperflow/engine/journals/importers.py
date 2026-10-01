@@ -246,6 +246,14 @@ def _parse_showjcr_csv(
     elif kind_lower in {"warning", "cas_warning"}:
         return _parse_showjcr_warning(file_path, headers, data_year, encoding, source_version)
 
+    # A dated dataset marker is stronger than incidental text in a temporary
+    # prefix (e.g. tmpxr...FQBJCR2025.csv must remain a CAS dataset).
+    marker = re.search(
+        r"(FQBJCR|FQB|CCFT|CCF|GJQKYJMD|YJMD|WARNING|JCR|XR)[_-]?(?:19|20)\d{2}(?!\d)",
+        fname_upper,
+    )
+    if marker:
+        fname_upper = marker.group(1)
     # 2. Known filename prefix priority (prevent XR2026 with '预警标记' being hijacked by warning)
     if "XR" in fname_upper:
         return _parse_showjcr_xr(file_path, headers, data_year, encoding, source_version)

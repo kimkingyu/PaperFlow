@@ -1,0 +1,9 @@
+import { beforeEach, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import Settings from '../src/pages/Settings';
+const mocks = vi.hoisted(() => ({api:vi.fn(),post:vi.fn()}));
+vi.mock('../src/api',async original => ({...await original<any>(),api:mocks.api,post:mocks.post}));
+vi.mock('../src/context',() => ({useWorkbench:() => ({tools:[],capabilities:{},refresh:vi.fn(),mode:'standalone',setMode:vi.fn()})}));
+beforeEach(() => {mocks.api.mockReset();mocks.post.mockReset();mocks.api.mockResolvedValue({configured:false,provider:'openai_compatible',base_url:'https://test.example/v1',model:'test-model',consented:false});mocks.post.mockResolvedValue({configured:true});});
+it('模型凭证仅在受控POST发送，提交后立即清空，永不进入浏览器存储',async () => {render(<Settings/>);await waitFor(() => expect(screen.getByLabelText('模型服务端点')).toHaveValue('https://test.example/v1'));const password = screen.getByLabelText('API Key');expect(password).toHaveAttribute('type','password');fireEvent.change(password,{target:{value:'private-key-for-test'}});fireEvent.click(screen.getByRole('button',{name:'保存模型配置'}));await waitFor(() => expect(mocks.post).toHaveBeenCalledWith('/api/model/config',{provider:'openai_compatible',base_url:'https://test.example/v1',model:'test-model',api_key:'private-key-for-test',remember:false}));expect(password).toHaveValue('');expect(JSON.stringify({...localStorage,...sessionStorage})).not.toContain('private-key-for-test');});
+it('不发送模型测试请求，直到明确材料发送授权',async () => {render(<Settings/>);await screen.findByDisplayValue('test-model');expect(screen.getByRole('button',{name:'授权并测试连接'})).toBeDisabled();fireEvent.click(screen.getByLabelText(/允许将本次明确选中的研究材料/));await waitFor(() => expect(mocks.post).toHaveBeenCalledWith('/api/model/consent',{consent:true}));fireEvent.click(screen.getByRole('button',{name:'授权并测试连接'}));await waitFor(() => expect(mocks.post).toHaveBeenCalledWith('/api/model/test',{consent:true}));});

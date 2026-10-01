@@ -15,6 +15,13 @@ build/
 # Local cloned repos for reference
 repos/
 
+# Frontend development and test output (packaged app assets are intentional)
+frontend/node_modules/
+frontend/playwright-report/
+frontend/test-results/
+frontend/coverage/
+*.tsbuildinfo
+
 # Office temporary files
 ~$*.docx
 ~$*.doc

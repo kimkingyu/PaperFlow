@@ -1,4 +1,41 @@
-# PaperFlow-MCP: Live Office/Word Bridge & 0-to-1 Academic Writing Suite for AI Clients
+# PaperFlow: Standalone Research Agent Workspace and MCP Writing Tools
+
+## Two execution modes
+
+- **Standalone web application:** `python -m paperflow web` (`gui` / `studio` aliases). PaperFlow owns the conversation, bounded tool loop, approvals, event history, project data and downloadable artifacts. No external harness is required.
+- **External harness / MCP:** `python -m paperflow run` (also the default with no command). The host supplies its Agent and model; no additional PaperFlow model API key is required. Existing stdio tools and the single-file MCP App remain compatible.
+
+### Start the standalone application
+
+Python 3.10+ is required. Install a built wheel (the example filename is version 0.1.0). It includes static assets; end users do not need Node. A local build does not imply that this revision has been published to PyPI.
+
+```bash
+python -m pip install "./dist/paperflow_mcp-0.1.0-py3-none-any.whl[gui,pdf]"
+python -m paperflow web
+```
+
+For a source checkout:
+
+```bash
+python -m pip install -e ".[dev,gui,pdf]"
+npm --prefix frontend ci
+npm --prefix frontend run build
+python -m paperflow web
+```
+
+After building the frontend, run `python -m build` to produce wheel and source distributions with the static UI in `dist/`.
+
+The server binds only to loopback and prints a per-launch authenticated URL. Create or select a workspace, then use research planning, literature, evidence-backed writing, journals, offline submission tracking, document formatting, artifacts or the native Agent. Manual/offline features remain usable without model credentials.
+
+Native model settings support Responses, Chat Completions-compatible and Anthropic protocols. Material disclosure and network/write permissions require explicit consent. API keys remain in process memory or, when requested, the endpoint-scoped OS keyring; they are not stored in browser storage, conversations, logs or exported documents. The browser access token is a separate credential.
+
+Runs are bounded by 40 model calls, 80 tool executions and 30 minutes by default. Cancellation prevents subsequent actions; already-issued calls must still settle. Reconnecting the event stream does not replay actions. Restarted or ambiguous operations require review rather than automatic execution.
+
+Uploads and downloads use managed file IDs rather than arbitrary server paths. Formatting produces a new document by default. Live Word/WPS operations require Windows, an available desktop application, an explicitly selected target and confirmation; other platforms retain offline DOCX support. Use `python -m paperflow gui --legacy` for the old single-file studio.
+
+PDF text extraction is not full-paper understanding. Citation-location checks do not certify semantic truth or completed experiments. Missing original experimental material remains a placeholder.
+
+---
 
 <p align="center">
   <b>Enabling Tencent WorkBuddy, Qwen, Cursor, and Claude Desktop to directly mount and control live Microsoft Word & WPS instances in real time!</b><br>

@@ -889,15 +889,20 @@ class ReadingLoopService:
                         usage["download_attempts"] += 1
                         settled_costs["download_attempts"] = 1
                         dl_res = self.literature.download(target_pid)
-                        if dl_res.get("status") == "error":
+                        acquisition = (dl_res.get("data") or {}).get("acquisition") or {}
+                        sha = acquisition.get("file_sha256")
+                        if dl_res.get("status") == "error" or acquisition.get("status") not in ("downloaded", "imported") or not sha:
                             loop["status"] = "stopped"
                             loop["stop_reason"] = "no_open_fulltext"
-                            loop["stop_detail"] = f"文献 {target_pid} 无法合法获取公开全文: {dl_res.get('message', '')}"
-                            self.store.save_action(pid, action_id, loop["round_index"], kind, "failed", payload, result={"error": dl_res.get("message")})
+                            detail = dl_res.get("message") or acquisition.get("message") or "来源没有返回可用公开全文"
+                            loop["stop_detail"] = f"文献 {target_pid} 无法合法获取公开全文: {detail}"
+                            self.store.save_action(pid, action_id, loop["round_index"], kind, "failed", payload, result={"error": detail})
                             saved = self.store.save(pid, loop, expected_loop_revision, "无公开全文停止", project["revision"])
                             return _response({"project_id": pid, "project_revision": project["revision"], "loop_revision": saved["loop_revision"], "loop": saved, "project": project})
 
-                    step_result = {"paper_id": target_pid, "downloaded": True}
+                    download_receipt = self.literature.get(paper_id=target_pid)["data"] if is_cached else dl_res["data"]
+                    step_result = {"paper_id": target_pid, "downloaded": True, "file_sha256": sha,
+                                   "download_receipt": download_receipt}
                     # Next is read
                     next_id = generate_action_id()
                     loop["status"] = "ready"
@@ -1076,6 +1081,7 @@ class ReadingLoopService:
 
         new_loop = copy.deepcopy(loop)
         new_project_revision = project["revision"]
+        saved_reading = None
 
         owner_token = _CURRENT_LOOP_OWNER.set(pid)
         try:
@@ -1188,6 +1194,7 @@ class ReadingLoopService:
                 )
                 if save_res.get("status") == "error":
                     raise JournalError(save_res.get("error_code") or "READING_ERROR", save_res.get("message") or "")
+                saved_reading = save_res.get("data")
 
                 # Ensure interpreted paper is in selected_paper_ids so its evidence is visible in draft and prepare_writing
                 fresh_proj = self._get_project_data(pid)
@@ -1288,6 +1295,7 @@ class ReadingLoopService:
             "loop_revision": saved_loop["loop_revision"],
             "loop": saved_loop,
             "project": fresh_proj,
+            **({"saved_reading": saved_reading} if saved_reading else {}),
         })
 
     @_service_guard
@@ -1298,12 +1306,14 @@ class ReadingLoopService:
         expected_project_revision: int,
         expected_loop_revision: int
     ) -> Dict[str, Any]:
-        """GUI runner dedicated method: atomically reserves model call attempt before invocation."""
+        """Reserve a GUI/native model attempt only against current project and loop revisions."""
         pid = validate_project_id(project_id)
         integer(expected_project_revision, "expected_project_revision", 1)
         integer(expected_loop_revision, "expected_loop_revision", 1)
 
         project = self._get_project_data(pid)
+        if project["revision"] != expected_project_revision:
+            raise JournalError("REVISION_CONFLICT", "项目已被其他操作修改，请刷新后重新授权模型调用")
         loop = self.store.get(pid)
         if loop is None:
             raise JournalError("LOOP_NOT_FOUND", "自适应阅读循环未启动")
@@ -1329,6 +1339,21 @@ class ReadingLoopService:
             "loop": saved_loop,
             "project": project,
             "model_ticket": ticket_id,
+        })
+
+    @_service_guard
+    def release_unissued_model_call(self, project_id: str, action_id: str, model_ticket: str) -> Dict[str, Any]:
+        """Trusted coordinator only: release a ticket before any provider request.
+
+        This is deliberately not exposed as an Agent/MCP tool. Issued/ambiguous calls
+        must use normal settlement or reconciliation, never this unissued refund.
+        """
+        pid = validate_project_id(project_id)
+        changed = self.store.release_unissued_model_ticket(pid, action_id, model_ticket)
+        loop = self.store.get(pid)
+        return _response({
+            "project_id": pid, "loop_revision": loop["loop_revision"], "loop": loop,
+            "released": changed, "provider_request_issued": False,
         })
 
     @_service_guard

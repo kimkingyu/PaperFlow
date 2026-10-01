@@ -52,8 +52,11 @@ def _error(code: str, message: str, status: int) -> JSONResponse:
 
 def create_app(token: str, port: int, finder: Optional[JournalFinder] = None,
                store: Optional[SecretStore] = None, transport=None, literature=None, writing=None,
-               loop=None) -> Starlette:
-    finder = finder or JournalFinder()
+               loop=None, standalone: bool = False, application=None, agent=None, agent_transport=None) -> Starlette:
+    finder = finder or getattr(application, "finder", None) or JournalFinder()
+    literature = literature if literature is not None else getattr(application, "literature", None)
+    writing = writing if writing is not None else getattr(application, "writing", None)
+    loop = loop if loop is not None else getattr(application, "loop", None)
     store = store or SecretStore()
     allowed_hosts = {f"127.0.0.1:{port}", f"localhost:{port}"}
     service_lock = threading.RLock()
@@ -79,12 +82,37 @@ def create_app(token: str, port: int, finder: Optional[JournalFinder] = None,
                 loop = reading_loop_service(finder, writing=writing_project_service(), literature=papers_service())
             return loop
 
+
+
+    def app_services():
+        nonlocal application, literature, writing, loop
+        with service_lock:
+            if application is None:
+                from paperflow.application.services import ApplicationServices
+                application = ApplicationServices(finder=finder, literature=literature,
+                                                  writing=writing, loop=loop)
+                literature, writing, loop = application.literature, application.writing, application.loop
+            return application
+    def native_agent():
+        nonlocal agent
+        with service_lock:
+            if agent is None:
+                from paperflow.agent.runtime import AgentRuntime
+                services = app_services()
+                agent = AgentRuntime(services.directory, services.describe_tools, services.execute,
+                                     lambda: store.config, transport=agent_transport)
+            return agent
     def perform_action(action_name: str, params: Dict[str, Any]):
         if params is None:
             params = {}
         if not isinstance(params, dict):
             raise JournalError("INVALID_INPUT", "参数必须是对象")
         _no_paths(params)
+        # Compatibility actions must not bypass the web's managed-file boundary.
+        # MCP/CLI still call their own original repository/file interfaces.
+        if ({"path", "project_path", "project_dir", "directory", "input_path", "github_repo"}.intersection(params)
+                or str(params.get("source_type", "")).strip().lower() == "local"):
+            raise JournalError("INVALID_INPUT", "网页只接受上传内容或受管文件ID；本地路径/仓库读取请使用MCP或CLI")
         if action_name == "search_reviews":
             from .review_searcher import search_journal_reviews
             return search_journal_reviews(
@@ -110,6 +138,9 @@ def create_app(token: str, port: int, finder: Optional[JournalFinder] = None,
     def guard(request: Request, need_token: bool = True) -> Optional[Response]:
         if request.headers.get("host", "") not in allowed_hosts:
             return _error("FORBIDDEN_HOST", "Host 不被允许", 403)
+        origin = request.headers.get("origin")
+        if origin and origin not in {"http://" + host for host in allowed_hosts}:
+            return _error("FORBIDDEN_ORIGIN", "请求来源不被允许", 403)
         if need_token and not pysecrets.compare_digest(request.headers.get("x-paperflow-token", ""), token):
             return _error("FORBIDDEN", "缺少或错误的访问令牌", 403)
         return None
@@ -117,9 +148,11 @@ def create_app(token: str, port: int, finder: Optional[JournalFinder] = None,
     async def body(request: Request) -> Dict[str, Any]:
         if request.headers.get("content-type", "").split(";")[0].strip() != "application/json":
             raise JournalError("INVALID_INPUT", "请求必须是 application/json")
-        raw = await request.body()
-        if len(raw) > MAX_BODY_BYTES:
-            raise JournalError("INPUT_TOO_LARGE", "请求体超过大小限制")
+        raw = bytearray()
+        async for chunk in request.stream():
+            raw.extend(chunk)
+            if len(raw) > MAX_BODY_BYTES:
+                raise JournalError("INPUT_TOO_LARGE", "请求体超过大小限制")
         payload = await run_in_threadpool(json.loads, raw.decode("utf-8") or "{}")
         if not isinstance(payload, dict):
             raise JournalError("INVALID_INPUT", "请求体必须是对象")
@@ -129,13 +162,17 @@ def create_app(token: str, port: int, finder: Optional[JournalFinder] = None,
         return JSONResponse(payload, headers=SECURITY_HEADERS)
 
     def failure(exc: Exception) -> JSONResponse:
-        if isinstance(exc, JournalError):
-            return _error(exc.code, redact(str(exc), store.config.api_key()), 400)
+        code = getattr(exc, "code", None)
+        if isinstance(code, str) and re.fullmatch(r"[A-Z][A-Z0-9_]{1,80}", code):
+            return _error(code, redact(str(exc), store.config.api_key())[:1000], 400)
         if isinstance(exc, (ValueError, TypeError)):
             return _error("INVALID_INPUT", redact(str(exc), store.config.api_key())[:500], 400)
         return _error("INTERNAL_ERROR", "操作失败，请检查输入或本地数据状态", 500)
 
     async def page(request: Request) -> Response:
+        if standalone and request.url.path != "/legacy":
+            from .app_static import app_page
+            return await app_page(request, guard)
         blocked = guard(request, need_token=False)
         if blocked:
             return blocked
@@ -185,10 +222,13 @@ def create_app(token: str, port: int, finder: Optional[JournalFinder] = None,
             return blocked
         try:
             p = await body(request)
-            provider, base_url, model = str(p.get("provider", "")), str(p.get("base_url", "")).strip(), str(p.get("model", "")).strip()
+            _only_params(p, {"provider", "base_url", "model", "api_key", "remember"})
+            if not all(isinstance(p.get(key, ""), str) for key in ("provider", "base_url", "model", "api_key")) or type(p.get("remember", False)) is not bool:
+                raise JournalError("INVALID_INPUT", "模型配置文本和 remember 布尔值类型不正确")
+            provider, base_url, model = p.get("provider", ""), p.get("base_url", "").strip(), p.get("model", "").strip()
             model_scoring.validate_endpoint(provider, base_url, model)
             result = await run_in_threadpool(store.configure, provider, base_url, model,
-                                             str(p.get("api_key", "")), bool(p.get("remember")))
+                                             p.get("api_key", ""), p.get("remember", False))
             return ok(result)
         except RuntimeError as exc:
             return _error("KEYRING_UNAVAILABLE", str(exc), 400)
@@ -200,7 +240,35 @@ def create_app(token: str, port: int, finder: Optional[JournalFinder] = None,
         if blocked:
             return blocked
         try:
-            return ok(await run_in_threadpool(store.consent, bool((await body(request)).get("consent"))))
+            p = await body(request)
+            _only_params(p, {"consent"})
+            if type(p.get("consent")) is not bool:
+                raise JournalError("INVALID_INPUT", "consent 必须为明确的布尔值")
+            return ok(await run_in_threadpool(store.consent, p["consent"]))
+        except Exception as exc:
+            return failure(exc)
+
+    async def model_test(request: Request) -> Response:
+        blocked = guard(request)
+        if blocked is not None:
+            return blocked
+        try:
+            p = await body(request)
+            _only_params(p, {"consent"})
+            if p.get("consent") is not True:
+                raise JournalError("CONSENT_REQUIRED", "连接测试会向配置端点发送一个简短请求，请明确授权")
+            config = store.config
+            model_scoring.validate_endpoint(config.provider, config.base_url, config.model)
+            if not config.configured:
+                raise JournalError("MODEL_NOT_CONFIGURED", "请先配置模型与凭证")
+            answer = await run_in_threadpool(model_scoring._chat, config,
+                                            "This is a connection test. Reply with OK only.", "OK",
+                                            transport or model_scoring._http_transport)
+            if store.config is not config:
+                raise JournalError("CONTEXT_CHANGED", "测试期间模型配置已变更，请重新测试")
+            return ok({"status": "success", "data": {"connected": True, "model_calls": 1,
+                       "provider": config.provider, "model": config.model,
+                       "message": redact(answer[:300], config.api_key())}})
         except Exception as exc:
             return failure(exc)
 
@@ -336,7 +404,8 @@ def create_app(token: str, port: int, finder: Optional[JournalFinder] = None,
                     raise JournalError("CONSENT_REQUIRED", "启动或恢复自动补读循环必须重新明确同意材料发送")
                 res = await run_in_threadpool(
                     paper_reading_loop.start_auto_loop, loop_project_service(), store, ident,
-                    l_rev, p_rev, p.get("budget"), p.get("request", ""), consent=True, transport=transport
+                    l_rev, p_rev, p.get("budget"), p.get("request", ""), consent=True, transport=transport,
+                    execution_services=app_services()
                 )
             else:
                 raise JournalError("INVALID_INPUT", f"不支持的控制动作：{act}")
@@ -363,7 +432,8 @@ def create_app(token: str, port: int, finder: Optional[JournalFinder] = None,
 
             res = await run_in_threadpool(
                 paper_reading_loop.start_auto_loop, loop_project_service(), store, ident,
-                l_rev, p_rev, p.get("budget"), p.get("request", ""), consent=True, transport=transport
+                l_rev, p_rev, p.get("budget"), p.get("request", ""), consent=True, transport=transport,
+                    execution_services=app_services()
             )
             return ok(res)
         except Exception as exc:
@@ -376,6 +446,8 @@ def create_app(token: str, port: int, finder: Optional[JournalFinder] = None,
         try:
             p = await body(request)
             _only_params(p, {"project_id", "expected_loop_revision", "expected_project_revision", "consent"})
+            if p.get("consent") is not True:
+                raise JournalError("CONSENT_REQUIRED", "需要显式授权本次模型调用")
             ident = str(p.get("project_id", ""))
             if not ident or not re.fullmatch(r"[A-Za-z0-9_-]{1,128}", ident):
                 raise JournalError("INVALID_INPUT", "需要有效的 project_id")
@@ -386,17 +458,19 @@ def create_app(token: str, port: int, finder: Optional[JournalFinder] = None,
 
             res = await run_in_threadpool(
                 paper_reading_loop.single_step, loop_project_service(), store, ident,
-                l_rev, p_rev, consent=p.get("consent") is True, transport=transport
+                l_rev, p_rev, consent=p.get("consent") is True, transport=transport,
+                execution_services=app_services()
             )
             return ok(res)
         except Exception as exc:
             return failure(exc)
 
     routes = [
-        Route("/", page), Route("/api/action", action, methods=["POST"]),
+        Route("/", page), Route("/legacy", page), Route("/api/action", action, methods=["POST"]),
         Route("/api/inbox", inbox_list), Route("/api/inbox/{item_id}", inbox_item),
         Route("/api/model/status", model_status), Route("/api/model/config", model_config, methods=["POST"]),
         Route("/api/model/consent", model_consent, methods=["POST"]),
+        Route("/api/model/test", model_test, methods=["POST"]),
         Route("/api/model/score", model_score, methods=["POST"]),
         Route("/api/model/read-paper", model_read_paper, methods=["POST"]),
         Route("/api/model/writing-{phase}", model_writing, methods=["POST"]),
@@ -407,12 +481,31 @@ def create_app(token: str, port: int, finder: Optional[JournalFinder] = None,
         Route("/api/writing/loop-step", loop_step, methods=["POST"]),
     ]
 
+    from .agent_routes import build_agent_routes
+    from .app_static import build_static_routes
+    from .workbench_routes import build_workbench_routes
+
+    class LazyApplication:
+        def __getattr__(self, name):
+            return getattr(app_services(), name)
+
+    routes.extend(build_static_routes(guard))
+    routes.extend(build_workbench_routes(LazyApplication(), guard, failure, ok))
+    routes.extend(build_agent_routes(native_agent, app_services, guard, failure, ok))
+
     @asynccontextmanager
     async def lifespan(app_instance):
-        yield
-        paper_reading_loop.shutdown_all()
+        try:
+            yield
+        finally:
+            paper_reading_loop.shutdown_all()
+            if agent is not None:
+                await run_in_threadpool(agent.shutdown)
 
-    return Starlette(routes=routes, lifespan=lifespan)
+    app = Starlette(routes=routes, lifespan=lifespan)
+    app.state.paperflow_services = app_services
+    app.state.paperflow_agent = native_agent
+    return app
 
 
 def _free_port() -> int:
@@ -422,19 +515,25 @@ def _free_port() -> int:
 
 
 def run_gui(argv=None) -> int:
-    parser = argparse.ArgumentParser(prog="paperflow gui", description="PaperFlow 期刊工作台（本地网页）")
+    parser = argparse.ArgumentParser(prog="paperflow web", description="PaperFlow 独立 Agent 与科研网页工作台")
     parser.add_argument("--port", type=int, default=0, help="端口，默认随机")
     parser.add_argument("--no-browser", action="store_true", help="不自动打开浏览器")
-    parser.add_argument("--data-dir", default=None, help="期刊库目录，默认与 MCP 相同")
+    parser.add_argument("--legacy", action="store_true", help="打开兼容的单文件期刊工作台")
+    parser.add_argument("--data-dir", default=None, help="隔离的全部业务数据目录；省略则沿用 MCP 默认目录")
     parser.add_argument("--token-file", default=None,
                         help="把本次访问链接写入该文件（便于脚本或其他工具读取），默认只打印到终端")
     args = parser.parse_args(argv)
     import uvicorn
     port = args.port or _free_port()
     token = pysecrets.token_urlsafe(32)
-    app = create_app(token, port, finder=JournalFinder(args.data_dir))
+    finder = JournalFinder(args.data_dir)
+    application = None
+    if args.data_dir is not None:
+        from paperflow.application.services import ApplicationServices
+        application = ApplicationServices(finder=finder, data_dir=args.data_dir)
+    app = create_app(token, port, finder=finder, application=application, standalone=not args.legacy)
     url = f"http://127.0.0.1:{port}/?token={token}"
-    print("PaperFlow 期刊工作台已启动（只监听本机）：", flush=True)
+    print("PaperFlow 独立科研工作台已启动（只监听本机）：", flush=True)
     print(f"  {url}", flush=True)
     print("按 Ctrl+C 退出。令牌仅本次有效。", flush=True)
     if args.token_file:

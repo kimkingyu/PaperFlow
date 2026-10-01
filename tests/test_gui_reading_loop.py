@@ -312,7 +312,16 @@ def test_env(tmp_path, monkeypatch):
     store.consent(True)
 
     fake_service = FakeReadingLoopService()
-    app = gui_server.create_app(TOKEN, PORT, finder=finder, store=store, loop=fake_service)
+    # Keep HTTP leases isolated and use the same injected, authoritative project service.
+    from paperflow.application.services import ApplicationServices
+    execution_services = ApplicationServices(
+        finder=finder, writing=fake_service, loop=fake_service,
+        data_dir=tmp_path / "application",
+    )
+    app = gui_server.create_app(
+        TOKEN, PORT, finder=finder, store=store, loop=fake_service,
+        application=execution_services,
+    )
     client = TestClient(app, base_url=f"http://127.0.0.1:{PORT}")
     return client, fake_service, store
 

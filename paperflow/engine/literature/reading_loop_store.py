@@ -667,6 +667,51 @@ class ReadingLoopStore:
             )
         return tid
 
+    def release_unissued_model_ticket(self, pid: str, action_id: str, ticket_id: str) -> bool:
+        """Release only a reservation known not to have reached the provider.
+
+        The ticket and reserved counter change in the same immediate transaction.
+        Already released tickets are idempotent; settled requests cannot be refunded.
+        """
+        pid = project_id(pid)
+        with self.connection(True) as conn:
+            ticket = conn.execute(
+                "SELECT status FROM reading_loop_model_tickets WHERE ticket_id=? AND project_id=? AND action_id=?",
+                (ticket_id, pid, action_id),
+            ).fetchone()
+            if ticket is None:
+                raise JournalError("TICKET_NOT_FOUND", "模型凭证不存在或不属于当前项目动作")
+            if ticket["status"] == "released_unissued":
+                return False
+            if ticket["status"] != "reserved":
+                raise JournalError("TICKET_ALREADY_SETTLED", "已请求并结算的模型调用不能退回预算")
+            row = conn.execute(
+                "SELECT loop_revision, reserved FROM reading_loops WHERE project_id=?", (pid,),
+            ).fetchone()
+            if row is None:
+                raise JournalError("LOOP_NOT_FOUND", "自适应阅读循环不存在")
+            reserved = json.loads(row["reserved"])
+            if type(reserved.get("gui_model_calls")) is not int or reserved["gui_model_calls"] < 1:
+                raise JournalError("NEEDS_RECONCILIATION", "预留计数与模型凭证不一致，请核对后处理")
+            saved = conn.execute(
+                "SELECT snapshot FROM reading_loop_revisions WHERE project_id=? AND loop_revision=?",
+                (pid, row["loop_revision"]),
+            ).fetchone()
+            if saved is None:
+                raise JournalError("NEEDS_RECONCILIATION", "预留对应循环快照缺失，请核对后处理")
+            reserved["gui_model_calls"] -= 1
+            revision, now = row["loop_revision"] + 1, utc_now()
+            snapshot = json.loads(saved["snapshot"])
+            snapshot.update(loop_revision=revision, reserved=reserved)
+            conn.execute("UPDATE reading_loops SET reserved=?, loop_revision=?, updated_at=? WHERE project_id=?",
+                         (budget_json(reserved), revision, now, pid))
+            conn.execute("UPDATE reading_loop_model_tickets SET status='released_unissued' WHERE ticket_id=?", (ticket_id,))
+            conn.execute(
+                "INSERT INTO reading_loop_revisions(project_id, loop_revision, snapshot, change_note, created_at) VALUES (?,?,?,?,?)",
+                (pid, revision, budget_json(snapshot), "释放确定未请求模型的预留，不计调用次数", now),
+            )
+        return True
+
     def settle_model_ticket(self, pid: str, action_id: str, ticket_id: str, success: bool):
         pid = project_id(pid)
         status = "settled_success" if success else "settled_failed"

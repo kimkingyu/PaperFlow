@@ -84,14 +84,17 @@ def test_all_rejected_records_raises_schema_changed():
         os.remove(path)
 
 
-def test_showjcr_fqbjcr_combined_issn_and_multi_minors():
+@pytest.mark.parametrize("temporary_prefix", ["tmp", "tmpxrprefix-", "tmpccftprefix-", "tmpccfprefix-"])
+def test_showjcr_fqbjcr_combined_issn_and_multi_minors(temporary_prefix):
     content = (
         "刊名,ISSN/EISSN,Web of Science,Open Access,大类名称,大类分区,Top,小类1名称,小类1分区,小类2名称,小类2分区\n"
         "Demo Journal of Science,1234-5678/2345-6789,SCIE; ESCI,Yes,工程技术,1区,Top,自动化与控制系统,1区,计算机：人工智能,2区\n"
         "Another Medical Review,0000-1111,,No,医学,2区,否,肿瘤学,2区,,\n"
         ",9999-9999,,No,医学,2区,否,肿瘤学,2区,,\n"
     )
-    with tempfile.NamedTemporaryFile("w", delete=False, suffix="FQBJCR2025.csv", encoding="utf-8") as tf:
+    with tempfile.NamedTemporaryFile(
+        "w", delete=False, prefix=temporary_prefix, suffix="FQBJCR2025.csv", encoding="utf-8"
+    ) as tf:
         tf.write(content)
         path = tf.name
     try:
