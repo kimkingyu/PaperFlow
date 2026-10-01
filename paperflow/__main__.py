@@ -25,6 +25,12 @@ def main() -> None:
     elif command in ("journal", "journals"):
         from paperflow.cli.journal_cli import run_journal_cli
         sys.exit(run_journal_cli(args[1:]))
+    elif command in ("paper", "papers"):
+        from paperflow.cli.paper_cli import run_paper_cli
+        sys.exit(run_paper_cli(args[1:]))
+    elif command in ("gui", "studio"):
+        from paperflow.gui.server import run_gui
+        sys.exit(run_gui(args[1:]))
     elif command in ("run", "serve"):
         from paperflow.server.mcp_server import run_server
         run_server()
@@ -34,6 +40,8 @@ def main() -> None:
         print("  python -m paperflow audit   # 论文格式审查体检 (支持桌面活动 Word 或 docx 文件)")
         print("  python -m paperflow fix     # 论文格式一键规范化与自愈修复")
         print("  python -m paperflow journal # 期刊本地选刊、风险预警与审稿跟踪")
+        print("  python -m paperflow paper   # 真实文献检索、合法全文、本地分页阅读与有证据解读卡")
+        print("  python -m paperflow gui     # 打开期刊工作台（本地网页，可配合任意 AI 客户端）")
         print("  python -m paperflow setup   # 一键自动为已安装的 AI 客户端注入连接配置")
         print("  python -m paperflow doctor  # 检查环境并探测桌面上打开的 Word/WPS")
         print("  python -m paperflow run     # 启动 MCP Server (stdio 模式)")

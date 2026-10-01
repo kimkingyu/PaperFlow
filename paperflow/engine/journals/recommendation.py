@@ -337,6 +337,210 @@ def _weighted_score(values, weights):
                            for k, w in weights.items()},
             "meaning": "适配推荐分的保守下界，不是期刊质量分或录用概率"}
 
+def _get_cas_quartile(record: JournalRecord) -> Optional[int]:
+    for r in record.rankings:
+        if r.system == "cas" and r.year == 2025 and r.quartile:
+            q = str(r.quartile).replace("Q", "")
+            if q.isdigit():
+                return int(q)
+    return None
+
+def calc_decision_summary(record: JournalRecord) -> Dict[str, Any]:
+    """计算期刊四大最核心决策指标：期刊等级、难易程度（融合网络评论）、审核时间、发表价格。"""
+    # 1. 期刊等级 (Tier)
+    cas_rank = next((r for r in record.rankings if r.system == "cas" and r.year in (2025, 2026) and r.quartile), None)
+    cas_q = int(str(cas_rank.quartile).replace("Q", "")) if cas_rank and str(cas_rank.quartile).replace("Q", "").isdigit() else None
+    is_top = (cas_rank.top is True) if cas_rank else any(r.system == "cas" and r.top is True for r in record.rankings)
+
+    jcr_rank = next((r for r in record.rankings if r.system == "jcr"), None)
+    jcr_q = int(str(jcr_rank.quartile).replace("Q", "")) if jcr_rank and str(jcr_rank.quartile).replace("Q", "").isdigit() else None
+
+    ccf_rank = next((r for r in record.rankings if r.system in ("ccf", "ccft") and r.grade), None)
+    ccf_grade = ccf_rank.grade if ccf_rank else None
+
+    tier_parts = []
+    if cas_q:
+        tier_parts.append(f"中科院 {cas_q}区" + (" Top" if is_top else ""))
+    if jcr_q:
+        tier_parts.append(f"JCR Q{jcr_q}")
+    if ccf_grade:
+        tier_parts.append(f"CCF {ccf_grade}类" if ccf_grade in ("A", "B", "C") else f"CCF {ccf_grade}")
+    tier_summary = " · ".join(tier_parts) if tier_parts else "等级待核验"
+
+    # 2. 难易程度 (Easiness / Difficulty) - 深度融合网络评论
+    missing = []
+    score = None
+    basis_items = []
+    comment_signals = []
+
+    if cas_q is not None:
+        if cas_q == 4:
+            score = 90.0
+            basis_items.append("中科院4区基准（发文门槛较低）")
+        elif cas_q == 3:
+            score = 75.0
+            basis_items.append("中科院3区基准（难度适中）")
+        elif cas_q == 2:
+            score = 45.0
+            basis_items.append("中科院2区基准（主流权威，竞争较激烈）")
+        elif cas_q == 1:
+            score = 15.0
+            basis_items.append("中科院1区基准（顶刊级发文难度）")
+
+        if record.oa_mode == "full":
+            score += 5.0
+            basis_items.append("完全开放获取(Full OA，版面容量充裕)")
+        elif record.oa_mode == "hybrid":
+            score += 2.0
+
+        if is_top:
+            score -= 8.0
+            basis_items.append("中科院Top期刊认证（审稿把关显著收紧）")
+
+        if ccf_grade == "A":
+            score -= 10.0
+            basis_items.append("CCF-A类顶级推荐（国际至高竞争梯队）")
+        elif ccf_grade == "B":
+            score -= 4.0
+            basis_items.append("CCF-B类重点推荐")
+
+        # 国人发文占比调整
+        cn_ratio = next((m.value for m in record.metrics if m.name == "chinese_author_ratio" and m.value is not None), None)
+        if cn_ratio is not None:
+            if cn_ratio >= 50.0:
+                score += 4.0
+                basis_items.append(f"国人学者发文占比高 ({cn_ratio:.0f}%)，对国内学者友好")
+            elif cn_ratio <= 20.0:
+                score -= 4.0
+                basis_items.append(f"国际化程度高，国人学者占比偏低 ({cn_ratio:.0f}%)")
+
+        # 网络评论与真实投稿经验深度分析
+        comments_blob = " ".join(e.summary + " " + e.topic for e in record.experiences)
+        if comments_blob:
+            strict_keywords = [
+                ("实物台架", "实机硬件验证要求极高", -5.0),
+                ("硬件实验", "要求真实硬件部署与性能测试", -4.0),
+                ("严苛", "审稿意见非常严苛", -3.0),
+                ("严格", "审稿把关严格", -2.5),
+                ("必拒", "仿真无实物易直接拒稿", -5.0),
+                ("两极分化", "编辑/审稿人态度两极分化，存在退稿风险", -3.0),
+                ("挑剔", "审稿人细节挑剔", -2.5),
+                ("理论推导", "数学与理论推导要求高", -3.0),
+            ]
+            friendly_keywords = [
+                ("录用率高", "学者反馈录用率相对较高", 4.0),
+                ("友好", "社区反馈审稿包容友好", 3.0),
+                ("容易", "投稿门槛友好", 3.5),
+                ("修改后录用", "多位学者反馈大修后顺利接收", 2.5),
+                ("相对友好", "对工程型初学者友好", 3.0),
+                ("较快", "审稿流程较快不拖沓", 2.0),
+                ("难度适中", "审稿难度适中", 2.0),
+            ]
+            for kw, desc, delta in strict_keywords:
+                if kw in comments_blob and len(comment_signals) < 4:
+                    score += delta
+                    comment_signals.append(f"负向提醒：{desc}")
+            for kw, desc, delta in friendly_keywords:
+                if kw in comments_blob and len(comment_signals) < 4:
+                    score += delta
+                    comment_signals.append(f"正向反馈：{desc}")
+
+        score = max(0.0, min(100.0, score))
+    else:
+        missing.append("缺少 2025 年中科院分区数据，无法估算难易度")
+
+    easiness_val = round(score, 1) if score is not None else None
+    if easiness_val is None:
+        difficulty_label = "待评估"
+        difficulty_color = "muted"
+    elif easiness_val >= 85:
+        difficulty_label = "极其容易 · 水刊好投"
+        difficulty_color = "success"
+    elif easiness_val >= 70:
+        difficulty_label = "容易 · 录用门槛适中"
+        difficulty_color = "success"
+    elif easiness_val >= 50:
+        difficulty_label = "中等难度 · 要求完整验证"
+        difficulty_color = "info"
+    elif easiness_val >= 30:
+        difficulty_label = "较难 · 审稿把关严格"
+        difficulty_color = "warning"
+    else:
+        difficulty_label = "极难 · 顶刊级理论与实机"
+        difficulty_color = "danger"
+
+    # 3. 审核时间 (Review Time)
+    first_dec = next((m for m in record.metrics if m.name == "first_decision_days" and m.value is not None), None)
+    review_days = next((m for m in record.metrics if m.name == "review_days" and (m.value is not None or m.upper)), None)
+
+    time_parts = []
+    if first_dec and first_dec.value:
+        time_parts.append(f"初审约 {int(first_dec.value)} 天")
+    if review_days:
+        val = int(review_days.value) if review_days.value else int(review_days.upper or 0)
+        if val:
+            time_parts.append(f"全程约 {val} 天 ({val // 30 if val >= 30 else 1}个月)")
+    review_time_summary = " · ".join(time_parts) if time_parts else "周期待核验"
+
+    # 4. 发表价格 (Pricing)
+    sub_fee = next((f for f in record.publication_fees if f.route == "subscription" and f.amount is not None), None)
+    oa_fee = next((f for f in record.publication_fees if f.route == "open_access" and f.amount is not None), None)
+    diamond_fee = next((f for f in record.publication_fees if f.route == "diamond" and f.amount is not None), None)
+
+    price_parts = []
+    if diamond_fee:
+        price_parts.append("钻石 OA 全免费（0 元）")
+    else:
+        if sub_fee and sub_fee.amount == 0:
+            price_parts.append("订阅 0 元")
+        if oa_fee and oa_fee.amount is not None:
+            price_parts.append(f"OA {int(oa_fee.amount):,} {oa_fee.currency}")
+        elif record.oa_mode == "full":
+            price_parts.append("OA 资费待核验")
+
+    pricing_summary = " | ".join(price_parts) if price_parts else ("费用未知 ≠ 0" if record.publication_fees else "暂无公开资费记录")
+
+    return {
+        "tier": {
+            "cas_quartile": cas_q,
+            "is_top": is_top,
+            "jcr_quartile": jcr_q,
+            "ccf_grade": ccf_grade,
+            "summary": tier_summary
+        },
+        "easiness": {
+            "score": easiness_val,
+            "label": difficulty_label,
+            "color": difficulty_color,
+            "basis": basis_items,
+            "comment_signals": comment_signals
+        },
+        "review_time": {
+            "first_decision_days": int(first_dec.value) if first_dec and first_dec.value else None,
+            "summary": review_time_summary
+        },
+        "pricing": {
+            "subscription_amount": sub_fee.amount if sub_fee else None,
+            "oa_amount": oa_fee.amount if oa_fee else None,
+            "oa_currency": oa_fee.currency if oa_fee else "",
+            "summary": pricing_summary
+        },
+        "missing": missing
+    }
+
+def _calc_easiness_score(record: JournalRecord) -> tuple[Optional[float], list[str]]:
+    """水刊指数/难易度评分：基于中科院分区、OA 模式与网络评论的综合估计。"""
+    dec = calc_decision_summary(record)
+    return dec["easiness"]["score"], dec["missing"]
+
+def _calc_success_probability(academic_fit: Optional[float], easiness: Optional[float]) -> Optional[float]:
+    """预估成功率：由契合度和难易度结合生成，不声称真实录用率。"""
+    if academic_fit is None or easiness is None:
+        return None
+    # 契合度占 60%，难易度占 40%
+    prob = academic_fit * 0.6 + easiness * 0.4
+    return round(prob, 1)
+
 
 def recommend_records(prepared: Dict[str, Any], records: List[JournalRecord],
                       profile: Optional[ResearchProfile], assessments: List[FitAssessment],

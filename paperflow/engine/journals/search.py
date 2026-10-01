@@ -482,6 +482,8 @@ def search_records(
 
     paged_results = eligible_items[offset : offset + limit]
 
+    from .recommendation import calc_decision_summary
+
     def serialize_item(it):
         rec: JournalRecord = it["record"]
         return {
@@ -490,15 +492,18 @@ def search_records(
             "title_zh": rec.title_zh,
             "kind": rec.kind,
             "publisher": rec.publisher,
+            "homepage": rec.homepage,
             "issns": rec.issns,
             "indexing": rec.indexing,
             "oa_mode": rec.oa_mode,
+            "publication_fees": [f.model_dump(mode="json") for f in rec.publication_fees[:6]],
             "relevance_score": it["relevance_score"],
             "match_reasons": it["match_reasons"],
             "risk": it["risk"],
             "rankings": [r.model_dump() for r in rec.rankings],
             "metrics": [m.model_dump() for m in rec.metrics],
             "experiences_count": len(rec.experiences),
+            "decision_summary": calc_decision_summary(rec),
             "rejected_reasons": it["rejected_reasons"],
         }
 

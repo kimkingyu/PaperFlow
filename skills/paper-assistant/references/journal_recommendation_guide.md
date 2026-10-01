@@ -38,6 +38,20 @@
 10. 空数据库且未提供 `candidate_records` 时，只读回退内置精选，不自动建库；`use_builtin=false` 或显式 `candidate_records=[]` 可禁用。没有 Agent 判断时仍须标注 `needs_agent_assessment`，HTML 不将未评分候选冒充已推荐。
 11. 投稿评价始终标明主观性、来源、原年份、样本量未知及过期提示；不能据出版社主页生成虚构用户经历。零 APC 路线不等于总费用免费，初审不等于总录用周期。
 
+### 可视化工作台（GUI）
+
+同一套界面有两种打开方式，共用同一个期刊库：
+
+- **嵌在对话里（MCP Apps）**：Claude Desktop、claude.ai、VS Code/Copilot、Cursor、ChatGPT、Goose 等支持 MCP Apps 的客户端，调用 `open_journal_studio`、`search_academic_journals` 或 `recommend_journals` 时会直接显示交互界面。界面内部通过仅界面可见的 `studio_api` 工具取数据，模型看不到这个工具。
+- **本地网页**：任何客户端都能配合（包括 NarraFork、Cherry Studio、WorkBuddy、通义等暂不渲染 MCP Apps 的客户端）。让用户在终端运行 `python -m paperflow gui`，浏览器会打开只监听本机的工作台。不支持 MCP Apps 的客户端调用上述工具时，仍然只收到原来的文字结果。
+
+推荐打分有两种方式，报告里会标明打分来源：
+
+1. **harness 模型接管（默认）**：界面生成一段交接请求，你按平常的两阶段流程评估，最后调用 `recommend_journals(..., publish_to_gui=true)`，结果会自动出现在本地工作台的收件箱。嵌在对话里时，界面会用 `ui/message` 直接把请求发给你。收到这类请求时照常执行，引文必须出自稿件原文和期刊征稿范围。
+2. **GUI 自接模型（用户自行开启）**：用户在本地网页里配置 OpenAI 兼容接口（含 Ollama/LM Studio 等本机模型）或 Anthropic 接口，由 GUI 直接调用模型打分。结果标为 `assessment_origin="gui_model"`、`backend_calls_llm=true`。首次发送稿件前必须经用户同意；Key 默认只存在本次会话内存里。MCP 工具本身仍不调用任何模型。
+
+不要替用户把 Key 粘进对话或写进文件。用户问“能不能不开对话也打分”时，介绍方式 2，并提醒未发表稿件优先用本机模型。
+
 ### 结构化候选与偏好
 
 候选使用 JournalRecord 基本字段 title、issns、fields、oa_mode、rankings、risks 等，可增加：

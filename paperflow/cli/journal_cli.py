@@ -591,13 +591,16 @@ def _load_dict_list_json(path: str, label: str, max_items: int = 200) -> List[Di
 def cmd_recommend(finder: JournalFinder, args: argparse.Namespace) -> int:
     text = getattr(args, "text", "") or ""
     file_path = getattr(args, "input", "") or ""
+    project_dir = getattr(args, "project_dir", "") or ""
+    github_repo = getattr(args, "github", "") or ""
     mode = getattr(args, "mode", "auto") or "auto"
 
     try:
-        if text.strip() and file_path.strip():
-            raise JournalError("INVALID_INPUT", "--text 与 --input 互斥，不能同时指定")
-        if not text.strip() and not file_path.strip():
-            raise JournalError("INVALID_INPUT", "必须指定 --text 或 --input 之一")
+        sources = [bool(text.strip()), bool(file_path.strip()), bool(project_dir.strip()), bool(github_repo.strip())]
+        if sum(sources) > 1:
+            raise JournalError("INVALID_INPUT", "--text、--input、--project-dir 与 --github 互斥，只能指定一种材料来源")
+        if not any(sources):
+            raise JournalError("INVALID_INPUT", "必须指定 --text、--input、--project-dir 或 --github 之一")
         if mode not in ("auto", "idea", "manuscript"):
             raise JournalError("INVALID_INPUT", "--mode 必须为 auto、idea 或 manuscript")
 
@@ -605,11 +608,17 @@ def cmd_recommend(finder: JournalFinder, args: argparse.Namespace) -> int:
             if getattr(args, "html", ""):
                 raise JournalError("INVALID_INPUT", "--prepare-only 不生成推荐报告，不能同时使用 --html")
             max_chars = getattr(args, "max_chars", 60000)
+            project_options = {}
+            if project_dir.strip():
+                project_options["project_path"] = project_dir
+            if github_repo.strip():
+                project_options["github_repo"] = github_repo
             res = finder.prepare_manuscript(
                 text=text,
                 file_path=file_path,
                 mode=mode,
                 max_chars=max_chars,
+                **project_options,
             )
         else:
             profile = _load_dict_json(args.profile, "--profile") if getattr(args, "profile", None) else None
@@ -636,6 +645,11 @@ def cmd_recommend(finder: JournalFinder, args: argparse.Namespace) -> int:
                 raise JournalError("INVALID_INPUT", "--overwrite-html 需要同时指定 --html")
             if getattr(args, "no_builtin", False):
                 export_options["use_builtin"] = False
+            project_options = {}
+            if project_dir.strip():
+                project_options["project_path"] = project_dir
+            if github_repo.strip():
+                project_options["github_repo"] = github_repo
             res = finder.recommend(
                 text=text,
                 file_path=file_path,
@@ -644,6 +658,7 @@ def cmd_recommend(finder: JournalFinder, args: argparse.Namespace) -> int:
                 assessments=assessments,
                 candidate_records=candidate_records,
                 preferences=preferences,
+                **project_options,
                 **export_options,
             )
 
@@ -786,6 +801,8 @@ def create_parser() -> argparse.ArgumentParser:
     p_recommend = subparsers.add_parser("recommend", help="结合稿件信息与画像进行期刊推荐")
     p_recommend.add_argument("--text", default="", help="稿件或设想直接文本")
     p_recommend.add_argument("--input", "--file", dest="input", default="", help="稿件文件路径 (.txt, .md, .docx, .pdf)")
+    p_recommend.add_argument("--project-dir", dest="project_dir", default="", help="本地项目文件夹路径（读取 README/docs 作为选刊材料）")
+    p_recommend.add_argument("--github", dest="github", default="", help="GitHub 仓库 owner/repo 或 URL（读取公开 README/docs）")
     p_recommend.add_argument("--mode", default="auto", help="解析/推荐模式 (auto, idea, manuscript)")
     p_recommend.add_argument("--profile", default=None, help="稿件语义画像 JSON 文件路径")
     p_recommend.add_argument("--assessments", default=None, help="期刊匹配度评估列表 JSON 文件路径")

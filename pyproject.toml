@@ -21,8 +21,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8,<10", "build>=1,<2", "PyYAML>=6,<7"]
+dev = ["pytest>=8,<10", "build>=1,<2", "PyYAML>=6,<7", "httpx>=0.27,<1"]
 pdf = ["pypdf>=6.19,<7"]
+gui = ["keyring>=25,<27"]
 
 [project.scripts]
 paperflow = "paperflow.__main__:main"
@@ -32,4 +33,4 @@ where = ["."]
 include = ["paperflow*"]
 
 [tool.setuptools.package-data]
-paperflow = ["resources/journals/*.json"]
+paperflow = ["resources/journals/*.json", "gui/static/*.html"]

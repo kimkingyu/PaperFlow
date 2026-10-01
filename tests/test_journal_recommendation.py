@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 import pytest
 
 from paperflow.engine.journals.models import (
-    EditorialProfile, JournalError, JournalRecord, Metric, Provenance,
+    EditorialProfile, Experience, JournalError, JournalRecord, Metric, Provenance,
     PublicationFee, Ranking, RiskEvent, SchoolPolicy,
 )
 from paperflow.engine.journals.recommendation import combine_candidates, recommend_records
@@ -341,3 +341,36 @@ def test_metadata_constraints_are_considered_before_candidate_limit():
     prefs = RecommendationPreferences(candidate_limit=1, filters={"rank_system": "cas", "rank_year": 2026, "quartiles": [1]})
     results = recommend_records(prepared(), combine_candidates([], [bad, good]), portrait(), [], prefs, COVERAGE, as_of=NOW)["data"]
     assert results["assessment_targets"][0]["title"] == "Fictional beta"
+
+
+def test_decision_summary_integrates_comments_and_four_core_facets():
+    from paperflow.engine.journals.recommendation import calc_decision_summary
+    # Strict journal with hardware rig comments and Top flag
+    strict = journal(
+        title="Strict Hardware Rig Journal",
+        rankings=[Ranking(system="cas", year=2025, quartile=2, top=True, category="计算机科学", provenance=provenance())],
+        experiences=[Experience(summary="审稿人极其严苛，硬性要求实物台架硬件实验验证，纯仿真必拒。", provenance=provenance())],
+        publication_fees=[PublicationFee(route="subscription", amount=0.0, currency="USD", provenance=provenance()),
+                          PublicationFee(route="open_access", amount=2940.0, currency="USD", provenance=provenance())]
+    )
+    dec_strict = calc_decision_summary(strict)
+    assert dec_strict["tier"]["is_top"] is True
+    assert "中科院 2区 Top" in dec_strict["tier"]["summary"]
+    assert dec_strict["easiness"]["score"] < 45.0  # Base 45 is reduced by Top (-8) and strict comment signals!
+    assert any("实机硬件" in sig or "拒稿" in sig for sig in dec_strict["easiness"]["comment_signals"])
+    assert dec_strict["pricing"]["subscription_amount"] == 0.0
+    assert dec_strict["pricing"]["oa_amount"] == 2940.0
+
+    # Friendly journal with positive community comments
+    friendly = journal(
+        title="Friendly Fast Journal",
+        rankings=[Ranking(system="cas", year=2025, quartile=4, category="工程技术", provenance=provenance())],
+        experiences=[Experience(summary="审稿对初学者非常友好，录用率高，修改后顺利接收，速度较快。", provenance=provenance())],
+        metrics=[Metric(name="first_decision_days", value=21.0, provenance=provenance()),
+                 Metric(name="chinese_author_ratio", value=65.0, provenance=provenance())]
+    )
+    dec_friendly = calc_decision_summary(friendly)
+    assert dec_friendly["tier"]["cas_quartile"] == 4
+    assert dec_friendly["easiness"]["score"] >= 95.0  # Base 90 + friendly boost + Chinese author ratio!
+    assert any("友好" in sig or "录用率高" in sig for sig in dec_friendly["easiness"]["comment_signals"])
+    assert dec_friendly["review_time"]["first_decision_days"] == 21

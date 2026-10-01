@@ -175,9 +175,25 @@ class JournalFinder:
         res["sources"] = [{k: v for k, v in result.items() if k != "content"}]
         return res
 
-    def prepare_manuscript(self, text: str = "", file_path: str = "", mode: str = "auto", max_chars: int = 60000):
+    def prepare_manuscript(self, text: str = "", file_path: str = "", mode: str = "auto", max_chars: int = 60000,
+                           project_path: str = "", github_repo: str = ""):
         from .journals.manuscript import prepare_manuscript
         from .journals.recommendation_models import ResearchProfile, FitAssessment, RUBRIC_VERSION
+        from .journals.project_reader import read_local_project, read_github_project
+
+        if project_path:
+            if text or file_path or github_repo:
+                raise JournalError("INVALID_INPUT", "project_path 与 text/file_path/github_repo 互斥")
+            proj = read_local_project(project_path, max_chars=max_chars)
+            text = proj["data"]["text"]
+            file_path = ""
+        elif github_repo:
+            if text or file_path:
+                raise JournalError("INVALID_INPUT", "github_repo 与 text/file_path 互斥")
+            proj = read_github_project(github_repo, max_chars=max_chars)
+            text = proj["data"]["text"]
+            file_path = ""
+
         result = prepare_manuscript(text=text, file_path=file_path, mode=mode, max_chars=max_chars)
         result["data"]["agent_contract"] = {
             "version": RUBRIC_VERSION, "model_provider": "calling_agent", "backend_calls_llm": False,
@@ -188,17 +204,36 @@ class JournalFinder:
                       "当前 Agent 对候选形成带稿件和征稿范围原文依据的判断，再调用同一工具计分"],
             "privacy": "不额外调用模型、不借用宿主凭据、不自动上传或保存稿件",
         }
+        if project_path or github_repo:
+            result["data"]["project_source"] = proj["data"]
         return result
 
 
     def recommend(self, text: str = "", file_path: str = "", mode: str = "auto",
                   profile: Optional[Dict] = None, assessments: Optional[List[Dict]] = None,
                   candidate_records: Optional[List[Dict]] = None, preferences: Optional[Dict] = None,
-                  html_path: str = "", overwrite_html: bool = False, use_builtin: bool = True):
+                  html_path: str = "", overwrite_html: bool = False, use_builtin: bool = True,
+                  publish_to_gui: bool = False,
+                  project_path: str = "", github_repo: str = ""):
         from .journals.manuscript import prepare_manuscript
         from .journals.models import JournalRecord
         from .journals.recommendation_models import ResearchProfile, FitAssessment, RecommendationPreferences
         from .journals.recommendation import combine_candidates, recommend_records
+        from .journals.project_reader import read_local_project, read_github_project
+
+        if project_path:
+            if text or file_path or github_repo:
+                raise JournalError("INVALID_INPUT", "project_path 与 text/file_path/github_repo 互斥")
+            proj = read_local_project(project_path)
+            text = proj["data"]["text"]
+            file_path = ""
+        elif github_repo:
+            if text or file_path:
+                raise JournalError("INVALID_INPUT", "github_repo 与 text/file_path 互斥")
+            proj = read_github_project(github_repo)
+            text = proj["data"]["text"]
+            file_path = ""
+
         for payload, maximum in ((candidate_records, 2 * 1024 * 1024), (assessments, 256 * 1024),
                                  (profile, 32 * 1024), (preferences, 64 * 1024)):
             try:
@@ -230,6 +265,9 @@ class JournalFinder:
         if html_path:
             from .journals.html_reporter import write_html_report
             result["data"]["html_path"] = write_html_report(result, html_path, overwrite=overwrite_html)
+        if publish_to_gui:
+            from paperflow.gui.inbox import publish
+            result["data"]["gui_inbox_id"] = publish(self.store.directory, result)
         return result
 
     def build_database(self, force: bool = False, dry_run: bool = True,
@@ -288,12 +326,14 @@ class JournalFinder:
 
     def details(self, query: str):
         from .journals.risk import assess_risk
+        from .journals.recommendation import calc_decision_summary
         records, coverage, _ = self._view(include_history=True)
         record, ambiguous = self._one(query, records)
         if ambiguous:
             return ambiguous
         return response({"journal": record.model_dump(mode="json"),
-                         "risk": assess_risk(record, coverage=coverage)},
+                         "risk": assess_risk(record, coverage=coverage),
+                         "decision_summary": calc_decision_summary(record)},
                         coverage=coverage, warnings=record.identity_warnings)
 
     def check_warning(self, query: str, profile_id: Optional[str] = None, warning_years: Optional[List[int]] = None):

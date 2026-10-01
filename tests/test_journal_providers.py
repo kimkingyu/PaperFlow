@@ -594,3 +594,151 @@ def test_query_easyscholar_not_found(monkeypatch):
     with pytest.raises(JournalError) as exc_info:
         query_easyscholar("Unknown Nonexistent Journal", _opener=opener)
     assert exc_info.value.code == "NOT_FOUND"
+
+
+def test_safe_fetch_explicit_hosts_do_not_expand_legacy_default():
+    opener = MockOpener()
+    assert safe_fetch("https://api.crossref.org/works", allowed_hosts={"api.crossref.org"}, opener=opener)[0] == b"OK"
+    with pytest.raises(JournalError) as denied:
+        safe_fetch("https://api.crossref.org/works", opener=opener)
+    assert denied.value.code == "SSRF_VIOLATION"
+    with pytest.raises(JournalError) as empty_policy:
+        safe_fetch("https://api.github.com/test", allowed_hosts=set(), opener=opener)
+    assert empty_policy.value.code == "HOST_DENIED"
+    assert len(opener.calls) == 1
+
+
+def test_pin_dns_uses_numeric_sockets_tls_hostname_no_proxy_and_each_redirect(monkeypatch):
+    # Run the real urllib opener/HTTPSConnection path, replacing only raw socket I/O
+    # and TLS wrapping. A second DNS lookup would see loopback and fail this test.
+    calls, sockets, tls_names = [], [], []
+    addresses = {"arxiv.org": "1.1.1.1", "export.arxiv.org": "2.2.2.2"}
+
+    def resolve(host, port):
+        previous = any(item[0] == host for item in calls)
+        calls.append((host, port))
+        return ["127.0.0.1" if previous else addresses[host]]
+
+    class NumericSocket:
+        def __init__(self, family, kind):
+            self.family, self.kind = family, kind
+            self.sent, self.target = b"", None
+            sockets.append(self)
+
+        def settimeout(self, timeout):
+            self.timeout = timeout
+
+        def setsockopt(self, *args):
+            pass
+
+        def connect(self, address):
+            self.target = address
+
+        def sendall(self, data):
+            self.sent += data
+
+        def makefile(self, *args, **kwargs):
+            if self.target[0] == "1.1.1.1":
+                return io.BytesIO(b"HTTP/1.1 302 Found\r\nLocation: https://export.arxiv.org/pdf/2301.12345v7\r\nContent-Length: 0\r\n\r\n")
+            return io.BytesIO(b"HTTP/1.1 200 OK\r\nContent-Type: application/pdf\r\nContent-Length: 9\r\n\r\n%PDF-1.7\n")
+
+        def close(self):
+            pass
+
+    def wrap(context, sock, *, server_hostname, **kwargs):
+        assert context.check_hostname is True
+        assert context.verify_mode == providers.ssl.CERT_REQUIRED
+        tls_names.append(server_hostname)
+        return sock
+
+    def forbidden_second_lookup(*args, **kwargs):
+        raise AssertionError("The socket must not resolve the hostname a second time")
+
+    set_dns_resolver_seam(resolve)
+    monkeypatch.setattr(providers.socket, "socket", NumericSocket)
+    monkeypatch.setattr(providers.socket, "getaddrinfo", forbidden_second_lookup)
+    monkeypatch.setattr(providers.ssl.SSLContext, "wrap_socket", wrap)
+    monkeypatch.setenv("HTTPS_PROXY", "http://127.0.0.1:9999")
+    monkeypatch.setenv("ALL_PROXY", "http://127.0.0.1:9999")
+    monkeypatch.setenv("NO_PROXY", "")
+    body, _, final = safe_fetch(
+        "https://arxiv.org/pdf/2301.12345v7", allowed_hosts=set(addresses), pin_dns=True,
+        public_only=True, allow_cross_host_redirect=True,
+    )
+    assert body == b"%PDF-1.7\n" and final == "https://export.arxiv.org/pdf/2301.12345v7"
+    assert calls == [("arxiv.org", 443), ("export.arxiv.org", 443)]
+    assert [sock.target for sock in sockets] == [("1.1.1.1", 443), ("2.2.2.2", 443)]
+    assert tls_names == ["arxiv.org", "export.arxiv.org"]
+    assert b"Host: arxiv.org\r\n" in sockets[0].sent
+    assert b"Host: export.arxiv.org\r\n" in sockets[1].sent
+
+
+@pytest.mark.parametrize("target,code", [
+    ("https://unknown.example/file.pdf", "HOST_DENIED"),
+    ("http://arxiv.org/file.pdf", "INVALID_URL"),
+    ("https://user:secret@arxiv.org/file.pdf", "SSRF_VIOLATION"),
+    ("https://arxiv.org/file.pdf?signature=secret", "SSRF_VIOLATION"),
+    ("https://arxiv.org/file.pdf?email=private@example.org", "SSRF_VIOLATION"),
+])
+def test_explicit_pdf_policy_validates_every_redirect_before_open(target, code):
+    def redirect(req, timeout):
+        raise urllib.error.HTTPError(req.full_url, 302, "Found", {"location": target}, None)
+
+    opener = MockOpener(redirect)
+    with pytest.raises(JournalError) as error:
+        safe_fetch("https://arxiv.org/file.pdf", allowed_hosts={"arxiv.org"}, pin_dns=True,
+                   public_only=True, allow_cross_host_redirect=True, opener=opener)
+    assert error.value.code == code and len(opener.calls) == 1
+    assert "private@example.org" not in str(error.value) and "secret" not in str(error.value)
+
+
+def test_request_interval_applies_to_rate_limit_retries():
+    now, attempts, waits = [1000.0], [], []
+    set_monotonic_seam(lambda: now[0])
+
+    def sleep(seconds):
+        waits.append(seconds)
+        now[0] += seconds
+
+    def limited(req, timeout):
+        attempts.append(now[0])
+        raise urllib.error.HTTPError(req.full_url, 429, "Limited", {"retry-after": "1"}, None)
+
+    set_sleep_seam(sleep)
+    with pytest.raises(JournalError) as error:
+        safe_fetch("https://export.arxiv.org/api/query", allowed_hosts={"export.arxiv.org"},
+                   pin_dns=True, request_interval=3.0, opener=MockOpener(limited))
+    assert error.value.code == "RATE_LIMITED"
+    assert attempts == [1000.0, 1003.0, 1006.0]
+    assert all(wait <= 3.0 for wait in waits)
+
+
+def test_pinned_dns_wait_is_bounded_and_never_opens_after_timeout(monkeypatch):
+    release, finished = providers.threading.Event(), providers.threading.Event()
+
+    def blocked_dns(host, port):
+        try:
+            assert release.wait(2)
+            return ["1.1.1.1"]
+        finally:
+            finished.set()
+
+    monkeypatch.setattr(providers, "REQUEST_TIMEOUT_SECONDS", 0.01)
+    set_dns_resolver_seam(blocked_dns)
+    opener = MockOpener()
+    try:
+        with pytest.raises(JournalError) as error:
+            safe_fetch("https://arxiv.org/test", allowed_hosts={"arxiv.org"}, pin_dns=True, opener=opener)
+        assert error.value.code == "TIMEOUT" and not opener.calls
+    finally:
+        release.set()
+        assert finished.wait(2)
+
+
+def test_pinned_dns_worker_queue_is_bounded(monkeypatch):
+    monkeypatch.setattr(providers, "_PINNED_DNS_SLOTS", providers.threading.BoundedSemaphore(0))
+    monkeypatch.setattr(providers, "REQUEST_TIMEOUT_SECONDS", 0.01)
+    opener = MockOpener()
+    with pytest.raises(JournalError) as error:
+        safe_fetch("https://arxiv.org/test", allowed_hosts={"arxiv.org"}, pin_dns=True, opener=opener)
+    assert error.value.code == "TIMEOUT" and not opener.calls

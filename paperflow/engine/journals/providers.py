@@ -1,6 +1,6 @@
 """Outbound HTTP client and network providers for external journal datasets and APIs.
 
-Only permitted external hostnames:
+Default journal-only hostnames (other consumers must supply a per-call policy):
 - api.github.com
 - raw.githubusercontent.com
 - easyscholar.cc
@@ -12,17 +12,20 @@ from __future__ import annotations
 
 import email.utils
 import hashlib
+import http.client
 import ipaddress
 import json
 import math
 import os
 import re
 import socket
+import ssl
+import threading
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Collection, Dict, List, Optional, Tuple
 
 from paperflow.engine.journals import catalog
 from paperflow.engine.journals.models import (
@@ -54,6 +57,41 @@ _DNS_RESOLVER: Callable[[str, int], List[str]] = lambda host, port: [
 ]
 _SLEEP_FN: Callable[[float], None] = time.sleep
 _MONOTONIC_FN: Callable[[], float] = time.monotonic
+# Blocking OS DNS calls cannot be cancelled; cap both their wait and worker count.
+_PINNED_DNS_SLOTS = threading.BoundedSemaphore(4)
+
+
+def _resolve_pinned_dns(hostname: str, timeout: float) -> List[str]:
+    deadline = _MONOTONIC_FN() + timeout
+    slots = _PINNED_DNS_SLOTS
+    if not slots.acquire(timeout=max(0.0, timeout)):
+        raise JournalError("TIMEOUT", "DNS 解析队列超过时间预算")
+    if _MONOTONIC_FN() >= deadline:
+        slots.release()
+        raise JournalError("TIMEOUT", "DNS 解析队列超过时间预算")
+    ready = threading.Event()
+    result: Dict[str, Any] = {}
+    resolver = _DNS_RESOLVER
+
+    def resolve():
+        try:
+            result["ips"] = list(resolver(hostname, 443))
+        except Exception:
+            result["error"] = True
+        finally:
+            slots.release()
+            ready.set()
+
+    try:
+        threading.Thread(target=resolve, daemon=True, name="paperflow-public-dns").start()
+    except Exception:
+        slots.release()
+        raise JournalError("NETWORK_ERROR", "无法启动受限 DNS 解析") from None
+    if not ready.wait(max(0.0, deadline - _MONOTONIC_FN())):
+        raise JournalError("TIMEOUT", "DNS 解析超过时间预算")
+    if result.get("error"):
+        raise JournalError("NETWORK_ERROR", "域名 DNS 解析失败")
+    return result["ips"]
 
 
 def set_dns_resolver_seam(fn: Optional[Callable[[str, int], List[str]]]) -> None:
@@ -152,63 +190,129 @@ def _parse_retry_after(raw_val: Optional[str]) -> Optional[float]:
     return None
 
 
-def _validate_safe_url(url: str, expected_host: Optional[str] = None) -> urllib.parse.SplitResult:
-    """Validate that the URL satisfies all SSRF constraints before any network request."""
+_SECRET_QUERY_KEYS = {
+    "email", "token", "access_token", "api_key", "apikey", "key", "password",
+    "secretkey", "signature", "x-amz-signature",
+}
+
+
+def _has_secret_query(query: str) -> bool:
+    return any(
+        key.lower() in _SECRET_QUERY_KEYS or key.lower().startswith("x-amz-")
+        for key, _ in urllib.parse.parse_qsl(query, keep_blank_values=True)
+    )
+
+
+def _validate_safe_url(
+    url: str,
+    expected_host: Optional[str] = None,
+    allowed_hosts: Optional[Collection[str]] = None,
+    *,
+    public_only: bool = False,
+    _resolved_ips: Optional[List[str]] = None,
+    _dns_timeout: Optional[float] = None,
+) -> urllib.parse.SplitResult:
+    """Check a target and optionally return the exact validated DNS answers for pinning."""
     try:
         parsed = urllib.parse.urlsplit(url)
     except Exception:
         raise JournalError("INVALID_URL", "URL 无法正确解析")
 
     if parsed.scheme.lower() != "https":
-        raise JournalError("INVALID_URL", f"仅支持 HTTPS 请求，拒绝非 HTTPS 协议")
-
+        raise JournalError("INVALID_URL", "仅支持 HTTPS 请求，拒绝非 HTTPS 协议")
     if parsed.username or parsed.password:
         raise JournalError("SSRF_VIOLATION", "禁止在 URL 中包含 userinfo/凭据")
-
+    if public_only and _has_secret_query(parsed.query):
+        raise JournalError("SSRF_VIOLATION", "公开全文链接不得包含邮箱、密钥或签名参数")
     try:
         port = parsed.port
     except ValueError:
         raise JournalError("INVALID_URL", "URL 包含非法的端口号")
-
     if port is not None and port != 443:
-        raise JournalError("SSRF_VIOLATION", f"仅允许 443 端口，拒绝非 443 端口访问")
+        raise JournalError("SSRF_VIOLATION", "仅允许 443 端口，拒绝非 443 端口访问")
 
     hostname = (parsed.hostname or "").lower().strip()
     if not hostname:
         raise JournalError("INVALID_URL", "URL 缺少有效主机名")
-
     if expected_host and hostname != expected_host.lower():
-        raise JournalError("SSRF_VIOLATION", f"目标主机必须为预期主机，实际请求被拒绝")
+        raise JournalError("SSRF_VIOLATION", "目标主机必须为预期主机，实际请求被拒绝")
+    policy = ALLOWED_HOSTS if allowed_hosts is None else allowed_hosts
+    if hostname not in policy:
+        if allowed_hosts is None:
+            raise JournalError("SSRF_VIOLATION", "目标主机未在安全白名单中")
+        raise JournalError("HOST_DENIED", "目标主机未在安全白名单中；全文主机可通过 PAPERFLOW_PDF_ALLOWED_HOSTS 显式配置")
 
-    if hostname not in ALLOWED_HOSTS:
-        raise JournalError("SSRF_VIOLATION", f"目标主机未在安全白名单中")
-
-    # DNS check: resolve hostname and ensure no resolved address is private/loopback/link-local/multicast
     try:
-        resolved_ips = _DNS_RESOLVER(hostname, 443)
+        resolved_ips = _DNS_RESOLVER(hostname, 443) if _dns_timeout is None else _resolve_pinned_dns(hostname, _dns_timeout)
+    except JournalError:
+        raise
     except Exception:
-        raise JournalError("NETWORK_ERROR", "域名 DNS 解析失败")
-
+        raise JournalError("NETWORK_ERROR", "域名 DNS 解析失败") from None
     if not resolved_ips:
         raise JournalError("NETWORK_ERROR", "域名未解析到有效 IP 地址")
-
+    checked = []
     for ip_str in resolved_ips:
         try:
             ip = ipaddress.ip_address(ip_str)
         except ValueError:
             raise JournalError("SSRF_VIOLATION", "DNS 返回非合规 IP 地址")
-
-        if (
-            ip.is_private
-            or ip.is_loopback
-            or ip.is_link_local
-            or ip.is_multicast
-            or ip.is_reserved
-            or ip.is_unspecified
-        ):
+        if not ip.is_global or ip.is_multicast or "%" in str(ip):
             raise JournalError("SSRF_VIOLATION", "DNS 解析命中私网或受限保留地址段")
-
+        mapped = getattr(ip, "ipv4_mapped", None)
+        if mapped is not None and (not mapped.is_global or mapped.is_multicast):
+            raise JournalError("SSRF_VIOLATION", "DNS 解析命中私网或受限保留地址段")
+        if str(ip) not in checked:
+            checked.append(str(ip))
+    if _resolved_ips is not None:
+        _resolved_ips.extend(checked)
     return parsed
+
+
+class _PinnedHTTPSConnection(http.client.HTTPSConnection):
+    """Connect a numeric public address without a second hostname resolution.
+
+    HTTPSConnection.connect still wraps the socket with self.host for TLS SNI
+    and certificate verification; the HTTP Host header is also unchanged.
+    """
+
+    def __init__(self, host: str, *, pinned_ip: str, **kwargs: Any):
+        super().__init__(host, **kwargs)
+        self._pinned_ip = ipaddress.ip_address(pinned_ip)
+        self._create_connection = self._connect_pinned
+
+    def _connect_pinned(self, address: Any, timeout: Any, source_address: Any = None):
+        if address[1] != 443 or self._tunnel_host:
+            raise JournalError("SSRF_VIOLATION", "固定 DNS 连接不允许代理隧道或非 443 端口")
+        family = socket.AF_INET6 if self._pinned_ip.version == 6 else socket.AF_INET
+        sock = socket.socket(family, socket.SOCK_STREAM)
+        try:
+            if timeout is not socket._GLOBAL_DEFAULT_TIMEOUT:
+                sock.settimeout(timeout)
+            if source_address:
+                sock.bind(source_address)
+            sock.connect((str(self._pinned_ip), 443))
+            return sock
+        except BaseException:
+            sock.close()
+            raise
+
+
+class _PinnedHTTPSHandler(urllib.request.HTTPSHandler):
+    def __init__(self, hostname: str, pinned_ip: str):
+        context = ssl.create_default_context()
+        context.set_alpn_protocols(["http/1.1"])
+        super().__init__(context=context)
+        self.hostname = hostname
+        self.pinned_ip = pinned_ip
+
+    def https_open(self, req):
+        def connection(host, **kwargs):
+            conn = _PinnedHTTPSConnection(host, pinned_ip=self.pinned_ip, **kwargs)
+            if conn.host.lower() != self.hostname or conn.port != 443:
+                raise JournalError("SSRF_VIOLATION", "固定 DNS 连接主机不匹配")
+            return conn
+
+        return self.do_open(connection, req, context=self._context)
 
 
 def safe_fetch(
@@ -219,6 +323,10 @@ def safe_fetch(
     allow_cross_host_redirect: bool = False,
     opener: Optional[Any] = None,
     deadline: Optional[float] = None,
+    allowed_hosts: Optional[Collection[str]] = None,
+    pin_dns: bool = False,
+    public_only: bool = False,
+    request_interval: float = 0.0,
 ) -> Tuple[bytes, Dict[str, str], str]:
     """Execute a guarded HTTP GET request using urllib standard library.
 
@@ -230,17 +338,28 @@ def safe_fetch(
         allow_cross_host_redirect: Whether cross-host redirection is allowed.
         opener: Optional urllib opener test seam.
         deadline: Monotonic deadline (time.monotonic() timestamp). If None, defaults to now + 90s.
+        allowed_hosts: Per-call hostname set. None retains the journal-only default.
+        pin_dns: Connect to validated numeric public IPs, with normal TLS checks and no proxies.
+        public_only: Reject secret-bearing query parameters on every hop (for public PDFs).
+        request_interval: Minimum interval between attempts, including retries and redirects.
 
     Returns:
         (content_bytes, response_headers, final_url)
     """
     if deadline is None:
         deadline = _MONOTONIC_FN() + TOTAL_TIME_BUDGET_SECONDS
+    if not isinstance(request_interval, (int, float)) or not math.isfinite(request_interval) or request_interval < 0:
+        raise JournalError("INVALID_INPUT", "请求间隔必须是有限的非负秒数")
+    if allowed_hosts is not None:
+        if isinstance(allowed_hosts, (str, bytes)) or any(not isinstance(host, str) for host in allowed_hosts):
+            raise JournalError("INVALID_INPUT", "主机策略必须是明确的主机名集合")
+        allowed_hosts = frozenset(host.strip().lower() for host in allowed_hosts)
 
     current_url = url
     headers_dict = dict(headers or {})
     redirect_count = 0
     retries = 0
+    last_request_at = None
 
     while True:
         now = _MONOTONIC_FN()
@@ -248,9 +367,22 @@ def safe_fetch(
         if remaining_budget <= 0:
             raise JournalError("TIMEOUT", "请求超过总体时间预算 (90秒)")
 
-        # Step 1: SSRF pre-check
-        _validate_safe_url(current_url, expected_host=expected_host if redirect_count == 0 else None)
-        parsed_current = urllib.parse.urlsplit(current_url)
+        # The IP answers checked here are also the addresses used by the socket.
+        validated_ips: List[str] = []
+        parsed_current = _validate_safe_url(
+            current_url,
+            expected_host=expected_host if redirect_count == 0 else None,
+            allowed_hosts=allowed_hosts,
+            public_only=public_only,
+            _resolved_ips=validated_ips,
+            _dns_timeout=min(REQUEST_TIMEOUT_SECONDS, remaining_budget) if pin_dns else None,
+        )
+        if last_request_at is not None and request_interval:
+            wait = max(0.0, request_interval - (_MONOTONIC_FN() - last_request_at))
+            if wait >= deadline - _MONOTONIC_FN():
+                raise JournalError("TIMEOUT", "请求间隔超过总体时间预算")
+            if wait:
+                _SLEEP_FN(wait)
 
         # Refresh remaining budget after DNS validation before opening connection
         now = _MONOTONIC_FN()
@@ -266,13 +398,25 @@ def safe_fetch(
             def redirect_request(self, req, fp, code, msg, hdrs, newurl):
                 return None
 
-        actual_opener = opener or urllib.request.build_opener(_NoRedirectHandler)
-
         try:
+            if opener is not None:
+                # An explicit opener remains a trusted injection seam for offline tests.
+                actual_opener = opener
+            elif pin_dns:
+                actual_opener = urllib.request.build_opener(
+                    urllib.request.ProxyHandler({}),
+                    _NoRedirectHandler,
+                    _PinnedHTTPSHandler(parsed_current.hostname.lower(), validated_ips[0]),
+                )
+            else:
+                actual_opener = urllib.request.build_opener(_NoRedirectHandler)
             step_timeout = min(REQUEST_TIMEOUT_SECONDS, max(remaining_budget, 0.1))
+            last_request_at = _MONOTONIC_FN()
             with actual_opener.open(req, timeout=step_timeout) as resp:
                 status_code = resp.status if hasattr(resp, "status") else resp.code
                 resp_headers = {k.lower(): v for k, v in resp.headers.items()}
+                if status_code != 304 and not 200 <= status_code < 300:
+                    raise urllib.error.HTTPError(current_url, status_code, "HTTP response", resp.headers, None)
 
                 # Handle 304 Not Modified if ETag/If-None-Match was provided
                 if status_code == 304:
@@ -346,8 +490,7 @@ def safe_fetch(
                         raise JournalError("SSRF_VIOLATION", "拒绝未授权的跨主机重定向")
 
                     # Check for secret parameters in current URL; forbid cross-host redirect if credentials present in query
-                    curr_query = parsed_current.query.lower()
-                    if any(s in curr_query for s in ("secretkey", "token", "password", "key=")):
+                    if _has_secret_query(parsed_current.query):
                         raise JournalError("SSRF_VIOLATION", "禁止携带敏感凭据参数进行跨主机重定向")
 
                     # Case-insensitively strip authorization / credential headers
@@ -358,8 +501,7 @@ def safe_fetch(
                     for k in keys_to_remove:
                         headers_dict.pop(k, None)
 
-                # Validate new destination URL
-                _validate_safe_url(new_url)
+                # The next loop validates and pins the new destination before connecting.
                 current_url = new_url
                 continue
 
